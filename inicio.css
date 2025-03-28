@@ -1,0 +1,110 @@
+/* Estilos generales */
+body {
+    font-family: Arial, sans-serif;
+    margin: 2;
+    padding: 2;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 5px;
+    width: 100%;
+}
+
+.menu {
+    display: flex;
+    gap: 15px;
+    padding-bottom: 5px;
+    width: 100%;
+}
+
+.menu button {
+    color: white;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding-bottom: 10px;
+    border-radius: 5px;
+    transition: background 0.3s;
+    background-color: #8688fc;
+}
+
+.menu button:hover {
+    background: #555;
+}
+
+button {
+    padding: 5px 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+/* Modo claro (por defecto) */
+body.light-mode {
+    background-color: #ffffff;
+    color: #333;
+}
+
+/* Modo oscuro */
+body.dark-mode {
+    background-color: #121212;
+    color: #e0e0e0;
+}
+
+body.dark-mode .menu button {
+    background-color: #bb86fc;
+    color: #000000;
+}
+
+/* Estilo del contenedor box */
+
+
+/* Estilo del mensaje de bienvenida */
+#nombre_id {
+    margin: 0;
+    font-size: 20px;
+    color: #333;
+}
+body.dark-mode #nombre_id{
+    color: #f1f1f1;
+}
+
+/* Estilo del botón de cambio de tema */
+#themeToggleBtn {
+    padding: 3px 5px;
+    background-color: #272727;
+    color: rgb(255, 255, 255);
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    text-decoration: solid;
+    justify-content: end;
+}
+
+#themeToggleBtn:hover {
+    background-color: #3b2727;
+    color: #e6b6b6;
+    
+}
+body.dark-mode #themeToggleBtn{
+    background-color: #acacac;    
+    color: #161616;
+}
+body.dark-mode #themeToggleBt:hover {
+    background-color:  #1d1515;  
+    color: #af7a7a; 
+}
+
+

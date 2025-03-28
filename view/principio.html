@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Página Principal</title>
+</head>
+
+<body>
+    <h2>Bienvenidos al Sistema de Control de Stock</h2>
+
+    <div class="columns">
+        <!-- Columna 1 -->
+        <div class="column">
+            <img src="https://i.postimg.cc/TYqfVC2b/Cortadora.png" alt="Cortadora" id="cortadora">
+        </div>
+
+        <!-- Columna 2 -->
+        <div class="column" id="listamaquina">
+            <h3>Fadeco</h3>
+            <p>Eco</p>
+            <p>Inox 330</p>
+            <p>Inox 300</p>
+            <p>Inox 250</p>
+            <p>Pintada 330</p>
+            <p>Pintada 300</p>
+        </div>
+
+        <!-- Columna 3 -->
+        <div class="column">
+            <img src="https://i.postimg.cc/PJbsM5HH/logofadeco.png" alt="fadeco" id="logofadeco">
+            <div class="Box">
+                <div class="col">
+                    <p>¿Qué pieza necesita saber?</p>
+                    <select id="piezasDropdown"></select>
+                </div>
+                <div class="col">
+                    <p>Instrucciones</p>
+                    <select id="instrucDropdown"></select>
+                </div>
+            </div>
+            <textarea rows="15" id="resultado" readonly></textarea>
+            <button id="limpiarTablaBtn" onclick="limpiarTabla()">Limpiar Tabla</button>
+        </div>
+    </div>
+
+    <!-- Enlace al archivo JavaScript -->
+</body>
+
+</html>

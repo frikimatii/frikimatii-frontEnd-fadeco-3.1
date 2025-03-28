@@ -1,0 +1,166 @@
+.box-agregar{
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content:flex-start;
+    align-items: flex-start;
+    gap: 20px;
+}
+.sidebar{
+    display: flex;
+    flex-direction: column;
+    gap: 3px;   
+    justify-content: start;
+}
+#aluminio, #chapa, #shop, #plastico, #fundicion{
+    justify-items: center;
+    background-color: blue;
+    margin: 5px;
+    display: grid;
+    font-size: 16px;
+    cursor: pointer;
+    width: 200px;
+}
+
+
+
+.sidebar button img{
+    justify-content: center;
+    align-items: center;
+    width: 65px;
+}
+
+
+.caja-agregar-pieza{
+    display: flex;
+    
+}
+
+.box-tabla{
+    display: flex;
+    flex-direction: column;
+}
+
+#tablaDeAlouminio{
+    width: 400px;
+}
+
+.tabulator-tableholder{
+    width: 350px !important
+
+}
+.datos-agregar-pieza{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-left: 50px;
+}
+
+
+.titulo-tipo{
+    margin: 0;
+    padding: 0;
+    text-align: center;
+    font-size: 50px;
+    font-weight: 600;
+}
+.descripcion-tipo{
+    margin: 0;
+    padding: 0;
+    font-style: italic;
+    font-size: 18px;
+}
+.separador{
+    border: solid rgb(0, 0, 0) 1px;
+    width: 90%;
+    margin: 10px;
+}
+
+body.dark-mode .separador{
+    border: solid rgb(255, 255, 255) 1px;
+    width: 90%;
+    margin: 10px;
+}
+
+.form-container{
+    padding: 10px;
+    border-radius: 10px;
+    text-align: end;
+}
+.form-gruop{
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 15px;
+}
+
+label {
+    font-weight: bold;
+    margin-bottom: 5px;
+    font-size: 20px;
+}
+
+input{
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    margin: 3px;
+
+}
+.btn-agregar{
+    background-color: #009919;
+    color: white;
+    border: 10px;
+    font-size: 16px;
+    cursor: pointer;
+}
+.btn-agregar:hover{
+    background-color: #70aa79;
+}
+
+.btn-elimiar{
+    background-color: #ff1919;
+    color: white;
+    border: 10px;
+    font-size: 16px;
+    cursor: pointer;
+}
+.btn-elimiar:hover{
+    background-color: #ff8181;
+}
+
+.dato_extra{
+    display: flex;
+    align-items: center;
+    margin: 0 10px 0 10px;
+    justify-content: space-around;
+}
+
+.box-descripcion{
+    width: 300px;
+    height: 130px;
+    border: solid red 1px;
+    margin: 3px;
+}
+.box-descripcion p{
+margin: 0;
+padding: 0;}
+
+.id-imagen img{
+    width: 150px;
+    height: 150px;
+    margin: 5px;
+}
+.box-historial{
+    display: flex;
+    flex-direction: column;
+
+}
+.box-historial p{
+    margin: 0;
+    padding: 0;
+}
+.box-historial textarea{
+    margin: 0;
+    padding: 0;
+    width: 500px;
+}

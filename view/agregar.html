@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gestión de Materiales</title>
+</head>
+<body>
+  <div class="box-agregar">
+    <!-- 📌 Barra lateral con botones -->
+    <div class="sidebar">
+      <button id="aluminio" onclick="mostrarTabla('aluminio')">
+        <img src="https://i.postimg.cc/g2gp5jZk/img-aluminio.png" alt="aluminio" />Aluminio
+      </button>
+      <button id="chapa" onclick="mostrarTabla('chapa')">
+        <img src="https://i.postimg.cc/rpzTLT1G/img-chapa.png" alt="chapa" />Chapa
+      </button>
+      <button id="shop" onclick="mostrarTabla('shop')">
+        <img src="https://i.postimg.cc/x8VVHbWg/img-shop.png" alt="shop" />Shop
+      </button>
+      <button id="plastico" onclick="mostrarTabla('plastico')">
+        <img src="https://i.postimg.cc/G2y1HjSH/img-plastico.png" alt="plastico" />Plástico
+      </button>
+      <button id="fundicion" onclick="mostrarTabla('fundicion')">
+        <img src="https://i.postimg.cc/SK5hSPdB/img-hierro.png" alt="fundicion" />Fundición
+      </button>
+    </div>
+
+    <!-- 📌 Área de contenido (Tablas dinámicas) -->
+    <div class="content">
+
+      <!-- Tabla Aluminio -->
+      <div id="tabla-aluminio" class="table-container" style="display: none;">
+        <div class="caja-agregar-pieza">
+          <div class="box-tabla">
+            <h5>Tabla de Aluminio</h5>
+            <div id="tablaDeAluminio"></div>
+          </div>
+          <div class="datos-agregar-pieza">
+            <h3 class="titulo-tipo">Aluminio</h3>
+            <div class="separador"></div>
+            <p class="descripcion-tipo">Seleccione una pieza de la tabla para ver sus características.</p>
+            <div class="form-container">
+              <div class="form-group">
+                <label for="pieza">Pieza Seleccionada</label>
+                <input type="text" id="pieza-aluminio" readonly />
+              </div>
+              <div class="form-group">
+                <label for="cantidad">Cantidad:</label>
+                <input autofocus type="number" id="cantidad-aluminio" min="0" placeholder="Ingrese la cantidad" />
+              </div>
+              <button id="btn-agregar-aluminio" class="btn-agregar">Agregar</button>
+            </div>
+            <div class="dato_extra">
+              <div class="box-descripcion">
+                <p class="titulo-de-descripcion">Detalles de la pieza</p>
+                <p class="descripcion-pieza" id="descripcion-aluminio">....</p>
+              </div>
+              <div class="id-imagen">
+                <img id="img-aluminio" src="https://i.postimg.cc/j5hHWbMS/eje.png" alt="pieza" />
+              </div>
+            </div>
+            <div class="historial-container">
+              <h3>📜 Historial de Cambios</h3>
+              <ul id="historial-cambios-aluminio"></ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tabla Chapa -->
+      <div id="tabla-chapa" class="table-container" style="display: none;">
+        <div class="caja-agregar-pieza">
+          <div class="box-tabla">
+            <h5>Tabla de Chapa</h5>
+            <div id="tablaDeChapa"></div>
+          </div>
+          <div class="datos-agregar-pieza">
+            <h3 class="titulo-tipo">Chapa</h3>
+            <div class="separador"></div>
+            <p class="descripcion-tipo">Seleccione una pieza de la tabla para ver sus características.</p>
+            <div class="form-container">
+              <div class="form-group">
+                <label for="pieza">Pieza Seleccionada</label>
+                <input type="text" id="pieza-chapa" readonly />
+              </div>
+              <div class="form-group">
+                <label for="cantidad">Cantidad:</label>
+                <input autofocus type="number" id="cantidad-chapa" min="0" placeholder="Ingrese la cantidad" />
+              </div>
+              <button id="btn-agregar-chapa" class="btn-agregar">Agregar</button>
+            </div>
+            <div class="dato_extra">
+              <div class="box-descripcion">
+                <p class="titulo-de-descripcion">Detalles de la pieza</p>
+                <p class="descripcion-pieza" id="description-chapa">....</p>
+              </div>
+              <div class="id-imagen">
+                <img id="img-chapa" src="https://i.postimg.cc/j5hHWbMS/eje.png" alt="pieza" />
+              </div>
+            </div>
+            <div class="historial-container">
+              <h3>📜 Historial de Cambios</h3>
+              <ul id="historial-cambios-chapa"></ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tabla Shop -->
+      <div id="tabla-shop" class="table-container" style="display: none;">
+        <div class="caja-agregar-pieza">
+          <div class="box-tabla">
+            <h5>Tabla de Shop/Insumos</h5>
+            <div id="tablaDeShop"></div>
+          </div>
+          <div class="datos-agregar-pieza">
+            <h3 class="titulo-tipo">Insumos</h3>
+            <div class="separador"></div>
+            <p class="descripcion-tipo">Seleccione una pieza de la tabla para ver sus características.</p>
+            <div class="form-container">
+              <div class="form-group">
+                <label for="pieza">Pieza Seleccionada</label>
+                <input type="text" id="pieza-shop" readonly />
+              </div>
+              <div class="form-group">
+                <label for="cantidad">Cantidad:</label>
+                <input autofocus type="number" id="cantidad-shop" min="0" placeholder="Ingrese la cantidad" />
+              </div>
+              <button id="btn-agregar-shop" class="btn-agregar">Agregar</button>
+            </div>
+            <div class="dato_extra">
+              <div class="box-descripcion">
+                <p class="titulo-de-descripcion">Detalles de la pieza</p>
+                <p class="descripcion-pieza" id="description-shop">....</p>
+              </div>
+              <div class="id-imagen">
+                <img id="img-shop" src="https://i.postimg.cc/j5hHWbMS/eje.png" alt="pieza" />
+              </div>
+            </div>
+            <div class="historial-container">
+              <h3>📜 Historial de Cambios</h3>
+              <ul id="historial-cambios-shop"></ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tabla Plástico -->
+      <div id="tabla-plastico" class="table-container" style="display: none;">
+        <div class="caja-agregar-pieza">
+          <div class="box-tabla">
+            <h5>Tabla de Plástico</h5>
+            <div id="tablaDePlastico"></div>
+          </div>
+          <div class="datos-agregar-pieza">
+            <h3 class="titulo-tipo">Plástico</h3>
+            <div class="separador"></div>
+            <p class="descripcion-tipo">Seleccione una pieza de la tabla para ver sus características.</p>
+            <div class="form-container">
+              <div class="form-group">
+                <label for="pieza">Pieza Seleccionada</label>
+                <input type="text" id="pieza-plastico" readonly />
+              </div>
+              <div class="form-group">
+                <label for="cantidad">Cantidad:</label>
+                <input autofocus type="number" id="cantidad-plastico" min="0" placeholder="Ingrese la cantidad" />
+              </div>
+              <button id="btn-agregar-plastico" class="btn-agregar">Agregar</button>
+            </div>
+            <div class="dato_extra">
+              <div class="box-descripcion">
+                <p class="titulo-de-descripcion">Detalles de la pieza</p>
+                <p class="descripcion-pieza" id="description-plastico">....</p>
+              </div>
+              <div class="id-imagen">
+                <img id="img-plastico" src="https://i.postimg.cc/j5hHWbMS/eje.png" alt="pieza" />
+              </div>
+            </div>
+            <div class="historial-container">
+              <h3>📜 Historial de Cambios</h3>
+              <ul id="historial-cambios-plastico"></ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tabla Fundición -->
+      <div id="tabla-fundicion" class="table-container" style="display: none;">
+        <div class="caja-agregar-pieza">
+          <div class="box-tabla">
+            <h5>Tabla de Hierro</h5>
+            <div id="tablaDeFundicion"></div>
+          </div>
+          <div class="datos-agregar-pieza">
+            <h3 class="titulo-tipo">Hierro</h3>
+            <div class="separador"></div>
+            <p class="descripcion-tipo">Seleccione una pieza de la tabla para ver sus características.</p>
+            <div class="form-container">
+              <div class="form-group">
+                <label for="pieza">Pieza Seleccionada</label>
+                <input type="text" id="pieza-fundicion" readonly />
+              </div>
+              <div class="form-group">
+                <label for="cantidad">Cantidad:</label>
+                <input type="number" id="cantidad-fundicion" min="0" placeholder="Ingrese la cantidad" />
+              </div>
+              <button class="btn-agregar" id="btn-agregar-fundicion">Agregar</button>
+            </div>
+            <div class="dato_extra">
+              <div class="box-descripcion">
+                <p class="titulo-de-descripcion">Detalles de la pieza</p>
+                <p class="descripcion-pieza" id="description-fundicion">....</p>
+              </div>
+              <div class="id-imagen">
+                <img src="https://i.postimg.cc/j5hHWbMS/eje.png" alt="pieza" id="img-fundicion"/>
+              </div>
+            </div>
+            <div class="historial-container">
+              <h3>📜 Historial de Cambios</h3>
+              <ul id="historial-cambios-fundicion"></ul>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+</body>
+</html>
