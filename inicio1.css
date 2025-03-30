@@ -1,7 +1,7 @@
 
 
 h2 {
-  margin-top: 20px;
+  margin-top: 10px;
   font-size: 24px;
   color: #4e4e4e;
   text-align: center;
@@ -62,16 +62,21 @@ h2 {
 }
 
 .col p {
-  margin: 0 0 10px;
+  margin: 0 0 5px;
   font-size: 14px;
   color: #333;
 }
 
+.col p :hover{
+  margin: 0 0 5px;
+  font-size: 14px;
+  color: #ffffff;
+}
 .col select {
   width: 100%;
   padding: 5px;
   margin-bottom: 10px;
-  border: 1px solid #ddd;
+  border: 1px solid #1705b8;
   border-radius: 4px;
 }
 

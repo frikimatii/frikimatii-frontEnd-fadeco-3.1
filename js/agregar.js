@@ -3,7 +3,6 @@ async function mostrar() {
     const response = await fetch("http://localhost:5000/api/piezas");
     if (!response.ok) throw new Error("Error en la respuesta del servidor");
     const piezas = await response.json();
-    piezas.forEach((pieza) => console.log(pieza.nombre));
   } catch (error) {
     console.error("Error al cargar las piezas:", error);
   }

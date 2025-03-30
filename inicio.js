@@ -2,6 +2,7 @@ const { llenarProcesosDropdown, mostrarSeleccion, cargarPiezas } = require("./js
 
 const {mostrar, mostrarTabla, limpiarCampos} = require('./js/agregar')
 
+const {mostrarbtn,  box} = require('./js/mecanizado')
 
 fetch("http://localhost:5000/api/auth/user", {
   method: "GET",
@@ -42,7 +43,11 @@ async function loadSection(section) {
       mostrar(),
       limpiarCampos()
       mostrarTabla()
+    } else if (section === 'mecanizado'){
+      mostrarbtn()
+      box()
     }
+
   } catch (error) {
     console.error("Error:", error);
     contentDiv.innerHTML = `<p>Error al cargar la sección "${section}"</p>`;
@@ -50,7 +55,7 @@ async function loadSection(section) {
 }
 
 window.loadSection = loadSection;
-window.onload = () => loadSection("principio");
+window.onload = () => loadSection("mecanizado");
 
 // Tema oscuro/claro
 document.addEventListener("DOMContentLoaded", () => {

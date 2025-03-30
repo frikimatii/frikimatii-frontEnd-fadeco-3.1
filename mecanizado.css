@@ -1,0 +1,59 @@
+.titulo-mecanizado{
+    margin: 2 !important;
+    padding: 2;
+}
+
+.cajasMecanizados{
+    display: flex;
+}
+
+.cajaMecanizado{
+    display: flex;
+}
+
+.cajaMecanizadobox{
+    width: 300px;
+    height: 170px;
+    border: solid rgb(0, 0, 0) 1px;
+    padding: 5px;
+    margin-bottom: 10px;
+    border-radius: 3%;
+}
+.cajacaja p{
+    font-weight: 600;
+    color: rgb(0, 0, 0);
+}
+
+body.dark-mode .cajacaja p {
+    color: rgb(255, 255, 255) !important;
+}
+.cajaselectimput{
+    display: flex;
+}
+.selector{
+    width: 70%;
+    margin: 3px;
+}
+.cantidades{
+    width: 30%;
+}
+
+.box-boton{
+    display: flex;
+    flex-direction:row-reverse;
+}
+.sepa{
+    border-bottom: solid 2px rgb(136, 136, 136);
+    width: 64%;
+    margin-left: 5px;
+}
+.cajonBotones{
+    display: flex;
+    height: 60px;
+    margin: 4px;
+}
+.btnstock{
+    margin: 5px;
+}
+
+
