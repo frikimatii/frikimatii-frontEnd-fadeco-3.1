@@ -139,15 +139,38 @@ function box() {
 
   ////
 
-  async function actualizarPiezasPlasma(
-    piezaSeleccionada,
-    cantidadSeleccionada
-  ) {
-    const p = piezaSeleccionada;
-    const r = cantidadSeleccionada;
-    console.log(p, r);
+  async function actualizarPiezasPlasma(piezaSeleccionada ,cantidadSeleccionada) { 
+    try {
+      const response = await fetch(
+        `http://localhost:5000/api/piezas/plasma/${encodeURIComponent(piezaSeleccionada)}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ cantidad: cantidadSeleccionada }),
+        }
+      );
+  
+      if (!response.ok) {
+        let errorMessage = "Error en el servidor";
+        try {
+          const errorData = await response.json();
+          errorMessage = errorData.mensaje || errorMessage;
+        } catch (jsonError) {
+          console.error("Error al leer el JSON de respuesta:", jsonError);
+        }
+        throw new Error(errorMessage);
+      }
+  
+      // Obtener la respuesta y manejar el resultado si todo está bien
+      const data = await response.json();
+      alert(data.mensaje);
+    } catch (error) {
+      console.error("Error al actualizar la pieza:", error);
+      alert(error.message); // Muestra el mensaje de error devuelto por el backend
+    }
   }
-
   async function mostrarTablasPlasma() {
     const TablaMecanizado = document.getElementById("TablaMecanizado");
     if (!TablaMecanizado) {
@@ -370,6 +393,38 @@ function box() {
       console.log("esto es un erro ", error);
     }
   }
+  async function actualizarPiezasCorte(piezaSeleccionada ,cantidadSeleccionada) { 
+    try {
+      const response = await fetch(
+        `http://localhost:5000/api/piezas/corte/${encodeURIComponent(piezaSeleccionada)}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ cantidad: cantidadSeleccionada }),
+        }
+      );
+  
+      if (!response.ok) {
+        let errorMessage = "Error en el servidor";
+        try {
+          const errorData = await response.json();
+          errorMessage = errorData.mensaje || errorMessage;
+        } catch (jsonError) {
+          console.error("Error al leer el JSON de respuesta:", jsonError);
+        }
+        throw new Error(errorMessage);
+      }
+  
+      // Obtener la respuesta y manejar el resultado si todo está bien
+      const data = await response.json();
+      alert(data.mensaje);
+    } catch (error) {
+      console.error("Error al actualizar la pieza:", error);
+      alert(error.message); // Muestra el mensaje de error devuelto por el backend
+    }
+  }
 
   //////  mostrar augeriado bruto, terminado
   async function mostrarTablasAugeriado() {
@@ -467,7 +522,39 @@ function box() {
       console.log("esto es un erro ", error);
     }
   }
-
+  async function actualizarPiezasAugeriado(piezaSeleccionada ,cantidadSeleccionada) { 
+    try {
+      const response = await fetch(
+        `http://localhost:5000/api/piezas/augeriado/${encodeURIComponent(piezaSeleccionada)}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ cantidad: cantidadSeleccionada }),
+        }
+      );
+  
+      if (!response.ok) {
+        let errorMessage = "Error en el servidor";
+        try {
+          const errorData = await response.json();
+          errorMessage = errorData.mensaje || errorMessage;
+        } catch (jsonError) {
+          console.error("Error al leer el JSON de respuesta:", jsonError);
+        }
+        throw new Error(errorMessage);
+      }
+  
+      // Obtener la respuesta y manejar el resultado si todo está bien
+      const data = await response.json();
+      alert(data.mensaje);
+    } catch (error) {
+      console.error("Error al actualizar la pieza:", error);
+      alert(error.message); // Muestra el mensaje de error devuelto por el backend
+    }
+  }
+  
   /////  mostrar Torno bruto, terminado
   async function mostrarTablasTorno() {
     const TablaMecanizado = document.getElementById("TablaMecanizado");
@@ -574,6 +661,38 @@ function box() {
       console.log("esto es un erro ", error);
     }
   }
+  async function actualizarPiezasTorno(piezaSeleccionada ,cantidadSeleccionada) { 
+    try {
+      const response = await fetch(
+        `http://localhost:5000/api/piezas/torno/${encodeURIComponent(piezaSeleccionada)}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ cantidad: cantidadSeleccionada }),
+        }
+      );
+  
+      if (!response.ok) {
+        let errorMessage = "Error en el servidor";
+        try {
+          const errorData = await response.json();
+          errorMessage = errorData.mensaje || errorMessage;
+        } catch (jsonError) {
+          console.error("Error al leer el JSON de respuesta:", jsonError);
+        }
+        throw new Error(errorMessage);
+      }
+  
+      // Obtener la respuesta y manejar el resultado si todo está bien
+      const data = await response.json();
+      alert(data.mensaje);
+    } catch (error) {
+      console.error("Error al actualizar la pieza:", error);
+      alert(error.message); // Muestra el mensaje de error devuelto por el backend
+    }
+  }
 
   //// mostrar Fresa bruto, terminado
   async function mostrarTablasFresa() {
@@ -664,6 +783,38 @@ function box() {
       });
     } catch (error) {
       console.log("esto es un erro ", error);
+    }
+  }
+  async function actualizarPiezasFresa(piezaSeleccionada ,cantidadSeleccionada) { 
+    try {
+      const response = await fetch(
+        `http://localhost:5000/api/piezas/fresa/${encodeURIComponent(piezaSeleccionada)}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ cantidad: cantidadSeleccionada }),
+        }
+      );
+  
+      if (!response.ok) {
+        let errorMessage = "Error en el servidor";
+        try {
+          const errorData = await response.json();
+          errorMessage = errorData.mensaje || errorMessage;
+        } catch (jsonError) {
+          console.error("Error al leer el JSON de respuesta:", jsonError);
+        }
+        throw new Error(errorMessage);
+      }
+  
+      // Obtener la respuesta y manejar el resultado si todo está bien
+      const data = await response.json();
+      alert(data.mensaje);
+    } catch (error) {
+      console.error("Error al actualizar la pieza:", error);
+      alert(error.message); // Muestra el mensaje de error devuelto por el backend
     }
   }
 
@@ -758,6 +909,38 @@ function box() {
       });
     } catch (error) {
       console.log("esto es un erro ", error);
+    }
+  }
+  async function actualizarPiezasSoldador(piezaSeleccionada ,cantidadSeleccionada) { 
+    try {
+      const response = await fetch(
+        `http://localhost:5000/api/piezas/soldador/${encodeURIComponent(piezaSeleccionada)}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ cantidad: cantidadSeleccionada }),
+        }
+      );
+  
+      if (!response.ok) {
+        let errorMessage = "Error en el servidor";
+        try {
+          const errorData = await response.json();
+          errorMessage = errorData.mensaje || errorMessage;
+        } catch (jsonError) {
+          console.error("Error al leer el JSON de respuesta:", jsonError);
+        }
+        throw new Error(errorMessage);
+      }
+  
+      // Obtener la respuesta y manejar el resultado si todo está bien
+      const data = await response.json();
+      alert(data.mensaje);
+    } catch (error) {
+      console.error("Error al actualizar la pieza:", error);
+      alert(error.message); // Muestra el mensaje de error devuelto por el backend
     }
   }
 
@@ -859,6 +1042,38 @@ function box() {
       console.log("esto es un erro ", error);
     }
   }
+  async function actualizarPiezasBalancin(piezaSeleccionada ,cantidadSeleccionada) { 
+    try {
+      const response = await fetch(
+        `http://localhost:5000/api/piezas/balancin/${encodeURIComponent(piezaSeleccionada)}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ cantidad: cantidadSeleccionada }),
+        }
+      );
+  
+      if (!response.ok) {
+        let errorMessage = "Error en el servidor";
+        try {
+          const errorData = await response.json();
+          errorMessage = errorData.mensaje || errorMessage;
+        } catch (jsonError) {
+          console.error("Error al leer el JSON de respuesta:", jsonError);
+        }
+        throw new Error(errorMessage);
+      }
+  
+      // Obtener la respuesta y manejar el resultado si todo está bien
+      const data = await response.json();
+      alert(data.mensaje);
+    } catch (error) {
+      console.error("Error al actualizar la pieza:", error);
+      alert(error.message); // Muestra el mensaje de error devuelto por el backend
+    }
+  }
 
   ///mostrar augeriado bruto, terminado
   async function mostrarTablasPulido() {
@@ -887,6 +1102,38 @@ function box() {
       });
     } catch (error) {
       console.error("Error al Obtener datos", error);
+    }
+  }
+  async function actualizarPiezasPulido(piezaSeleccionada ,cantidadSeleccionada) { 
+    try {
+      const response = await fetch(
+        `http://localhost:5000/api/piezas/torno/${encodeURIComponent(piezaSeleccionada)}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ cantidad: cantidadSeleccionada }),
+        }
+      );
+  
+      if (!response.ok) {
+        let errorMessage = "Error en el servidor";
+        try {
+          const errorData = await response.json();
+          errorMessage = errorData.mensaje || errorMessage;
+        } catch (jsonError) {
+          console.error("Error al leer el JSON de respuesta:", jsonError);
+        }
+        throw new Error(errorMessage);
+      }
+  
+      // Obtener la respuesta y manejar el resultado si todo está bien
+      const data = await response.json();
+      alert(data.mensaje);
+    } catch (error) {
+      console.error("Error al actualizar la pieza:", error);
+      alert(error.message); // Muestra el mensaje de error devuelto por el backend
     }
   }
 
@@ -969,11 +1216,11 @@ function box() {
       },
       plasma: {
         piezas: [
-          "ChapaBase_330Inox",
-          "ChapaBase_300Inox",
-          "ChapaBase_330Pintada",
-          "ChapaBase_300Pintada",
-          "ChapaBase_250Inox",
+          "ChapaBase 330Inox",
+          "ChapaBase 300Inox",
+          "ChapaBase 330Pintada",
+          "ChapaBase 300Pintada",
+          "ChapaBase 250Inox",
           "Lateral i330 contecla",
           "Lateral i330 sintecla",
           "Lateral i300 contecla",
@@ -991,11 +1238,11 @@ function box() {
           "Vela 330",
           "Vela 300",
           "Vela 250",
-          "Bandeja cabezal inox 250",
-          "Bandeja cabezal pintada",
-          "Bandeja cabezal inox",
-          "Pieza caja eco",
-          "Media_luna",
+          "Bandeja Cabezal Inox 250",
+          "Bandeja Cabezal Pintada",
+          "Bandeja Cabezal Inox",
+          "Pieza Caja Eco",
+          "Media Luna",
         ],
         imagen: "https://i.postimg.cc/W11LMVHR/plasma.png",
         mecanizado: "plasma",
@@ -1144,20 +1391,28 @@ function box() {
             cantidadSeleccionada > 0
           ) {
             if (mecanizadoId === "plegadora") {
-              actualizarPiezasPlegadora(
-                piezaSeleccionada,
-                cantidadSeleccionada
-              );
+              actualizarPiezasPlegadora(piezaSeleccionada,cantidadSeleccionada);
             } else if (mecanizadoId === "plasma") {
-              actualizarPiezasPlasma(piezaSeleccionada, cantidadSeleccionada);
-            } else if (mecanizadoId === "torno") {
-              alert(piezaSeleccionada);
+              actualizarPiezasPlasma(piezaSeleccionada,cantidadSeleccionada);
+            } else if (mecanizadoId === "corte"){
+              actualizarPiezasCorte(piezaSeleccionada,cantidadSeleccionada)
+            } else if (mecanizadoId === "augeriado"){
+              actualizarPiezasAugeriado(piezaSeleccionada, cantidadSeleccionada)
+            } else if (mecanizadoId === "torno"){
+              actualizarPiezasTorno(piezaSeleccionada, cantidadSeleccionada)
+            } else if (mecanizadoId === "fresa"){
+              actualizarPiezasFresa(piezaSeleccionada, cantidadSeleccionada)
+            } else if (mecanizadoId === "soldador"){
+              actualizarPiezasSoldador(piezaSeleccionada, cantidadSeleccionada)
+            } else if (mecanizadoId === "pulido"){
+              actualizarPiezasPulido(piezaSeleccionada, cantidadSeleccionada)
+            } else if (mecanizadoId === "balancin"){
+              actualizarPiezasBalancin(piezaSeleccionada, cantidadSeleccionada)
             }
 
             console.log(`Mecanizado: ${mecanizadoId}`);
             console.log(`Pieza seleccionada: ${piezaSeleccionada}`);
             console.log(`Cantidad seleccionada: ${cantidadSeleccionada}`);
-
             // Resetear el input
             inputCantidad.value = "";
           } else {
