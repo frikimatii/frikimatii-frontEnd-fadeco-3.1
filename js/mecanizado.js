@@ -107,8 +107,47 @@ function box() {
       console.log("esto es un erro ", error);
     }
   }
+  async function actualizarPiezasPlegadora(
+    piezaSeleccionada,
+    cantidadSeleccionada
+  ) {
+    try {
+      const response = await fetch(
+        `http://localhost:5000/api/piezas/plegadora/${encodeURIComponent(
+          piezaSeleccionada
+        )}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ cantidad: cantidadSeleccionada }),
+        }
+      );
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.mensaje || "Error en el servidor");
+      }
+      // Obtener la respuesta y manejar el resultado
+      const data = await response.json();
+      alert(data.mensaje);
+    } catch (error) {
+      console.error("Error al actualizar la pieza:", error);
+      alert(error.message); // Muestra el mensaje de error devuelto por el backend
+    }
+  }
 
-  /// mostrar plasmas bruto, terminado
+  ////
+
+  async function actualizarPiezasPlasma(
+    piezaSeleccionada,
+    cantidadSeleccionada
+  ) {
+    const p = piezaSeleccionada;
+    const r = cantidadSeleccionada;
+    console.log(p, r);
+  }
+
   async function mostrarTablasPlasma() {
     const TablaMecanizado = document.getElementById("TablaMecanizado");
     if (!TablaMecanizado) {
@@ -851,82 +890,6 @@ function box() {
     }
   }
 
-
-  async function actualizarPlegadora(){
-    alert("Plegadora")
-  }
-  async function actualizarPlasma(){
-    alert("Plasma")
-  }
-  async function actualizarCorte(){
-    alert("Corte")
-  }
-  async function actualizaraugeriado(){
-    alert("augeriado")
-  }
-  async function actualizarTorno(){
-    alert("Torno")
-  }
-  async function actualizarSoldador(){
-    alert("Soldador")
-  }
-  async function actualizarPulido(){
-    alert("Pulido")
-  }
-  async function actualizarFresa(){
-    alert("Fresa")
-  }
-  async function actualizarBalancin(){
-    alert("Balancin")
-  }
-
-
-  async function actualizar(pieza, cantiadad){
-    try{
-      if (pieza.includes("plegadora")){
-        await actualizarPlegadora()
-      } else if (pieza.includes("plasmas")){
-        await actualizarPlasma()
-      }
-    } catch(erro){
-      console.error("Erro al Actualizar", erro)
-    }
-
-
-  }
-
-
-  async function actualizarPieza(piezaSeleccionada, cantidadSeleccionada) {
-    
-    
-
-    try {
-      // Realizar la solicitud PUT al servidor
-      const response = await fetch(
-        `http://localhost:5000/api/piezas/mecanizado/${piezaSeleccionada}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            cantidad: cantidadSeleccionada,
-          }),
-        }
-      );
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.mensaje || "Error en el servidor");
-      }
-      // Obtener la respuesta y manejar el resultado
-      const data = await response.json();
-      alert(data.mensaje);
-    } catch (error) {
-      console.error("Error al actualizar la pieza:", error);
-      alert(error.message); // Muestra el mensaje de error devuelto por el backend
-    }
-  }
-
   const objetosMecanizados = [
     {
       augeriado: {
@@ -947,7 +910,7 @@ function box() {
         mecanizado: "augeriado",
         funcion: mostrarTablasAugeriado,
         funcionStock: mostrarStockTerminadosAugeriado,
-        actualiarP: actualizaraugeriado,
+        actualiarP: "",
       },
       fresa: {
         piezas: [
@@ -962,13 +925,13 @@ function box() {
         mecanizado: "fresa",
         funcion: mostrarTablasFresa,
         funcionStock: mostrarStockTerminadosFresa,
-        actualizarP: actualizarFresa
+        actualizarP: "",
       },
       pulido: {
         piezas: ["cabezal Inox", "cabezal 250"],
         imagen: "https://i.postimg.cc/2jnDY2Zt/pulido.png",
         mecanizado: "pulido",
-        funcion: mostrarTablasPulido,
+        funcion: "",
       },
       plegadora: {
         piezas: [
@@ -1002,7 +965,7 @@ function box() {
         mecanizado: "plegadora",
         funcion: mostrarTablasPlegadora,
         funcionStock: mostrarStockTerminadosPlegadora,
-        actualizarP: actualizarPlegadora
+        actualiarP: "",
       },
       plasma: {
         piezas: [
@@ -1038,7 +1001,7 @@ function box() {
         mecanizado: "plasma",
         funcion: mostrarTablasPlasma,
         funcionStock: mostrarStockTerminadosPlasma,
-        actualizarP: actualizarPlasma
+        actualizarP: "",
       },
       corte: {
         piezas: [
@@ -1071,7 +1034,7 @@ function box() {
         mecanizado: "corte",
         funcion: mostrarTablasCorte,
         funcionStock: mostrarStockTerminadosCorte,
-        actualizarP: actualizarCorte
+        actualizarP: "",
       },
       balancin: {
         piezas: [
@@ -1091,7 +1054,7 @@ function box() {
         mecanizado: "balancin",
         funcion: mostrarTablasBalancin,
         funcionStock: mostrarStockTerminadosBalancin,
-        actualizarP: actualizarBalancin
+        actualizarP: "",
       },
       torno: {
         piezas: [
@@ -1121,7 +1084,7 @@ function box() {
         mecanizado: "torno",
         funcion: mostrarTablasTorno,
         funcionStock: mostrarStockTerminadosTorno,
-        actualizarP: actualizarTorno
+        actualizarP: "",
       },
       soldador: {
         piezas: [
@@ -1143,7 +1106,7 @@ function box() {
         mecanizado: "soldador",
         funcion: mostrarTablasSoldador,
         funcionStock: mostrarStockTerminadosSoldador,
-        actualizarP: actualizarSoldador
+        actualizarP: "",
       },
     },
   ];
@@ -1167,22 +1130,36 @@ function box() {
       if (event.target.classList.contains("btn")) {
         const mecanizadoId = event.target.id.replace("accionemecanizado-", ""); // Extrae el ID del mecanizado
         const select = document.getElementById(`select-${mecanizadoId}`);
-        const inputCantidad = document.getElementById(`cantidad-${mecanizadoId}`);
+        const inputCantidad = document.getElementById(
+          `cantidad-${mecanizadoId}`
+        );
 
         if (select && inputCantidad) {
           const piezaSeleccionada = select.value;
           const cantidadSeleccionada = parseInt(inputCantidad.value, 10); // Convertir a número
 
-          if (piezaSeleccionada && cantidadSeleccionada > 0) {
-
-
-            alert(`🛠 Mecanizado: ${mecanizadoId}\n📦 Pieza: ${piezaSeleccionada}\n🔢 Cantidad: ${cantidadSeleccionada}`);
+          if (
+            piezaSeleccionada &&
+            cantidadSeleccionada &&
+            cantidadSeleccionada > 0
+          ) {
+            if (mecanizadoId === "plegadora") {
+              actualizarPiezasPlegadora(
+                piezaSeleccionada,
+                cantidadSeleccionada
+              );
+            } else if (mecanizadoId === "plasma") {
+              actualizarPiezasPlasma(piezaSeleccionada, cantidadSeleccionada);
+            } else if (mecanizadoId === "torno") {
+              alert(piezaSeleccionada);
+            }
 
             console.log(`Mecanizado: ${mecanizadoId}`);
             console.log(`Pieza seleccionada: ${piezaSeleccionada}`);
             console.log(`Cantidad seleccionada: ${cantidadSeleccionada}`);
-            actualizar(piezaSeleccionada, cantidadSeleccionada)
-            cantidadSeleccionada.value = "";
+
+            // Resetear el input
+            inputCantidad.value = "";
           } else {
             alert("Selecciona una pieza y una cantidad válida.");
           }
@@ -1216,7 +1193,7 @@ function box() {
       const imagen = mecanizado.imagen || ""; // Imagen de respaldo
       const fun = mecanizado.funcion || ""; // Función de respaldo
       const fun2 = mecanizado.funcionStock || ""; // Función de respaldo
-      const actualizarpiezas = mecanizado.actualizarP || ""
+      const actualizarpiezas = mecanizado.actualizarP || "";
       // Generar las opciones para el <select>
       let opcionesSelect = `<option value="">Selecciona una pieza</option>`;
       piezas.forEach((pieza) => {
