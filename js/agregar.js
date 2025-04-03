@@ -492,6 +492,8 @@ async function mostrarTabla(tabla) {
         }
       });
 
+
+      
       function agregarAlHistorialChapa(pieza, cantidad) {
         const timestamp = new Date().toLocaleString();
         const nuevoCambio = `🛠️ ${timestamp} - Se agregaron ${cantidad} unidades a la pieza "${pieza}".`;

@@ -1,3 +1,4 @@
+
 async function mostrarContenido(nombre) {
   function generarSelector(pieza) {
     let opcionesSelect = `<option value="">Seleccione Una Pieza</option>`;
@@ -69,7 +70,7 @@ async function mostrarContenido(nombre) {
         "basePintada330",
         "basePintada300",
         "baseInoxECO",
-        "Caja Soldada Eco",
+        "CajaSoldadaEco",
       ];
 
       const opcionesSelect = generarSelector(piezaSoldador);
@@ -82,16 +83,16 @@ async function mostrarContenido(nombre) {
               <button class='enSoldador' data-tipo="StockEnSoldador" >En Soldador</button>
           </div>
     
-          <div class="container-enviosSoldador">
+          <div id="enviosALSoldador" class="container-enviosSoldador">
               <p>Envios al Soldador</p>
               <div class="row">
                   <label>Enviar</label>
-                  <select class="selector">${opcionesSelect}</select>
+                  <select id="soldadorEnvios" class="selector">${opcionesSelect}</select>
               </div>
               <div class="row">
                   <label>Cantidad:</label>
-                  <input class="cantidades" type="number" min="0" required>
-                  <button>Enviar</button>
+                  <input id="cantidadEnvios" class="cantidades" type="number" min="0" required>
+                  <button id="btnEnviar">Enviar</button>
               </div>
           </div>
     
@@ -264,6 +265,7 @@ async function mostrarContenido(nombre) {
       });
 
       document.addEventListener("click", async (event) => {
+
         if (event.target.classList.contains("enFabrica")) {
           const tipo = event.target.getAttribute("data-tipo");
           console.log("Seleccionado: ", tipo);
@@ -281,6 +283,7 @@ async function mostrarContenido(nombre) {
                 "ChapaBase 330Pintada",
                 "ChapaBase 300Pintada",
                 "ChapaBase 250Inox",
+                "Media Luna"
               ],
               plegadora: [
                 "Lateral i330 contecla",
@@ -338,6 +341,77 @@ async function mostrarContenido(nombre) {
         } else if (event.target.classList.contains("enSoldador")) {
           const tipo = event.target.getAttribute("data-tipo");
           console.log("Seleccionado:", tipo);
+
+          try {
+            const res = await fetch("http://localhost:5000/api/stocksoldador");
+            if (!res.ok) throw new Error("Error en respuesta del servidor");
+
+            const piezaBrutoEnSoldador = await res.json();
+            const PiezasDelSoldador = {
+              bruto: [
+                "baseInox330", "baseInox300", "baseInox250", "basePintada330", "basePintada300", "baseInoxECO", "Caja Soldada Eco"]
+            }
+
+            const datosTabla = piezaBrutoEnSoldador.map((p) => {
+              let categoria = Object.keys(PiezasDelSoldador).find((key) => PiezasDelSoldador[key].includes(p.nombre)
+              )
+
+              return {
+                nombre: p.nombre,
+                cantidad: p.cantidad?.[categoria]?.cantidad || 0
+              }
+            })
+
+            if (!tablaDiv) {
+              console.error("Nose enmcontes el elemento con Id TableID")
+              return
+            }
+
+            new Tabulator(tablaDiv, {
+              height: 500,
+              layout: 'fitColumns',
+              data: datosTabla,
+              initialSort: [{ column: "nombre", dir: "asc" }],
+              columns: [
+                { title: "Nombre", field: "nombre" },
+                { title: "Cantidad", field: "cantidad" }
+              ]
+            })
+          } catch (error) {
+            console.error("es un error")
+          }
+        }
+      });
+
+
+
+      document.getElementById("btnEnviar").addEventListener("click", function () {
+        const selectElement = document.getElementById("soldadorEnvios");
+        const inputCantidad = document.getElementById("cantidadEnvios");
+
+        const piezaSeleccionada = selectElement.value;
+        const cantidad = inputCantidad.value;
+
+        if (piezaSeleccionada && cantidad > 0) {
+          fetch(`http://localhost:5000/api/enviosSoldador/${piezaSeleccionada}`, {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ cantidad: cantidad })
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              console.log(data.mensaje)
+              alert(data.mensaje)
+            })
+            .catch((error) => {
+              console.log("Error:", error)
+            })
+
+        } else {
+          console.log("Por favor, seleccione una pieza y una cantidad válida.");
+          alert("Por favor, seleccione una pieza y una cantidad válida.");
         }
       });
 
@@ -439,7 +513,7 @@ async function mostrarContenido(nombre) {
             console.log(piezaBrutaEnFabrica);
 
             const piezasLista = {
-              augeriado: ["Brazo 250", "Brazo 300", "Brazo 330"],
+              augeriado: ["Brazo 250", "Brazo 300", "Brazo 330", "baseInox330", "baseInox300", "baseInox250", "basePintada330", "basePintada300", "baseInoxECO", "Caja Soldada Eco"],
 
               bruto: [
                 "Velero",
@@ -603,7 +677,7 @@ async function mostrarContenido(nombre) {
             console.log(piezaBrutaEnFabrica);
 
             const piezasLista = {
-              augeriado: ["Brazo 250", "Brazo 300", "Brazo 330"],
+              augeriado: ["Brazo 250", "Brazo 300", "Brazo 330", "baseInox330", "baseInox300", "baseInox250", "basePintada330", "basePintada300", "baseInoxECO", "Caja Soldada Eco"],
 
               bruto: [
                 "Velero",
@@ -748,11 +822,9 @@ async function mostrarContenido(nombre) {
             const piezasLista = {
               balancin: ["Teletubi Eco"],
               soldador: [
-                "BasePintada_330",
-                "BasePintada_300",
                 "cabezal_pintada",
               ],
-              augeriado: ["caja_eco_augeriada"],
+              augeriado: ["Caja Soldada Eco", "basePintada330", "basePintada300",],
             };
 
             const datosTabla = piezaBrutaEnFabrica.map((p) => {
