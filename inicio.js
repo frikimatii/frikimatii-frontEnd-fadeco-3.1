@@ -4,6 +4,8 @@ const {mostrar, mostrarTabla, limpiarCampos} = require('./js/agregar')
 
 const {mostrarbtn,  box} = require('./js/mecanizado')
 
+const {mostrarContenido} = require("./js/provedores")
+
 fetch("http://localhost:5000/api/auth/user", {
   method: "GET",
   headers: {
@@ -42,10 +44,12 @@ async function loadSection(section) {
     } else if (section === "agregar") {
       mostrar(),
       limpiarCampos()
-      mostrarTabla()
+      mostrarTabla("aluminio")
     } else if (section === 'mecanizado'){
       mostrarbtn()
       box()
+    }else if (section === "provedores"){
+      mostrarContenido("Soldador")
     }
 
   } catch (error) {
@@ -55,8 +59,7 @@ async function loadSection(section) {
 }
 
 window.loadSection = loadSection;
-window.onload = () => loadSection("mecanizado");
-
+window.onload = () => loadSection("provedores");
 // Tema oscuro/claro
 document.addEventListener("DOMContentLoaded", () => {
   const themeToggleBtn = document.getElementById("themeToggleBtn");

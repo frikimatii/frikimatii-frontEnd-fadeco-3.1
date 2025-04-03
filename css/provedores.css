@@ -1,0 +1,50 @@
+.box-provedores {
+  display: flex;
+}
+
+.barralateral {
+  width: 20%;
+  display: flex;
+  flex-direction: column;
+}
+
+#soldadore,
+#carmelo,
+#maxi,
+#pintura,
+#niquelado,
+#afilador {
+  justify-items: center;
+  background-color: rgb(48, 48, 48);
+  margin: 5px;
+  display: grid;
+  font-size: 16px;
+  cursor: pointer;
+  width: 200px;
+  height: 90px;
+  color: white;
+  text-align: center;
+  align-items: center;
+}
+
+.boxBtnStock{
+  justify-content: center;
+  width: 400px;
+  gap: 20px;
+  display: flex;
+  flex-direction: row;
+  border-top: solid rgb(82, 82, 82) 1px;
+}
+.container-enviosSoldador{
+  border-bottom: solid red 1px;
+  margin: 15px;
+  align-items: center;
+  padding: 5px;
+  padding-bottom: 30px;
+}
+.botonesPiezas{
+  background-color: rgb(53, 112, 221);
+  width: 100px;
+  height:50px;
+  gap: px
+}

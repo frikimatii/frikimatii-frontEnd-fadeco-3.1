@@ -1,37 +1,40 @@
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Página Principal - Control de Stock</title>
-    <link rel="stylesheet" href='./inicio.css'>
-    <link rel="stylesheet" href="./inicio1.css">
-    <link rel="stylesheet" href="agregar.css">
-    <link rel="stylesheet" href="mecanizado.css">
+    <link rel="stylesheet" href="./css/inicio.css" />
+    <link rel="stylesheet" href="./css/inicio1.css" />
+    <link rel="stylesheet" href="./css/agregar.css" />
+    <link rel="stylesheet" href="./css/mecanizado.css" />
+    <link rel="stylesheet" href="./css/provedores.css" />
 
     <script src="https://unpkg.com/tabulator-tables@5.2.7/dist/js/tabulator.min.js"></script>
-    <link href="https://unpkg.com/tabulator-tables@5.2.7/dist/css/tabulator.min.css" rel="stylesheet">
-</head>
+    <link
+      href="https://unpkg.com/tabulator-tables@5.2.7/dist/css/tabulator.min.css"
+      rel="stylesheet"
+    />
+  </head>
 
-<body>
+  <body>
     <div class="menu">
-        <button onclick="loadSection('principio')">Principio</button>
-        <button onclick="loadSection('agregar')">Agregar Piezas</button>
-        <button onclick="loadSection('mecanizado')">Mecanizado</button>
-        <button onclick="loadSection('provedores')">Proveedores</button>
-        <button onclick="loadSection('armado')">Zona de Armado</button>
-        <button onclick="loadSection('control')">Control de Calidad</button>
-        <button onclick="loadSection('panel')">Dashboard</button>
-        <button id="themeToggleBtn">Cambiar a Modo Oscuro</button>
+      <button onclick="loadSection('principio')">Principio</button>
+      <button onclick="loadSection('agregar')">Agregar Piezas</button>
+      <button onclick="loadSection('mecanizado')">Mecanizado</button>
+      <button onclick="loadSection('provedores')">Proveedores</button>
+      <button onclick="loadSection('armado')">Zona de Armado</button>
+      <button onclick="loadSection('control')">Control de Calidad</button>
+      <button onclick="loadSection('panel')">Dashboard</button>
+      <button id="themeToggleBtn">Cambiar a Modo Oscuro</button>
     </div>
 
     <p id="nombre_id"><strong>Cargando..</strong></p>
     <div id="content"></div>
 
     <script type="module" src="./inicio.js"></script>
-        <script src="./js/agregar.js"></script>
-        <script src="js/mecanizado.js"></script>
-
-</body>
-
+    <script src="./js/agregar.js"></script>
+    <script src="js/mecanizado.js"></script>
+    <script src="js/provedores.js"></script>
+    
+  </body>
 </html>

@@ -1104,6 +1104,7 @@ function box() {
       console.error("Error al Obtener datos", error);
     }
   }
+  
   async function actualizarPiezasPulido(piezaSeleccionada ,cantidadSeleccionada) { 
     try {
       const response = await fetch(

@@ -22,8 +22,9 @@ async function mostrarTabla(tabla) {
   });
 
   const tablaSeleccionada = document.getElementById(`tabla-${tabla}`);
+
   if (tablaSeleccionada) {
-    tablaSeleccionada.style.display = "block";
+    tablaSeleccionada.style.display = "block"
 
     const tablaContenedor = document.getElementById(
       `tablaDe${tabla.charAt(0).toUpperCase() + tabla.slice(1)}`
@@ -616,7 +617,7 @@ async function mostrarTabla(tabla) {
         });
       }
     }
-  }
+  } 
 }
 
 
