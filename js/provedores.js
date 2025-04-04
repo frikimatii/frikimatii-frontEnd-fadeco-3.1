@@ -81,6 +81,7 @@ async function mostrarContenido(nombre) {
           <div class="boxBtnStock">
               <button class='enFabrica' data-tipo="StockEnFabrica" >En Fabrica</button>
               <button class='enSoldador' data-tipo="StockEnSoldador" >En Soldador</button>
+              <button class='enFabricaTerminado' data-tipo="StockTerminado" >En Terminado</button>
           </div>
     
           <div id="enviosALSoldador" class="container-enviosSoldador">
@@ -100,12 +101,12 @@ async function mostrarContenido(nombre) {
               <p>Entregas del Soldador</p>
               <div class="row">
                   <label>Enviar</label>
-                  <select class="selector">${opcionesSelect}</select>
+                  <select id="soldadorEntrega" class="selector">${opcionesSelect}</select>
               </div>
               <div class="row">
                   <label>Cantidad:</label>
-                  <input class="cantidades" type="number" min="0" required>
-                  <button>Enviar</button>
+                  <input  id="cantidadEntrega" class="cantidades" type="number" min="0" required>
+                  <button id="btnEntrega">Enviar</button>
               </div>
           </div>
       </div>`;
@@ -265,7 +266,6 @@ async function mostrarContenido(nombre) {
       });
 
       document.addEventListener("click", async (event) => {
-
         if (event.target.classList.contains("enFabrica")) {
           const tipo = event.target.getAttribute("data-tipo");
           console.log("Seleccionado: ", tipo);
@@ -364,7 +364,7 @@ async function mostrarContenido(nombre) {
 
               return {
                 nombre: p.nombre,
-                cantidad: p.proveedores?.[categoria]?.cantidad || 0
+                cantidad: p.proveedores?.[categoria]?.cantidad 
               }
             })
 
@@ -384,6 +384,45 @@ async function mostrarContenido(nombre) {
               ]
             })
           } catch (error) {
+            console.error("es un error")
+          }
+        } else if (event.target.classList.contains("enFabricaTerminado")) {
+          const tipo = event.target.getAttribute("data-tipo");
+          console.log("Seleccionado:", tipo);
+
+          try{
+            const res = await fetch("http://localhost:5000/api/stocksoldador")
+            if(!res.ok) throw new Error("Error en respuesta del servidor")
+
+
+            const piezaBrutoEnSoldador = await res.json()
+            const PiezasDelSoldador = {
+              bruto: [
+                "baseInox330", "baseInox300", "baseInox250", "basePintada330", "basePintada300", "baseInoxECO", "Caja Soldada Eco"]
+            }
+            const datosTabla = piezaBrutoEnSoldador.map((p) => {
+              let categoria = Object.keys(PiezasDelSoldador).find((key) => PiezasDelSoldador[key].includes(p.nombre)
+            )
+              return {
+                nombre: p.nombre,
+                cantidad: p.cantidad?.[categoria]?.cantidad 
+              }
+            })
+             
+            if (!tablaDiv){
+              console.error("No se encontro el elemento con el Id TablaDiv")
+            }
+            new Tabulator(tablaDiv, {
+              height: 500,
+              layout: 'fitColumns',
+              data: datosTabla,
+              initialSort: [{ column: "nombre", dir: "asc" }],
+              columns: [
+                { title: "Nombre", field: "nombre" },
+                { title: "Cantidad", field: "cantidad" }
+              ]
+            })
+          } catch(error){
             console.error("es un error")
           }
         }
@@ -420,6 +459,39 @@ async function mostrarContenido(nombre) {
         }
       });
 
+      document.getElementById("btnEntrega").addEventListener("click", function () {
+        const selectElement = document.getElementById("soldadorEntrega");
+        const inputCantidad = document.getElementById("cantidadEntrega");
+
+        const piezaSeleccionada = selectElement.value;
+        const cantidad = inputCantidad.value;
+
+        if (piezaSeleccionada && cantidad > 0) {
+          fetch(`http://localhost:5000/api/entregasSoldador/${piezaSeleccionada}`, {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ cantidad: cantidad })
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              console.log(data.mensaje)
+              alert(data.mensaje)
+            })
+            .catch((error) => {
+              console.log("Error:", error)
+            })
+        } else {
+          console.log("Por favor, seleccione una pieza y una cantidad válida.");
+          alert("Por favor, seleccione una pieza y una cantidad válida.");
+        }
+      })
+
+
+
+
+      
       break;
 
     case "Carmelo":
@@ -518,7 +590,8 @@ async function mostrarContenido(nombre) {
             console.log(piezaBrutaEnFabrica);
 
             const piezasLista = {
-              augeriado: ["Brazo 250", "Brazo 300", "Brazo 330", "baseInox330", "baseInox300", "baseInox250", "basePintada330", "basePintada300", "baseInoxECO", "Caja Soldada Eco"],
+              augeriado: [
+                "Brazo 250", "Brazo 300", "Brazo 330", "baseInox330", "baseInox300", "baseInox250", "basePintada330", "basePintada300", "baseInoxECO", "Caja Soldada Eco"],
 
               bruto: [
                 "Velero",
@@ -582,8 +655,88 @@ async function mostrarContenido(nombre) {
         } else if (event.target.classList.contains("stockCarmelo")) {
           const tipo = event.target.getAttribute("data-tipo");
           console.log("Seleccionado:", tipo);
+          try {
+            const res = await fetch("http://localhost:5000/api/carmelostockfabrica")
+            if (!res.ok) throw new Error("Error en la respuesta del servidor")
+
+            const piezaEnCarmerlo = await res.json()
+
+            const piezasCarmero = {
+              carmerlo: [
+                "Brazo 250", 
+                "Brazo 300", 
+                "Brazo 330", 
+                "baseInox330",
+                "baseInox300", 
+                "baseInox250", 
+                "basePintada330",
+                "basePintada300", 
+                "baseInoxECO", 
+                "Caja Soldada Eco", 
+                "Velero",
+                "Cubrecuchilla 250",
+                "Cubrecuchilla 330",
+                "Tapa Afilador",
+                "Aro Numerador",
+                "Tapa Afilador 250",
+                "Teletubi 330",
+                "Teletubi 250",
+                "Tapa Afilador Eco", 
+                "Cubrecuchilla 300", 
+                "Teletubi 300", 
+                "Vela 330",
+                "Vela 250",
+                "Vela 300",
+                "Planchada 330",
+                "Planchada 300",
+                "Planchada 250", 
+                "cajas_torneadas_250",
+                "cajas_torneadas_300",
+                "cajas_torneadas_330",
+                "baseInox330",
+                "baseInox300",
+                "baseInox250",
+                "baseInoxECO"
+              ]
+            }
+            
+            const datosTabla = piezaEnCarmerlo.map((p) => {
+              let categoria = Object.keys(piezasCarmero).find((key) =>
+                piezasCarmero[key].includes(p.nombre)
+              )
+
+              return{
+                nombre: p.nombre,
+                cantidad: p.proveedores?.[categoria]?.cantidad
+              }
+            })
+
+            if(!tablaDiv){
+              console.error("No se encontro el elemento con el Id TablaDiv")
+            }
+
+            new Tabulator(tablaDiv, {
+              height: 500,
+              layout: "fitColumns",
+              data: datosTabla,
+              initialSort: [{ column: "nombre", dir: "asc" }],
+              columns: [
+                { title: "Nombre", field: "nombre" },
+                { title: "Cantidad", field: "cantidad" },
+              ]
+            })
+
+          } catch (error) {
+            console.error("Esto es un error", error);
+
+          }
+
         }
       });
+
+
+
+
 
       break;
 
