@@ -283,7 +283,8 @@ async function mostrarContenido(nombre) {
                 "ChapaBase 330Pintada",
                 "ChapaBase 300Pintada",
                 "ChapaBase 250Inox",
-                "Media Luna"
+                "Media Luna",
+                "Pieza Caja Eco",
               ],
               plegadora: [
                 "Lateral i330 contecla",
@@ -299,14 +300,19 @@ async function mostrarContenido(nombre) {
                 "Lateral i330 eco",
               ],
               corte: [
-                "Planchuela 250",
-                "Planchuela 300",
-                "Planchuela 330",
                 "Varilla 300",
                 "Varilla 330",
                 "Varilla 250",
+                "Planchuela Inferior",
+                "Planchuela Interna"
               ],
-              balancin: ["PortaEje"],
+              balancin: [
+                "Planchuela 250",
+                "Planchuela 300",
+                "Planchuela 330"
+              ],
+              augeriado: [
+                "PortaEje"]
             };
 
             const datosTabla = piezaBrutoEnFabrica.map((p) => {
@@ -315,7 +321,7 @@ async function mostrarContenido(nombre) {
               );
               return {
                 nombre: p.nombre,
-                cantidad: p.cantidad?.[categoria]?.cantidad || 0, // Evitar undefined
+                cantidad: p.cantidad?.[categoria]?.cantidad, // Evitar undefined
               };
             });
 
@@ -348,7 +354,7 @@ async function mostrarContenido(nombre) {
 
             const piezaBrutoEnSoldador = await res.json();
             const PiezasDelSoldador = {
-              bruto: [
+              soldador: [
                 "baseInox330", "baseInox300", "baseInox250", "basePintada330", "basePintada300", "baseInoxECO", "Caja Soldada Eco"]
             }
 
@@ -358,7 +364,7 @@ async function mostrarContenido(nombre) {
 
               return {
                 nombre: p.nombre,
-                cantidad: p.cantidad?.[categoria]?.cantidad || 0
+                cantidad: p.proveedores?.[categoria]?.cantidad || 0
               }
             })
 
@@ -382,7 +388,6 @@ async function mostrarContenido(nombre) {
           }
         }
       });
-
 
 
       document.getElementById("btnEnviar").addEventListener("click", function () {
