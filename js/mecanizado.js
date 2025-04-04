@@ -450,8 +450,11 @@ function box() {
           "Tornillo Teletubi Eco",
           "Caja Soldada Eco",
           "Carcaza Afilador",
-          "PortaEje",
+
         ],
+        balancin:[
+          "PortaEje",
+        ]
       };
 
       let datosTabla = [];

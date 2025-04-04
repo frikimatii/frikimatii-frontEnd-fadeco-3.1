@@ -82,7 +82,7 @@ async function mostrarContenido(nombre) {
               <div class="row">
                   <label>Cantidad:</label>
                   <input id="cantidadEnvios" class="cantidades" type="number" min="0" required>
-                  <button id="btnEnviar">Enviar</button>
+                  <button id="btnEnviarSoldador">Enviar</button>
               </div>
           </div>
     
@@ -397,6 +397,7 @@ async function mostrarContenido(nombre) {
                 "baseInoxECO",
                 "Caja Soldada Eco",
               ],
+              augeriado: [],
             };
             const datosTabla = piezaBrutoEnSoldador.map((p) => {
               let categoria = Object.keys(PiezasDelSoldador).find((key) =>
@@ -428,7 +429,7 @@ async function mostrarContenido(nombre) {
       });
 
       document
-        .getElementById("btnEnviar")
+        .getElementById("btnEnviarSoldador")
         .addEventListener("click", function () {
           const selectElement = document.getElementById("soldadorEnvios");
           const inputCantidad = document.getElementById("cantidadEnvios");
@@ -451,6 +452,7 @@ async function mostrarContenido(nombre) {
               .then((data) => {
                 console.log(data.mensaje);
                 alert(data.mensaje);
+                inputCantidad.value = "";
               })
               .catch((error) => {
                 console.log("Error:", error);
@@ -487,6 +489,7 @@ async function mostrarContenido(nombre) {
               .then((data) => {
                 console.log(data.mensaje);
                 alert(data.mensaje);
+                inputCantidad.value = "";
               })
               .catch((error) => {
                 console.log("Error:", error);
@@ -1331,11 +1334,11 @@ async function mostrarContenido(nombre) {
 
     case "Pintura":
       const lista_piezas_Pintura = [
-        "BasePintada_330",
-        "BasePintada_300",
-        "cabezal_pintada",
-        "caja_eco_augeriada",
-        "teletubi_doblado_eco",
+        "basePintada330",
+        "basePintada300",
+        "Cabezal Pintada",
+        "Caja Soldada Eco",
+        "Teletubi Eco",
       ];
 
       const cajaPintura = document.createElement("div");
@@ -1358,13 +1361,13 @@ async function mostrarContenido(nombre) {
           <p>Envio a Pintura</p>
          <div class="row">
             <label for="text">Enviar</label>
-              <select class="selector">${piezaPintura}
+              <select id="soldadorEnviosPintura", class="selector">${piezaPintura}
               </select>
           </div>
           <div class="row">
               <label  for="cantidad">Cantidad:</label>
-              <input class="cantidades" type="number" id="cantidad" min="0" required>
-              <button>Enviar</button>
+              <input class="cantidades" type="number" id="cantidadEnviosPintura" min="0" required>
+              <button id="btnEnviarPintura">Enviar</button>
             </div>
         </div>`;
       const formularioHTMLEntregaPintura = `
@@ -1372,13 +1375,13 @@ async function mostrarContenido(nombre) {
             <p>Entregas de Pintura</p>
            <div class="row">
               <label for="text">Enviar</label>
-                <select class="selector">${piezaPintura}
+                <select id="soldadorEntregaPintura" class="selector">${piezaPintura}
                 </select>
             </div>
             <div class="row">
                 <label  for="cantidad">Cantidad:</label>
-                <input class="cantidades" type="number" id="cantidad" min="0" required>
-                <button>Enviar</button>
+                <input class="cantidades" type="number" id="cantidadEntregaPintura" min="0" required>
+                <button id="btnEntregaPintura">Enviar</button>
               </div>
           </div>`;
 
@@ -1392,8 +1395,6 @@ async function mostrarContenido(nombre) {
 
       document.addEventListener("click", async (event) => {
         if (event.target.classList.contains("stockFabrica")) {
-          const tipo = event.target.getAttribute("data-tipo");
-          console.log("Seleccionado: ", tipo);
           try {
             const res = await fetch(
               "http://localhost:5000/api/piezasbrutapintada"
@@ -1441,25 +1442,187 @@ async function mostrarContenido(nombre) {
             console.error("Esto es un error", error);
           }
         } else if (event.target.classList.contains("stockPintura")) {
-          const tipo = event.target.getAttribute("data-tipo");
-          console.log("Seleccionado:", tipo);
+          try {
+            const res = await fetch("http://localhost:5000/api/stockPintura");
+            if (!res.ok) throw new Error("Error en respuesta del servidor");
+
+            const piezaBrutoEnSoldador = await res.json();
+            const PiezasDelSoldador = {
+              pintura: [
+                "basePintada330",
+                "basePintada300",
+                "cabezal_pintada",
+                "Caja Soldada Eco",
+                "Teletubi Eco",
+              ],
+            };
+
+            const datosTabla = piezaBrutoEnSoldador.map((p) => {
+              let categoria = Object.keys(PiezasDelSoldador).find((key) =>
+                PiezasDelSoldador[key].includes(p.nombre)
+              );
+
+              return {
+                nombre: p.nombre,
+                cantidad: p.proveedores?.[categoria]?.cantidad,
+              };
+            });
+
+            if (!tablaDiv) {
+              console.error("Nose enmcontes el elemento con Id TableID");
+              return;
+            }
+
+            new Tabulator(tablaDiv, {
+              height: 500,
+              layout: "fitColumns",
+              data: datosTabla,
+              initialSort: [{ column: "nombre", dir: "asc" }],
+              columns: [
+                { title: "Nombre", field: "nombre" },
+                { title: "Cantidad", field: "cantidad" },
+              ],
+            });
+          } catch (error) {
+            console.error("es un error");
+          }
         } else if (event.target.classList.contains("stockTerminado")) {
-          const tipo = event.target.getAttribute("data-tipo");
-          console.log("Seleccionado:", tipo);
+          try {
+            const res = await fetch("http://localhost:5000/api/stockPintura");
+            if (!res.ok) throw new Error("Error en respuesta del servidor");
+
+            const piezaBrutoEnSoldador = await res.json();
+            const PiezasDelSoldador = {
+              terminado: [
+                "basePintada330",
+                "basePintada300",
+                "cabezal_pintada",
+                "Teletubi Eco",
+                "Caja Soldada Eco",
+              ],
+            };
+            const datosTabla = piezaBrutoEnSoldador.map((p) => {
+              let categoria = Object.keys(PiezasDelSoldador).find((key) =>
+                PiezasDelSoldador[key].includes(p.nombre)
+              );
+              return {
+                nombre: p.nombre,
+                cantidad: p.cantidad?.[categoria]?.cantidad,
+              };
+            });
+
+            if (!tablaDiv) {
+              console.error("No se encontro el elemento con el Id TablaDiv");
+            }
+            new Tabulator(tablaDiv, {
+              height: 500,
+              layout: "fitColumns",
+              data: datosTabla,
+              initialSort: [{ column: "nombre", dir: "asc" }],
+              columns: [
+                { title: "Nombre", field: "nombre" },
+                { title: "Cantidad", field: "cantidad" },
+              ],
+            });
+          } catch (error) {
+            console.error("es un error");
+          }
         }
       });
+
+      document
+        .getElementById("btnEnviarPintura")
+        .addEventListener("click", function () {
+          const selectElement = document.getElementById(
+            "soldadorEnviosPintura"
+          );
+          const inputCantidad = document.getElementById(
+            "cantidadEnviosPintura"
+          );
+
+          const piezaSeleccionada = selectElement.value;
+          const cantidad = inputCantidad.value;
+
+          if (piezaSeleccionada && cantidad > 0) {
+            fetch(
+              `http://localhost:5000/api/enviosPintura/${piezaSeleccionada}`,
+              {
+                method: "PUT",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ cantidad: cantidad }),
+              }
+            )
+              .then((response) => response.json())
+              .then((data) => {
+                console.log(data.mensaje);
+                alert(data.mensaje);
+                inputCantidad.value = "";
+              })
+              .catch((error) => {
+                console.log("Error:", error);
+              });
+          } else {
+            console.log(
+              "Por favor, seleccione una pieza y una cantidad válida."
+            );
+            alert("Por favor, seleccione una pieza y una cantidad válida.");
+          }
+        });
+
+      document
+        .getElementById("btnEntregaPintura")
+        .addEventListener("click", function () {
+          const selectElement = document.getElementById(
+            "soldadorEntregaPintura"
+          );
+          const inputCantidad = document.getElementById(
+            "cantidadEntregaPintura"
+          );
+
+          const piezaSeleccionada = selectElement.value;
+          const cantidad = inputCantidad.value;
+
+          if (piezaSeleccionada && cantidad > 0) {
+            fetch(
+              `http://localhost:5000/api/entregasPintura/${piezaSeleccionada}`,
+              {
+                method: "PUT",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ cantidad: cantidad }),
+              }
+            )
+              .then((response) => response.json())
+              .then((data) => {
+                console.log(data.mensaje);
+                alert(data.mensaje);
+                inputCantidad.value = "";
+              })
+              .catch((error) => {
+                console.log("Error:", error);
+              });
+          } else {
+            console.log(
+              "Por favor, seleccione una pieza y una cantidad válida."
+            );
+            alert("Por favor, seleccione una pieza y una cantidad válida.");
+          }
+        });
 
       break;
 
     case "Niquelado":
       const lista_piezas_Niquelado = [
-        "eje_rectificado",
-        "varilla_brazo_330",
-        "varilla_brazo_300",
-        "varilla_brazo_250",
-        "tubo_manija",
-        "tubo_manija_250",
-        "palanca_afilador",
+        "Eje Rectificado",
+        "Varilla Brazo 330",
+        "Varilla Brazo 300",
+        "Varilla Brazo 250",
+        "Tubo Manija",
+        "Tubo Manija 250",
+        "Palanca Afilador",
       ];
 
       const cajaNiquelado = document.createElement("div");
@@ -1473,7 +1636,7 @@ async function mostrarContenido(nombre) {
             <div class="boxBtnStock">
               <button class="stockNiquelado"  data-tipo="StockEnNiquelado" >En Niquelado</button>
               <button class="stockBruto"  data-tipo="StockEnBruto">En Fabrica Bruto</button>
-              <button class="stockTerminado"  data-tipo="StockEnTerminado">Terminado</button>
+              <button class="stockEnFabrica"  data-tipo="StockEnTerminado">Terminado</button>
             </div>
         </div>`;
       const formularioHTMLEnviosNiquelado = `
@@ -1481,13 +1644,13 @@ async function mostrarContenido(nombre) {
             <p>Envio a Niquelado</p>
            <div class="row">
               <label for="text">Enviar</label>
-                <select class="selector">${piezaNiquelado}
+                <select id="soldadorEnviosNiquelado" class="selector">${piezaNiquelado}
                 </select>
             </div>
             <div class="row">
                 <label  for="cantidad">Cantidad:</label>
-                <input class="cantidades" type="number" id="cantidad" min="0" required>
-                <button>Enviar</button>
+                <input class="cantidades" type="number" id="cantidadEnviosNiquelado" min="0" required>
+                <button id="btnEnviarNiquelado">Enviar</button>
               </div>
           </div>`;
       const formularioHTMLEntregaNiquelado = `
@@ -1495,13 +1658,13 @@ async function mostrarContenido(nombre) {
               <p>Entregas de Niquelado</p>
              <div class="row">
                 <label for="text">Enviar</label>
-                  <select class="selector">${piezaNiquelado}
+                  <select id="soldadorEntregaNiquelado" class="selector">${piezaNiquelado}
                   </select>
               </div>
               <div class="row">
                   <label  for="cantidad">Cantidad:</label>
-                  <input class="cantidades" type="number" id="cantidad" min="0" required>
-                  <button>Enviar</button>
+                  <input class="cantidades" type="number" id="cantidadEntregaNiquelado" min="0" required>
+                  <button id="btnEntregaNiquelado" >Enviar</button>
                 </div>
             </div>`;
 
@@ -1565,24 +1728,197 @@ async function mostrarContenido(nombre) {
           } catch (error) {
             console.error("Esto es un error", error);
           }
-        } else if (event.target.classList.contains("stockCarmelo")) {
-          const tipo = event.target.getAttribute("data-tipo");
-          console.log("Seleccionado:", tipo);
+        } else if (event.target.classList.contains("stockNiquelado")) {
+          try {
+            const res = await fetch(
+              "http://localhost:5000/api/piezasbrutaniquelado"
+            );
+            if (!res.ok) throw new Error("Error en respuesta del servidor");
+
+            const piezaBrutoEnSoldador = await res.json();
+            const PiezasDelSoldador = {
+              niquelado: [
+                "Eje Rectificado",
+                "Varilla Brazo 330",
+                "Varilla Brazo 300",
+                "Varilla Brazo 250",
+                "Tubo Manija",
+                "Tubo Manija 250",
+                "Palanca Afilador",
+              ],
+            };
+
+            const datosTabla = piezaBrutoEnSoldador.map((p) => {
+              let categoria = Object.keys(PiezasDelSoldador).find((key) =>
+                PiezasDelSoldador[key].includes(p.nombre)
+              );
+
+              return {
+                nombre: p.nombre,
+                cantidad: p.proveedores?.[categoria]?.cantidad,
+              };
+            });
+
+            if (!tablaDiv) {
+              console.error("Nose enmcontes el elemento con Id TableID");
+              return;
+            }
+
+            new Tabulator(tablaDiv, {
+              height: 500,
+              layout: "fitColumns",
+              data: datosTabla,
+              initialSort: [{ column: "nombre", dir: "asc" }],
+              columns: [
+                { title: "Nombre", field: "nombre" },
+                { title: "Cantidad", field: "cantidad" },
+              ],
+            });
+          } catch (error) {
+            console.error("es un error");
+          }
+        } else if (event.target.classList.contains("stockEnFabrica")) {
+          try {
+            const res = await fetch(
+              "http://localhost:5000/api/piezasbrutaniquelado"
+            );
+            if (!res.ok) throw new Error("Error en respuesta del servidor");
+
+            const piezaBrutoEnSoldador = await res.json();
+            const PiezasDelSoldador = {
+              terminado: [
+                "Eje Rectificado",
+                "Varilla Brazo 330",
+                "Varilla Brazo 300",
+                "Varilla Brazo 250",
+                "Tubo Manija",
+                "Tubo Manija 250",
+                "Palanca Afilador",
+              ],
+            };
+            const datosTabla = piezaBrutoEnSoldador.map((p) => {
+              let categoria = Object.keys(PiezasDelSoldador).find((key) =>
+                PiezasDelSoldador[key].includes(p.nombre)
+              );
+              return {
+                nombre: p.nombre,
+                cantidad: p.cantidad?.[categoria]?.cantidad,
+              };
+            });
+
+            if (!tablaDiv) {
+              console.error("No se encontro el elemento con el Id TablaDiv");
+            }
+            new Tabulator(tablaDiv, {
+              height: 500,
+              layout: "fitColumns",
+              data: datosTabla,
+              initialSort: [{ column: "nombre", dir: "asc" }],
+              columns: [
+                { title: "Nombre", field: "nombre" },
+                { title: "Cantidad", field: "cantidad" },
+              ],
+            });
+          } catch (error) {
+            console.error("es un error");
+          }
         }
       });
+
+      document
+        .getElementById("btnEnviarNiquelado")
+        .addEventListener("click", function () {
+          const selectElement = document.getElementById(
+            "soldadorEnviosNiquelado"
+          );
+          const inputCantidad = document.getElementById(
+            "cantidadEnviosNiquelado"
+          );
+
+          const piezaSeleccionada = selectElement.value;
+          const cantidad = inputCantidad.value;
+
+          if (piezaSeleccionada && cantidad > 0) {
+            fetch(
+              `http://localhost:5000/api/enviosNiquelado/${piezaSeleccionada}`,
+              {
+                method: "PUT",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ cantidad: cantidad }),
+              }
+            )
+              .then((response) => response.json())
+              .then((data) => {
+                console.log(data.mensaje);
+                alert(data.mensaje);
+                inputCantidad.value = "";
+              })
+              .catch((error) => {
+                console.log("Error:", error);
+              });
+          } else {
+            console.log(
+              "Por favor, seleccione una pieza y una cantidad válida."
+            );
+            alert("Por favor, seleccione una pieza y una cantidad válida.");
+          }
+        });
+
+      document
+        .getElementById("btnEntregaNiquelado")
+        .addEventListener("click", function () {
+          const selectElement = document.getElementById(
+            "soldadorEntregaNiquelado"
+          );
+          const inputCantidad = document.getElementById(
+            "cantidadEntregaNiquelado"
+          );
+
+          const piezaSeleccionada = selectElement.value;
+          const cantidad = inputCantidad.value;
+
+          if (piezaSeleccionada && cantidad > 0) {
+            fetch(
+              `http://localhost:5000/api/entregasNiquelado/${piezaSeleccionada}`,
+              {
+                method: "PUT",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ cantidad: cantidad }),
+              }
+            )
+              .then((response) => response.json())
+              .then((data) => {
+                console.log(data.mensaje);
+                alert(data.mensaje);
+                inputCantidad.value = "";
+              })
+              .catch((error) => {
+                console.log("Error:", error);
+              });
+          } else {
+            console.log(
+              "Por favor, seleccione una pieza y una cantidad válida."
+            );
+            alert("Por favor, seleccione una pieza y una cantidad válida.");
+          }
+        });
 
       break;
 
     case "Afilador":
       const lista_piezas_Afilador = [
-        "capuchon_afilador",
-        "carcaza_afilador",
-        "eje_corto",
-        "eje_largo",
-        "ruleman608",
-        "palanca_afilador",
-        "resorte_palanca",
-        "resorte_empuje",
+        "Capuchon Afilador",
+        "Carcaza Afilador",
+        "Eje Corto",
+        "Eje Largo",
+        "Ruleman608",
+        "Palanca Afilador",
+        "Resorte Palanca",
+        "Resorte Empuje",
       ];
 
       const cajaAfilador = document.createElement("div");
@@ -1592,41 +1928,40 @@ async function mostrarContenido(nombre) {
       let piezaAfilador = generarSelector(lista_piezas_Afilador);
 
       const htmlAfilador = `
-          <div>
-            <p>Afilador</p>
-              <div class="boxBtnStock">
-                <button class="stockRoman"  data-tipo="StockEnRoman" >En Roman</button>
-                <button class="stockFabrica"  data-tipo="StockEnFabrica" >En Fabrica</button>
-              </div>    
-          </div>
-          <div>
-            <p>Terminado</p>
-              <div class="boxBtnStock">
-                <button >Terminado</button>
-              </div>    
-          </div>`;
+            <div>
+               <div class="boxBtnStock">
+                    <button class="stockRoman" data-tipo="StockEnRoman">
+                      En Roman
+                    </button>
+                    <button class="stockFabrica" data-tipo="StockEnFabrica">
+                      En Fabrica
+                    </button>
+                    <button class="stockEnFabricaAfilador">
+                      Terminado
+                    </button>
+              </div>       
+        </div>`;
 
-      const formularioHTMLEntregaAfilador = `
-            <div class="container-enviosSoldador">
-                <p>Entregas de Afilador</p>
-               <div class="row">
-                  <label for="text">Enviar</label>
-                    <select class="selector">${piezaAfilador}
-                    </select>
+      const formularioHTMLEntregaAfilador = 
+        `<div class="container-enviosSoldador">
+                     <p>Entregas de Afilador</p>
+                 <div class="row">
+                    <label for="text">Enviar</label>
+                    <select id="piezaEnviarAfilador" class="selector">${piezaAfilador} </select>
                 </div>
-                <div class="row">
+               <div class="row">
                     <label  for="cantidad">Cantidad:</label>
-                    <input class="cantidades" type="number" id="cantidad" min="0" required>
-                    <button>Enviar</button>
+                    <input class="cantidades" type="number" id="cantidadEnviarAfilador" min="0" required>
+                    <button id="btnEnviarAfiladores">Enviar</button>
                   </div>
-              </div>`;
+        </div>`;
 
       const htmlResivido = `
         <div>
           <p>Entrega De Afiladores Terminados</p>
           <div>
-            <input class='cantidades' type='number' id='cantidad' min="0" required>
-            <button>Afiladores Entregados</button>
+            <input class='cantidades' type='number' id='cantidadEmtregacarmelo' min="0" required>
+            <button id="EntregaAfiladores">Afiladores Entregados</button>
           </div>
         </div>
       `;
@@ -1649,7 +1984,6 @@ async function mostrarContenido(nombre) {
             );
             if (!res.ok) throw new Error("Error en la respuesta del servidor");
             const piezaBrutaEnFabrica = await res.json();
-            console.log(piezaBrutaEnFabrica);
 
             const piezasLista = {
               augeriado: ["Carcaza Afilador"],
@@ -1691,11 +2025,170 @@ async function mostrarContenido(nombre) {
           } catch (error) {
             console.error("Esto es un error", error);
           }
-        } else if (event.target.classList.contains("stockCarmelo")) {
-          const tipo = event.target.getAttribute("data-tipo");
-          console.log("Seleccionado:", tipo);
+        } else if (event.target.classList.contains("stockRoman")) {
+          try {
+            const res = await fetch(
+              "http://localhost:5000/api/piezasbrutaAfilador"
+            );
+            if (!res.ok) throw new Error("Error en respuesta del servidor");
+
+            const piezaBrutoEnSoldador = await res.json();
+            const PiezasDelSoldador = {
+              afiladores: [
+                "Carcaza Afilador",
+                "Eje Corto",
+                "Eje Largo",
+                "Capuchon Afilador",
+                "Ruleman608",
+                "Resorte Palanca",
+                "Resorte Empuje",
+                "Palanca Afilador",
+              ],
+            };
+
+            const datosTabla = piezaBrutoEnSoldador.map((p) => {
+              let categoria = Object.keys(PiezasDelSoldador).find((key) =>
+                PiezasDelSoldador[key].includes(p.nombre)
+              );
+
+              return {
+                nombre: p.nombre,
+                cantidad: p.proveedores?.[categoria]?.cantidad,
+              };
+            });
+
+            if (!tablaDiv) {
+              console.error("Nose enmcontes el elemento con Id TableID");
+              return;
+            }
+
+            new Tabulator(tablaDiv, {
+              height: 500,
+              layout: "fitColumns",
+              data: datosTabla,
+              initialSort: [{ column: "nombre", dir: "asc" }],
+              columns: [
+                { title: "Nombre", field: "nombre" },
+                { title: "Cantidad", field: "cantidad" },
+              ],
+            });
+          } catch (error) {
+            console.error("es un error");
+          }
+        } else if (event.target.classList.contains("stockEnFabricaAfilador")) {
+          console.log("holasad")
+
+          try {
+            const res = await fetch("http://localhost:5000/api/afilador");
+            if (!res.ok) throw new Error("Error en respuesta del servidor");
+          
+            const piezas = await res.json();
+            
+            // Filtrar para que solo se incluya la pieza "Afilador"
+            const piezasFiltradas = piezas.filter((p) => p.nombre === "Afilador");
+            // Mapear para extraer solo nombre y la cantidad en cantidad.terminado.cantidad
+            console.log(piezasFiltradas)
+
+            const datosTabla = piezasFiltradas.map((p) => ({
+              nombre: p.nombre,
+              cantidad: p.cantidad?.terminado?.cantidad , // En caso de que no exista, queda en 0
+            }));
+          
+            if (!tablaDiv) {
+              console.error("No se encontró el elemento con el Id TablaDiv");
+            }
+            
+            new Tabulator(tablaDiv, {
+              height: 300,
+              layout: "fitColumns",
+              data: datosTabla,
+              initialSort: [{ column: "nombre", dir: "asc" }],
+              columns: [
+                { title: "Nombre", field: "nombre" },
+                { title: "Cantidad", field: "cantidad" },
+              ],
+            });
+          } catch (error) {
+            console.error("es un error", error);
+          }
+          
         }
       });
+
+      document
+      .getElementById("btnEnviarAfiladores")
+      .addEventListener("click", function () {
+        const selectElement = document.getElementById("piezaEnviarAfilador");
+        const inputCantidad = document.getElementById("cantidadEnviarAfilador");
+
+        const piezaSeleccionada = selectElement.value;
+        const cantidad = inputCantidad.value;
+
+        if (piezaSeleccionada && cantidad > 0) {
+          fetch(
+            `http://localhost:5000/api/enviosAfiladores/${piezaSeleccionada}`,
+            {
+              method: "PUT",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ cantidad: cantidad }),
+            }
+          )
+            .then((response) => response.json())
+            .then((data) => {
+              console.log(data.mensaje);
+              alert(data.mensaje);
+              inputCantidad.value = "";
+            })
+            .catch((error) => {
+              console.log("Error:", error);
+            });
+        } else {
+          console.log(
+            "Por favor, seleccione una pieza y una cantidad válida."
+          );
+          alert("Por favor, seleccione una pieza y una cantidad válida.");
+        }
+      });
+      document
+        .getElementById("EntregaAfiladores")
+        .addEventListener("click", function () {
+          const inputCantidad = document.getElementById(
+            "cantidadEmtregacarmelo"
+          );
+
+          const piezaSeleccionada = "Afilador";
+          const cantidad = inputCantidad.value;
+
+          if (piezaSeleccionada && cantidad > 0) {
+            fetch(
+              `http://localhost:5000/api/antregaAfiladores/${piezaSeleccionada}`,
+              {
+                method: "PUT",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ cantidad: cantidad }),
+              }
+            )
+              .then((response) => response.json())
+              .then((data) => {
+                console.log(data.mensaje);
+                alert(data.mensaje);
+                inputCantidad.value = "";
+              })
+              .catch((error) => {
+                console.log("Error:", error);
+              });
+          } else {
+            console.log(
+              "Por favor, seleccione una pieza y una cantidad válida."
+            );
+            alert("Por favor, seleccione una pieza y una cantidad válida.");
+          }
+        });
+
 
       break;
     default:
