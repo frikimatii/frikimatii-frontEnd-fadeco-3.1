@@ -1,4 +1,3 @@
-
 async function mostrarContenido(nombre) {
   function generarSelector(pieza) {
     let opcionesSelect = `<option value="">Seleccione Una Pieza</option>`;
@@ -46,20 +45,10 @@ async function mostrarContenido(nombre) {
     { title: "Nombre", field: "nombre" },
     { title: "Cantidad", field: "cantidad" },
   ];
+  data = [];
 
   switch (nombre) {
     case "Soldador":
-      data = [];
-
-      function generarSelector(piezas) {
-        return (
-          `<option value="">Seleccione Una Pieza</option>` +
-          piezas
-            .map((pieza) => `<option value="${pieza}">${pieza}</option>`)
-            .join("")
-        );
-      }
-
       const caja = document.createElement("div");
       const botonerBases = document.createElement("div");
 
@@ -304,15 +293,10 @@ async function mostrarContenido(nombre) {
                 "Varilla 330",
                 "Varilla 250",
                 "Planchuela Inferior",
-                "Planchuela Interna"
+                "Planchuela Interna",
               ],
-              balancin: [
-                "Planchuela 250",
-                "Planchuela 300",
-                "Planchuela 330"
-              ],
-              augeriado: [
-                "PortaEje"]
+              balancin: ["Planchuela 250", "Planchuela 300", "Planchuela 330"],
+              augeriado: ["PortaEje"],
             };
 
             const datosTabla = piezaBrutoEnFabrica.map((p) => {
@@ -355,174 +339,197 @@ async function mostrarContenido(nombre) {
             const piezaBrutoEnSoldador = await res.json();
             const PiezasDelSoldador = {
               soldador: [
-                "baseInox330", "baseInox300", "baseInox250", "basePintada330", "basePintada300", "baseInoxECO", "Caja Soldada Eco"]
-            }
+                "baseInox330",
+                "baseInox300",
+                "baseInox250",
+                "basePintada330",
+                "basePintada300",
+                "baseInoxECO",
+                "Caja Soldada Eco",
+              ],
+            };
 
             const datosTabla = piezaBrutoEnSoldador.map((p) => {
-              let categoria = Object.keys(PiezasDelSoldador).find((key) => PiezasDelSoldador[key].includes(p.nombre)
-              )
+              let categoria = Object.keys(PiezasDelSoldador).find((key) =>
+                PiezasDelSoldador[key].includes(p.nombre)
+              );
 
               return {
                 nombre: p.nombre,
-                cantidad: p.proveedores?.[categoria]?.cantidad 
-              }
-            })
+                cantidad: p.proveedores?.[categoria]?.cantidad,
+              };
+            });
 
             if (!tablaDiv) {
-              console.error("Nose enmcontes el elemento con Id TableID")
-              return
+              console.error("Nose enmcontes el elemento con Id TableID");
+              return;
             }
 
             new Tabulator(tablaDiv, {
               height: 500,
-              layout: 'fitColumns',
+              layout: "fitColumns",
               data: datosTabla,
               initialSort: [{ column: "nombre", dir: "asc" }],
               columns: [
                 { title: "Nombre", field: "nombre" },
-                { title: "Cantidad", field: "cantidad" }
-              ]
-            })
+                { title: "Cantidad", field: "cantidad" },
+              ],
+            });
           } catch (error) {
-            console.error("es un error")
+            console.error("es un error");
           }
         } else if (event.target.classList.contains("enFabricaTerminado")) {
           const tipo = event.target.getAttribute("data-tipo");
           console.log("Seleccionado:", tipo);
 
-          try{
-            const res = await fetch("http://localhost:5000/api/stocksoldador")
-            if(!res.ok) throw new Error("Error en respuesta del servidor")
+          try {
+            const res = await fetch("http://localhost:5000/api/stocksoldador");
+            if (!res.ok) throw new Error("Error en respuesta del servidor");
 
-
-            const piezaBrutoEnSoldador = await res.json()
+            const piezaBrutoEnSoldador = await res.json();
             const PiezasDelSoldador = {
               bruto: [
-                "baseInox330", "baseInox300", "baseInox250", "basePintada330", "basePintada300", "baseInoxECO", "Caja Soldada Eco"]
-            }
+                "baseInox330",
+                "baseInox300",
+                "baseInox250",
+                "basePintada330",
+                "basePintada300",
+                "baseInoxECO",
+                "Caja Soldada Eco",
+              ],
+            };
             const datosTabla = piezaBrutoEnSoldador.map((p) => {
-              let categoria = Object.keys(PiezasDelSoldador).find((key) => PiezasDelSoldador[key].includes(p.nombre)
-            )
+              let categoria = Object.keys(PiezasDelSoldador).find((key) =>
+                PiezasDelSoldador[key].includes(p.nombre)
+              );
               return {
                 nombre: p.nombre,
-                cantidad: p.cantidad?.[categoria]?.cantidad 
-              }
-            })
-             
-            if (!tablaDiv){
-              console.error("No se encontro el elemento con el Id TablaDiv")
+                cantidad: p.cantidad?.[categoria]?.cantidad,
+              };
+            });
+
+            if (!tablaDiv) {
+              console.error("No se encontro el elemento con el Id TablaDiv");
             }
             new Tabulator(tablaDiv, {
               height: 500,
-              layout: 'fitColumns',
+              layout: "fitColumns",
               data: datosTabla,
               initialSort: [{ column: "nombre", dir: "asc" }],
               columns: [
                 { title: "Nombre", field: "nombre" },
-                { title: "Cantidad", field: "cantidad" }
-              ]
-            })
-          } catch(error){
-            console.error("es un error")
+                { title: "Cantidad", field: "cantidad" },
+              ],
+            });
+          } catch (error) {
+            console.error("es un error");
           }
         }
       });
 
+      document
+        .getElementById("btnEnviar")
+        .addEventListener("click", function () {
+          const selectElement = document.getElementById("soldadorEnvios");
+          const inputCantidad = document.getElementById("cantidadEnvios");
 
-      document.getElementById("btnEnviar").addEventListener("click", function () {
-        const selectElement = document.getElementById("soldadorEnvios");
-        const inputCantidad = document.getElementById("cantidadEnvios");
+          const piezaSeleccionada = selectElement.value;
+          const cantidad = inputCantidad.value;
 
-        const piezaSeleccionada = selectElement.value;
-        const cantidad = inputCantidad.value;
+          if (piezaSeleccionada && cantidad > 0) {
+            fetch(
+              `http://localhost:5000/api/enviosSoldador/${piezaSeleccionada}`,
+              {
+                method: "PUT",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ cantidad: cantidad }),
+              }
+            )
+              .then((response) => response.json())
+              .then((data) => {
+                console.log(data.mensaje);
+                alert(data.mensaje);
+              })
+              .catch((error) => {
+                console.log("Error:", error);
+              });
+          } else {
+            console.log(
+              "Por favor, seleccione una pieza y una cantidad válida."
+            );
+            alert("Por favor, seleccione una pieza y una cantidad válida.");
+          }
+        });
 
-        if (piezaSeleccionada && cantidad > 0) {
-          fetch(`http://localhost:5000/api/enviosSoldador/${piezaSeleccionada}`, {
-            method: "PUT",
-            headers: {
-              "Content-Type": "application/json"
-            },
-            body: JSON.stringify({ cantidad: cantidad })
-          })
-            .then((response) => response.json())
-            .then((data) => {
-              console.log(data.mensaje)
-              alert(data.mensaje)
-            })
-            .catch((error) => {
-              console.log("Error:", error)
-            })
+      document
+        .getElementById("btnEntrega")
+        .addEventListener("click", function () {
+          const selectElement = document.getElementById("soldadorEntrega");
+          const inputCantidad = document.getElementById("cantidadEntrega");
 
-        } else {
-          console.log("Por favor, seleccione una pieza y una cantidad válida.");
-          alert("Por favor, seleccione una pieza y una cantidad válida.");
-        }
-      });
+          const piezaSeleccionada = selectElement.value;
+          const cantidad = inputCantidad.value;
 
-      document.getElementById("btnEntrega").addEventListener("click", function () {
-        const selectElement = document.getElementById("soldadorEntrega");
-        const inputCantidad = document.getElementById("cantidadEntrega");
+          if (piezaSeleccionada && cantidad > 0) {
+            fetch(
+              `http://localhost:5000/api/entregasSoldador/${piezaSeleccionada}`,
+              {
+                method: "PUT",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ cantidad: cantidad }),
+              }
+            )
+              .then((response) => response.json())
+              .then((data) => {
+                console.log(data.mensaje);
+                alert(data.mensaje);
+              })
+              .catch((error) => {
+                console.log("Error:", error);
+              });
+          } else {
+            console.log(
+              "Por favor, seleccione una pieza y una cantidad válida."
+            );
+            alert("Por favor, seleccione una pieza y una cantidad válida.");
+          }
+        });
 
-        const piezaSeleccionada = selectElement.value;
-        const cantidad = inputCantidad.value;
-
-        if (piezaSeleccionada && cantidad > 0) {
-          fetch(`http://localhost:5000/api/entregasSoldador/${piezaSeleccionada}`, {
-            method: "PUT",
-            headers: {
-              "Content-Type": "application/json"
-            },
-            body: JSON.stringify({ cantidad: cantidad })
-          })
-            .then((response) => response.json())
-            .then((data) => {
-              console.log(data.mensaje)
-              alert(data.mensaje)
-            })
-            .catch((error) => {
-              console.log("Error:", error)
-            })
-        } else {
-          console.log("Por favor, seleccione una pieza y una cantidad válida.");
-          alert("Por favor, seleccione una pieza y una cantidad válida.");
-        }
-      })
-
-
-
-
-      
       break;
 
     case "Carmelo":
       const lista_piezas_carmerlo = [
-        "brazo_augeriado_250",
-        "brazo_augeriado_300",
-        "brazo_augeriado_330",
-        "cajas_torneadas_250",
-        "cajas_torneadas_300",
-        "cajas_torneadas_330",
-        "cubrecuchilla_250",
-        "cubre_300_torneado",
-        "cubrecuchilla_330",
-        "velero",
-        "vela_final_330",
-        "vela_final_250",
-        "vela_final_300",
-        "planchada_final_330",
-        "planchada_final_300",
-        "planchada_final_250",
-        "tapa_afilador",
-        "aro_numerador",
-        "tapa_afilador_250",
-        "teletubi_330",
-        "teletubi_300_torneado",
-        "teletubi_250",
+        "Brazo 250",
+        "Brazo 300",
+        "Brazo 330",
+        "Caja 250",
+        "Caja 300",
+        "Caja 330",
+        "Cubrecuchilla 250",
+        "Cubrecuchilla 300",
+        "Cubrecuchill 330",
+        "Velero",
+        "Vela 330",
+        "Vela 250",
+        "Vela 300",
+        "Planchada 330",
+        "Planchada 300",
+        "Planchada 250",
+        "Tapa Afilador",
+        "Aro Numerador",
+        "Tapa Afilador 250",
+        "Teletubi 330",
+        "Teletubi 300",
+        "Teletubi 250",
         "BaseInox_330",
         "BaseInox_300",
         "BaseInox_250",
         "BaseECO",
-        "tapa_afilador_eco",
+        "Tapa Afilador Eco",
       ];
 
       const cajaCarmelo = document.createElement("div");
@@ -537,6 +544,7 @@ async function mostrarContenido(nombre) {
             <button class="stockCarmelo"  data-tipo="StockEnCarmelo">En Carmelo
             </button>
             <button class="stockFabrica"  data-tipo="StockEnFabrica">En Fabrica Bruto</button>
+            <button class="stockFabricaTerminado"  data-tipo="StockEnFabrica">En Fabrica Terminado</button>
           </div>
 
       </div>`;
@@ -545,13 +553,13 @@ async function mostrarContenido(nombre) {
           <p>Envio a Carmerlo</p>
          <div class="row">
             <label for="text">Enviar</label>
-              <select class="selector">${piezaCamelelo}
+              <select id="piezaACarmerloSelector" class="selector">${piezaCamelelo}
               </select>
           </div>
           <div class="row">
               <label  for="cantidad">Cantidad:</label>
-              <input class="cantidades" type="number" id="cantidad" min="0" required>
-              <button>Enviar</button>
+              <input id="cantidadEnviarCarmerlo" class="cantidades" type="number" id="cantidad" min="0" required>
+              <button id="btnEnviarCarmelo">Enviar</button>
             </div>
         </div>`;
       const formularioHTMLEntrega = `
@@ -559,13 +567,13 @@ async function mostrarContenido(nombre) {
             <p>Entregas de Carmerlo</p>
            <div class="row">
               <label for="text">Enviar</label>
-                <select class="selector">${piezaCamelelo}
+                <select id="piezaEntregaCarmelo" class="selector">${piezaCamelelo}
                 </select>
             </div>
             <div class="row">
                 <label  for="cantidad">Cantidad:</label>
-                <input class="cantidades" type="number" id="cantidad" min="0" required>
-                <button>Enviar</button>
+                <input class="cantidades" type="number" id="cantidadEmtregacarmelo" min="0" required>
+                <button id="btnEntregaCarmelo">Enviar</button>
               </div>
           </div>`;
 
@@ -587,11 +595,20 @@ async function mostrarContenido(nombre) {
             );
             if (!res.ok) throw new Error("Error en la respuesta del servidor");
             const piezaBrutaEnFabrica = await res.json();
-            console.log(piezaBrutaEnFabrica);
 
             const piezasLista = {
               augeriado: [
-                "Brazo 250", "Brazo 300", "Brazo 330", "baseInox330", "baseInox300", "baseInox250", "basePintada330", "basePintada300", "baseInoxECO", "Caja Soldada Eco"],
+                "Brazo 250",
+                "Brazo 300",
+                "Brazo 330",
+                "baseInox330",
+                "baseInox300",
+                "baseInox250",
+                "basePintada330",
+                "basePintada300",
+                "baseInoxECO",
+                "Caja Soldada Eco",
+              ],
 
               bruto: [
                 "Velero",
@@ -604,7 +621,13 @@ async function mostrarContenido(nombre) {
                 "Teletubi 250",
                 "Tapa Afilador Eco",
               ],
-              torno: ["Cubrecuchilla 300", "Teletubi 300"],
+              torno: [
+                "Cubrecuchilla 300",
+                "Teletubi 300",
+                "Caja 250",
+                "Caja 300",
+                "Caja 330",
+              ],
               soldador: [
                 "Vela 330",
                 "Vela 250",
@@ -656,23 +679,25 @@ async function mostrarContenido(nombre) {
           const tipo = event.target.getAttribute("data-tipo");
           console.log("Seleccionado:", tipo);
           try {
-            const res = await fetch("http://localhost:5000/api/carmelostockfabrica")
-            if (!res.ok) throw new Error("Error en la respuesta del servidor")
+            const res = await fetch(
+              "http://localhost:5000/api/carmelostockfabrica"
+            );
+            if (!res.ok) throw new Error("Error en la respuesta del servidor");
 
-            const piezaEnCarmerlo = await res.json()
+            const piezaEnCarmerlo = await res.json();
 
             const piezasCarmero = {
               carmerlo: [
-                "Brazo 250", 
-                "Brazo 300", 
-                "Brazo 330", 
+                "Brazo 250",
+                "Brazo 300",
+                "Brazo 330",
                 "baseInox330",
-                "baseInox300", 
-                "baseInox250", 
+                "baseInox300",
+                "baseInox250",
                 "basePintada330",
-                "basePintada300", 
-                "baseInoxECO", 
-                "Caja Soldada Eco", 
+                "basePintada300",
+                "baseInoxECO",
+                "Caja Soldada Eco",
                 "Velero",
                 "Cubrecuchilla 250",
                 "Cubrecuchilla 330",
@@ -681,38 +706,41 @@ async function mostrarContenido(nombre) {
                 "Tapa Afilador 250",
                 "Teletubi 330",
                 "Teletubi 250",
-                "Tapa Afilador Eco", 
-                "Cubrecuchilla 300", 
-                "Teletubi 300", 
+                "Tapa Afilador Eco",
+                "Cubrecuchilla 300",
+                "Teletubi 300",
                 "Vela 330",
                 "Vela 250",
                 "Vela 300",
                 "Planchada 330",
                 "Planchada 300",
-                "Planchada 250", 
+                "Planchada 250",
                 "cajas_torneadas_250",
                 "cajas_torneadas_300",
                 "cajas_torneadas_330",
                 "baseInox330",
                 "baseInox300",
                 "baseInox250",
-                "baseInoxECO"
-              ]
-            }
-            
+                "baseInoxECO",
+                "Caja 250",
+                "Caja 300",
+                "Caja 330",
+              ],
+            };
+
             const datosTabla = piezaEnCarmerlo.map((p) => {
               let categoria = Object.keys(piezasCarmero).find((key) =>
                 piezasCarmero[key].includes(p.nombre)
-              )
+              );
 
-              return{
+              return {
                 nombre: p.nombre,
-                cantidad: p.proveedores?.[categoria]?.cantidad
-              }
-            })
+                cantidad: p.proveedores?.[categoria]?.cantidad,
+              };
+            });
 
-            if(!tablaDiv){
-              console.error("No se encontro el elemento con el Id TablaDiv")
+            if (!tablaDiv) {
+              console.error("No se encontro el elemento con el Id TablaDiv");
             }
 
             new Tabulator(tablaDiv, {
@@ -723,52 +751,204 @@ async function mostrarContenido(nombre) {
               columns: [
                 { title: "Nombre", field: "nombre" },
                 { title: "Cantidad", field: "cantidad" },
-              ]
-            })
-
+              ],
+            });
           } catch (error) {
             console.error("Esto es un error", error);
-
           }
+        } else if (event.target.classList.contains("stockFabricaTerminado")) {
+          try {
+            const res = await fetch(
+              "http://localhost:5000/api/carmelostockfabrica"
+            );
+            if (!res.ok) throw new Error("Error en la respuesta del servidor");
 
+            const piezaEnCarmerlo = await res.json();
+
+            const piezasCarmero = {
+              terminado: [
+                "Brazo 250",
+                "Brazo 300",
+                "Brazo 330",
+                "baseInox330",
+                "baseInox300",
+                "baseInox250",
+                "basePintada330",
+                "basePintada300",
+                "baseInoxECO",
+                "Caja Soldada Eco",
+                "Velero",
+                "Cubrecuchilla 250",
+                "Cubrecuchilla 330",
+                "Tapa Afilador",
+                "Aro Numerador",
+                "Tapa Afilador 250",
+                "Teletubi 330",
+                "Teletubi 250",
+                "Tapa Afilador Eco",
+                "Cubrecuchilla 300",
+                "Teletubi 300",
+                "Vela 330",
+                "Vela 250",
+                "Vela 300",
+                "Planchada 330",
+                "Planchada 300",
+                "Planchada 250",
+                "cajas_torneadas_250",
+                "cajas_torneadas_300",
+                "cajas_torneadas_330",
+                "baseInox330",
+                "baseInox300",
+                "baseInox250",
+                "baseInoxECO",
+                "Caja 250",
+                "Caja 300",
+                "Caja 330",
+              ],
+            };
+
+            const datosTabla = piezaEnCarmerlo.map((p) => {
+              let categoria = Object.keys(piezasCarmero).find((key) =>
+                piezasCarmero[key].includes(p.nombre)
+              );
+
+              return {
+                nombre: p.nombre,
+                cantidad: p.cantidad?.[categoria]?.cantidad,
+              };
+            });
+
+            if (!tablaDiv) {
+              console.error("No se encontro el elemento con el Id TablaDiv");
+            }
+
+            new Tabulator(tablaDiv, {
+              height: 500,
+              layout: "fitColumns",
+              data: datosTabla,
+              initialSort: [{ column: "nombre", dir: "asc" }],
+              columns: [
+                { title: "Nombre", field: "nombre" },
+                { title: "Cantidad", field: "cantidad" },
+              ],
+            });
+          } catch (error) {
+            console.error("Esto es un error", error);
+          }
         }
       });
 
+      document
+        .getElementById("btnEnviarCarmelo")
+        .addEventListener("click", function () {
+          const selectElement = document.getElementById(
+            "piezaACarmerloSelector"
+          );
+          const inputCantidad = document.getElementById(
+            "cantidadEnviarCarmerlo"
+          );
 
+          const piezaSeleccionada = selectElement.value;
+          const cantidad = inputCantidad.value;
 
+          if (piezaSeleccionada && cantidad > 0) {
+            fetch(
+              `http://localhost:5000/api/enviosCarmelo/${piezaSeleccionada}`,
+              {
+                method: "PUT",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ cantidad: cantidad }),
+              }
+            )
+              .then((response) => response.json())
+              .then((data) => {
+                console.log(data.mensaje);
+                alert(data.mensaje);
+                inputCantidad.value = "";
+              })
+              .catch((error) => {
+                console.log("Error:", error);
+              });
+          } else {
+            console.log(
+              "Por favor, seleccione una pieza y una cantidad válida."
+            );
+            alert("Por favor, seleccione una pieza y una cantidad válida.");
+          }
+        });
 
+      document
+        .getElementById("btnEntregaCarmelo")
+        .addEventListener("click", function () {
+          const selectElement = document.getElementById("piezaEntregaCarmelo");
+          const inputCantidad = document.getElementById(
+            "cantidadEmtregacarmelo"
+          );
+
+          const piezaSeleccionada = selectElement.value;
+          const cantidad = inputCantidad.value;
+
+          if (piezaSeleccionada && cantidad > 0) {
+            fetch(
+              `http://localhost:5000/api/entregasCarmelo/${piezaSeleccionada}`,
+              {
+                method: "PUT",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ cantidad: cantidad }),
+              }
+            )
+              .then((response) => response.json())
+              .then((data) => {
+                console.log(data.mensaje);
+                alert(data.mensaje);
+                inputCantidad.value = "";
+              })
+              .catch((error) => {
+                console.log("Error:", error);
+              });
+          } else {
+            console.log(
+              "Por favor, seleccione una pieza y una cantidad válida."
+            );
+            alert("Por favor, seleccione una pieza y una cantidad válida.");
+          }
+        });
 
       break;
 
     case "Maxi":
       const lista_piezas_Maxi = [
-        "brazo_augeriado_250",
-        "brazo_augeriado_300",
-        "brazo_augeriado_330",
-        "cajas_torneadas_250",
-        "cajas_torneadas_300",
-        "cajas_torneadas_330",
-        "cubrecuchilla_250",
-        "cubre_300_torneado",
-        "cubrecuchilla_330",
-        "velero",
-        "vela_final_330",
-        "vela_final_250",
-        "vela_final_300",
-        "planchada_final_330",
-        "planchada_final_300",
-        "planchada_final_250",
-        "tapa_afilador",
-        "aro_numerador",
-        "tapa_afilador_250",
-        "teletubi_330",
-        "teletubi_300_torneado",
-        "teletubi_250",
+        "Brazo 250",
+        "Brazo 300",
+        "Brazo 330",
+        "Caja 250",
+        "Caja 300",
+        "Caja 330",
+        "Cubrecuchilla 250",
+        "Cubrecuchilla 300",
+        "Cubrecuchill 330",
+        "Velero",
+        "Vela 330",
+        "Vela 250",
+        "Vela 300",
+        "Planchada 330",
+        "Planchada 300",
+        "Planchada 250",
+        "Tapa Afilador",
+        "Aro Numerador",
+        "Tapa Afilador 250",
+        "Teletubi 330",
+        "Teletubi 300",
+        "Teletubi 250",
         "BaseInox_330",
         "BaseInox_300",
         "BaseInox_250",
         "BaseECO",
-        "tapa_afilador_eco",
+        "Tapa Afilador Eco",
       ];
 
       const cajaMaxi = document.createElement("div");
@@ -780,8 +960,9 @@ async function mostrarContenido(nombre) {
       <div>
         <p>Maxi</p>
           <div class="boxBtnStock">
-            <button class="stockMaxi"  data-tipo="StockEnMaxi" >En Carmelo</button>
+            <button class="stockMaxi"  data-tipo="StockEnMaxi" >En Maxi</button>
             <button class="stockFabrica"  data-tipo="StockEnFabrica">En Fabrica Bruto</button>
+            <button class="stockFabricaTerminado"  data-tipo="StockEnFabrica">En Fabrica Terminado</button>
           </div>
 
       </div>`;
@@ -790,13 +971,13 @@ async function mostrarContenido(nombre) {
           <p>Envio a Maxi</p>
          <div class="row">
             <label for="text">Enviar</label>
-              <select class="selector">${piezaMaxi}
+              <select id="PiezasSeleccionada" class="selector">${piezaMaxi}
               </select>
           </div>
           <div class="row">
               <label  for="cantidad">Cantidad:</label>
               <input class="cantidades" type="number" id="cantidad" min="0" required>
-              <button>Enviar</button>
+              <button id="EnviosAMaxi">Enviar</button>
             </div>
         </div>`;
       const formularioHTMLEntregaMaxi = `
@@ -804,13 +985,13 @@ async function mostrarContenido(nombre) {
             <p>Entregas de Maxi</p>
            <div class="row">
               <label for="text">Enviar</label>
-                <select class="selector">${piezaMaxi}
+                <select id="piezaEntregaMaxi" class="selector">${piezaMaxi}
                 </select>
             </div>
             <div class="row">
                 <label  for="cantidad">Cantidad:</label>
-                <input class="cantidades" type="number" id="cantidad" min="0" required>
-                <button>Enviar</button>
+                <input class="cantidades" type="number" id="cantidadEmtregaMaxi" min="0" required>
+                <button id="btnEntregaMaxi">Enviar</button>
               </div>
           </div>`;
 
@@ -835,7 +1016,18 @@ async function mostrarContenido(nombre) {
             console.log(piezaBrutaEnFabrica);
 
             const piezasLista = {
-              augeriado: ["Brazo 250", "Brazo 300", "Brazo 330", "baseInox330", "baseInox300", "baseInox250", "basePintada330", "basePintada300", "baseInoxECO", "Caja Soldada Eco"],
+              augeriado: [
+                "Brazo 250",
+                "Brazo 300",
+                "Brazo 330",
+                "baseInox330",
+                "baseInox300",
+                "baseInox250",
+                "basePintada330",
+                "basePintada300",
+                "baseInoxECO",
+                "Caja Soldada Eco",
+              ],
 
               bruto: [
                 "Velero",
@@ -848,7 +1040,13 @@ async function mostrarContenido(nombre) {
                 "Teletubi 250",
                 "Tapa Afilador Eco",
               ],
-              torno: ["Cubrecuchilla 300", "Teletubi 300"],
+              torno: [
+                "Cubrecuchilla 300",
+                "Teletubi 300",
+                "Caja 250",
+                "Caja 300",
+                "Caja 330",
+              ],
               soldador: [
                 "Vela 330",
                 "Vela 250",
@@ -896,11 +1094,238 @@ async function mostrarContenido(nombre) {
           } catch (error) {
             console.error("Esto es un error", error);
           }
-        } else if (event.target.classList.contains("StockEnMaxi")) {
-          const tipo = event.target.getAttribute("data-tipo");
-          console.log("Seleccionado:", tipo);
+        } else if (event.target.classList.contains("stockMaxi")) {
+          try {
+            const res = await fetch(
+              "http://localhost:5000/api/carmelostockfabrica"
+            );
+            if (!res.ok) throw new Error("Error en la respuesta del servidor");
+
+            const piezaEnCarmerlo = await res.json();
+
+            const piezasCarmero = {
+              maxi: [
+                "Brazo 250",
+                "Brazo 300",
+                "Brazo 330",
+                "baseInox330",
+                "baseInox300",
+                "baseInox250",
+                "basePintada330",
+                "basePintada300",
+                "baseInoxECO",
+                "Caja Soldada Eco",
+                "Velero",
+                "Cubrecuchilla 250",
+                "Cubrecuchilla 330",
+                "Tapa Afilador",
+                "Aro Numerador",
+                "Tapa Afilador 250",
+                "Teletubi 330",
+                "Teletubi 250",
+                "Tapa Afilador Eco",
+                "Cubrecuchilla 300",
+                "Teletubi 300",
+                "Vela 330",
+                "Vela 250",
+                "Vela 300",
+                "Planchada 330",
+                "Planchada 300",
+                "Planchada 250",
+                "cajas_torneadas_250",
+                "cajas_torneadas_300",
+                "cajas_torneadas_330",
+                "baseInox330",
+                "baseInox300",
+                "baseInox250",
+                "baseInoxECO",
+                "Caja 250",
+                "Caja 300",
+                "Caja 330",
+              ],
+            };
+
+            const datosTabla = piezaEnCarmerlo.map((p) => {
+              let categoria = Object.keys(piezasCarmero).find((key) =>
+                piezasCarmero[key].includes(p.nombre)
+              );
+
+              return {
+                nombre: p.nombre,
+                cantidad: p.proveedores?.[categoria]?.cantidad,
+              };
+            });
+
+            if (!tablaDiv) {
+              console.error("No se encontro el elemento con el Id TablaDiv");
+            }
+
+            new Tabulator(tablaDiv, {
+              height: 500,
+              layout: "fitColumns",
+              data: datosTabla,
+              initialSort: [{ column: "nombre", dir: "asc" }],
+              columns: [
+                { title: "Nombre", field: "nombre" },
+                { title: "Cantidad", field: "cantidad" },
+              ],
+            });
+          } catch (error) {
+            console.error("Esto es un error", error);
+          }
+        } else if (event.target.classList.contains("stockFabricaTerminado")) {
+          try {
+            const res = await fetch(
+              "http://localhost:5000/api/carmelostockfabrica"
+            );
+            if (!res.ok) throw new Error("Error en la respuesta del servidor");
+
+            const piezaEnCarmerlo = await res.json();
+
+            const piezasCarmero = {
+              terminado: [
+                "Brazo 250",
+                "Brazo 300",
+                "Brazo 330",
+                "baseInox330",
+                "baseInox300",
+                "baseInox250",
+                "basePintada330",
+                "basePintada300",
+                "baseInoxECO",
+                "Caja Soldada Eco",
+                "Velero",
+                "Cubrecuchilla 250",
+                "Cubrecuchilla 330",
+                "Tapa Afilador",
+                "Aro Numerador",
+                "Tapa Afilador 250",
+                "Teletubi 330",
+                "Teletubi 250",
+                "Tapa Afilador Eco",
+                "Cubrecuchilla 300",
+                "Teletubi 300",
+                "Vela 330",
+                "Vela 250",
+                "Vela 300",
+                "Planchada 330",
+                "Planchada 300",
+                "Planchada 250",
+                "cajas_torneadas_250",
+                "cajas_torneadas_300",
+                "cajas_torneadas_330",
+                "baseInox330",
+                "baseInox300",
+                "baseInox250",
+                "baseInoxECO",
+                "Caja 250",
+                "Caja 300",
+                "Caja 330",
+              ],
+            };
+
+            const datosTabla = piezaEnCarmerlo.map((p) => {
+              let categoria = Object.keys(piezasCarmero).find((key) =>
+                piezasCarmero[key].includes(p.nombre)
+              );
+
+              return {
+                nombre: p.nombre,
+                cantidad: p.cantidad?.[categoria]?.cantidad,
+              };
+            });
+
+            if (!tablaDiv) {
+              console.error("No se encontro el elemento con el Id TablaDiv");
+            }
+
+            new Tabulator(tablaDiv, {
+              height: 500,
+              layout: "fitColumns",
+              data: datosTabla,
+              initialSort: [{ column: "nombre", dir: "asc" }],
+              columns: [
+                { title: "Nombre", field: "nombre" },
+                { title: "Cantidad", field: "cantidad" },
+              ],
+            });
+          } catch (error) {
+            console.error("Esto es un error", error);
+          }
         }
       });
+
+      document
+        .getElementById("EnviosAMaxi")
+        .addEventListener("click", function () {
+          const piezasSeleccionada =
+            document.getElementById("PiezasSeleccionada");
+          const CantidadSeleccionada = document.getElementById("cantidad");
+
+          const piezaSeleccionada = piezasSeleccionada.value;
+          const cantidad = CantidadSeleccionada.value;
+
+          if (piezaSeleccionada && cantidad > 0) {
+            fetch(`http://localhost:5000/api/enviosMaxi/${piezaSeleccionada}`, {
+              method: "PUT",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ cantidad: cantidad }),
+            })
+              .then((response) => response.json())
+              .then((data) => {
+                console.log(data.mensaje);
+                alert(data.mensaje);
+                inputCantidad.value = "";
+              })
+              .catch((error) => {
+                console.log("Error:", error);
+              });
+          } else {
+            console.log(
+              "Por favor, seleccione una pieza y una cantidad válida."
+            );
+            alert("Por favor, seleccione una pieza y una cantidad válida.");
+          }
+        });
+
+      document
+        .getElementById("btnEntregaMaxi")
+        .addEventListener("click", function () {
+          const selectElement = document.getElementById("piezaEntregaMaxi");
+          const inputCantidad = document.getElementById("cantidadEmtregaMaxi");
+
+          const piezaSeleccionada = selectElement.value;
+          const cantidad = inputCantidad.value;
+
+          if (piezaSeleccionada && cantidad > 0) {
+            fetch(
+              `http://localhost:5000/api/entregasMaxi/${piezaSeleccionada}`,
+              {
+                method: "PUT",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ cantidad: cantidad }),
+              }
+            )
+              .then((response) => response.json())
+              .then((data) => {
+                console.log(data.mensaje);
+                alert(data.mensaje);
+                inputCantidad.value = "";
+              })
+              .catch((error) => {
+                console.log("Error:", error);
+              });
+          } else {
+            console.log(
+              "Por favor, seleccione una pieza y una cantidad válida."
+            );
+            alert("Por favor, seleccione una pieza y una cantidad válida.");
+          }
+        });
 
       break;
 
@@ -979,10 +1404,12 @@ async function mostrarContenido(nombre) {
 
             const piezasLista = {
               balancin: ["Teletubi Eco"],
-              soldador: [
-                "cabezal_pintada",
+              soldador: ["cabezal_pintada"],
+              augeriado: [
+                "Caja Soldada Eco",
+                "basePintada330",
+                "basePintada300",
               ],
-              augeriado: ["Caja Soldada Eco", "basePintada330", "basePintada300",],
             };
 
             const datosTabla = piezaBrutaEnFabrica.map((p) => {
@@ -1275,7 +1702,6 @@ async function mostrarContenido(nombre) {
       console.log(`No hay datos para ${nombre}`);
       return;
   }
-
   // Crear la tabla con Tabulator
   new Tabulator(tablaDiv, {
     layout: "fitColumns",

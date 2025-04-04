@@ -563,7 +563,7 @@ function box() {
       return;
     }
     try {
-      const response = await fetch(`http://localhost:5000/api/corte`);
+      const response = await fetch(`http://localhost:5000/api/torno`);
       if (!response.ok) throw new Error("Error en responder el servidor");
       const piezaCorte = await response.json();
 
@@ -1316,9 +1316,9 @@ function box() {
           "Carros",
           "Carros 250",
           "Movimiento",
-          "Caja_300",
-          "Caja_330",
-          "Caja_250",
+          "Caja 300",
+          "Caja 330",
+          "Caja 250",
           "Cubrecuchilla 300",
           "Teletubi 300",
           "Tornillo Teletubi Eco",
