@@ -45,6 +45,7 @@ async function mostrarContenido(nombre) {
     { title: "Nombre", field: "nombre" },
     { title: "Cantidad", field: "cantidad" },
   ];
+  
   data = [];
 
   switch (nombre) {

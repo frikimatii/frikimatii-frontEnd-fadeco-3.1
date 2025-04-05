@@ -1,10 +1,9 @@
 const { llenarProcesosDropdown, mostrarSeleccion, cargarPiezas } = require("./js/principio");
-
 const {mostrar, mostrarTabla, limpiarCampos} = require('./js/agregar')
-
 const {mostrarbtn,  box} = require('./js/mecanizado')
-
 const {mostrarContenido} = require("./js/provedores")
+const {boxArmado} = require("./js/armado")
+
 
 fetch("http://localhost:5000/api/auth/user", {
   method: "GET",
@@ -50,6 +49,8 @@ async function loadSection(section) {
       box()
     }else if (section === "provedores"){
       mostrarContenido("Soldador")
+    }else if (section === "armado"){
+      boxArmado()
     }
 
   } catch (error) {
@@ -59,7 +60,7 @@ async function loadSection(section) {
 }
 
 window.loadSection = loadSection;
-window.onload = () => loadSection("provedores");
+window.onload = () => loadSection("armado");
 // Tema oscuro/claro
 document.addEventListener("DOMContentLoaded", () => {
   const themeToggleBtn = document.getElementById("themeToggleBtn");
