@@ -444,16 +444,18 @@ function box() {
           "Brazo 330",
           "Brazo 300",
           "Brazo 250",
-          "Carros",
-          "Carros 250",
-          "Movimiento",
-          "Tornillo Teletubi Eco",
           "Caja Soldada Eco",
           "Carcaza Afilador",
 
         ],
         balancin:[
           "PortaEje",
+        ],
+        torno:[
+          "Tornillo Teletubi Eco",
+          "Carros",
+          "Carros 250",
+          "Movimiento"
         ]
       };
 
@@ -465,7 +467,7 @@ function box() {
             (p) => p.nombre === nombrePieza
           );
 
-          let cantidad = 0;
+          let cantidad ;
 
           if (
             pieezaEncontrada &&
@@ -504,6 +506,7 @@ function box() {
       if (!response.ok) throw new Error("Error en responder el servidor");
       const piezaplegadoras = await response.json();
       console.log(piezaplegadoras);
+      
       const tableData = piezaplegadoras.map((p) => ({
         nombre: p.nombre || "sin nombre",
         cantidad: p.cantidad?.augeriado?.cantidad || 0,
@@ -604,7 +607,7 @@ function box() {
             (p) => p.nombre === nombrePieza
           );
 
-          let cantidad = 0;
+          let cantidad ;
 
           if (
             pieezaEncontrada &&
@@ -842,7 +845,7 @@ function box() {
           "Planchada 300",
           "Planchada 250",
         ],
-        bruto: ["Varilla 330", "Varilla 300", "Varilla 250"],
+        corte: ["Varilla 330", "Varilla 300", "Varilla 250"],
         augeriado: ["Cuadrado Regulador"],
       };
 

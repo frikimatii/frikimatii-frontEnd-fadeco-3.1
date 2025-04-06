@@ -1943,8 +1943,7 @@ async function mostrarContenido(nombre) {
               </div>       
         </div>`;
 
-      const formularioHTMLEntregaAfilador = 
-        `<div class="container-enviosSoldador">
+      const formularioHTMLEntregaAfilador = `<div class="container-enviosSoldador">
                      <p>Entregas de Afilador</p>
                  <div class="row">
                     <label for="text">Enviar</label>
@@ -2077,8 +2076,6 @@ async function mostrarContenido(nombre) {
             console.error("es un error");
           }
         } else if (event.target.classList.contains("stockEnFabricaAfilador")) {
-          console.log("holasad")
-
           try {
             const res = await fetch("http://localhost:5000/api/afilador");
             if (!res.ok) throw new Error("Error en respuesta del servidor");
