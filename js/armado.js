@@ -1,4 +1,37 @@
 async function boxArmado() {
+  const Maquinas = [
+    "Inox_330",
+    "Inox_300",
+    "Inox_250",
+    "Pintada_330",
+    "Pintada_300",
+    "Inox_ECO",
+  ];
+
+  const ParteMaquinasMOTOR = [
+    "CajaMotor_330",
+    "CajaMotor_300",
+    "CajaMotor_250",
+    "CajaMotor_ECO",
+  ];
+
+  const ParteMaquinasPrearmado = [
+    "BasePreArmada_Inox330",
+    "BasePreArmada_Inox300",
+    "BasePreArmada_Inox250",
+    "BasePreArmada_InoxECO",
+    "BasePreArmada_Pintada330",
+    "BasePreArmada_Pintada300",
+  ];
+
+  function generarSelector(pieza) {
+    let opcionesSelect = `<option value="">Seleccione Una Pieza</option>`;
+    pieza.forEach((pieza) => {
+      opcionesSelect += `<option value="${pieza}">${pieza}</option>`;
+    });
+    return opcionesSelect;
+  }
+
   const BoxArmado = document.getElementById("zonaArmado");
 
   if (!BoxArmado) {
@@ -51,6 +84,8 @@ async function boxArmado() {
   motoresDiv.style.padding = "10px";
   motoresDiv.style.borderRadius = "8px";
 
+  const motores = generarSelector(ParteMaquinasMOTOR);
+
   motoresDiv.innerHTML = `
       <div class="boxMotores">
         <div class="stockMotores">
@@ -72,21 +107,21 @@ async function boxArmado() {
           <p class="tituloBtnMotoreArmados">Motores Armados</p>
           <div class="row">
             <label for="text">Motor</label>
-            <select id="piezaEnviarAfilador1" class="selector">
-              ${piezaAfilador}
+            <select id="MotorSeleccionado" class="selector">
+              ${motores}
             </select>
           </div>
           <div class="row">
-            <label for="cantidadEnviarAfilador1">Cantidad:</label>
-            <input class="cantidades" type="number" id="cantidadEnviarAfilador1" min="0" required />
-            <button class="btnArmarMotores">Armar Motores</button>
+            <label for="cantidad">Cantidad:</label>
+            <input class="cantidades" type="number" id="cantidadMotores" min="0" required />
+            <button id="ArmarMotores" class="btnArmarMotores">Armar Motores</button>
           </div>
         </div>
         <div class="boxmecanizaodMotores">
           <p class="tituloBtnMotoreArmados">Motores Armado / Torno</p>
           <div class="boxMotoresTorneado">
-            <button>Motores Torno</button>
-            <button>Motores Armado</button>
+            <button id="stockMotoresTorno">Motores Torno</button>
+            <button id="stockMotoresFinales">Motores Armado</button>
           </div>
         </div>
       </div>
@@ -131,6 +166,38 @@ async function boxArmado() {
         });
       } catch (error) {
         console.log("ERROR EM EL SERVIDOR", error);
+      }
+    });
+
+  document
+    .getElementById("ArmarMotores")
+    .addEventListener("click", function () {
+      const piezaSeleccionada = document.getElementById("MotorSeleccionado");
+      const cantidadSeleccionada = document.getElementById("cantidadMotores");
+
+      const pieza = piezaSeleccionada.value;
+      const cantidad = cantidadSeleccionada.value;
+      console.log(cantidad);
+      if (pieza && cantidad > 0) {
+        fetch(`http://localhost:5000/api/armadoDeMotores/${pieza}`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ cantidad: cantidad }),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            console.log(data.mensaje);
+            alert(data.mensaje);
+            cantidadSeleccionada.value = "";
+          })
+          .catch((error) => {
+            console.log("Error:", error);
+          });
+      } else {
+        console.log("Por favor, seleccione una pieza y una cantidad válida.");
+        alert("Por favor, seleccione una pieza y una cantidad válida.");
       }
     });
 
@@ -242,6 +309,107 @@ async function boxArmado() {
     augeriado: ["Tornillo Teletubi Eco", "Caja Soldada Eco"],
   });
 
+  ///Stock de motores
+
+  document
+    .getElementById("stockMotoresTorno")
+    .addEventListener("click", async function () {
+      try {
+        const res = await fetch("http://localhost:5000/api/Motores");
+        if (!res.ok) throw new Error("Error en respuesta del servidor");
+
+        const piezaBrutoEnFabrica = await res.json();
+
+        const piezasLista = {
+          fresa: [
+            "CajaMotor_330",
+            "CajaMotor_300",
+            "CajaMotor_250",
+            "CajaMotor_ECO",
+          ],
+        };
+
+        const datosTabla = piezaBrutoEnFabrica.map((p) => {
+          let categoria = Object.keys(piezasLista).find((key) =>
+            piezasLista[key].includes(p.nombre)
+          );
+          return {
+            nombre: p.nombre,
+            cantidad: p.cantidad?.[categoria]?.cantidad, // Evitar undefined
+          };
+        });
+
+        // Verifica que el div donde se mostrará la tabla exista
+        if (!tablaDiv) {
+          console.error("No se encontró el elemento con id 'tablaDiv'");
+          return;
+        }
+
+        new Tabulator(tablaDiv, {
+          height: 500,
+          layout: "fitColumns",
+          data: datosTabla,
+          initialSort: [{ column: "nombre", dir: "asc" }],
+          columns: [
+            { title: "Nombre", field: "nombre" },
+            { title: "Cantidad", field: "cantidad" },
+          ],
+        });
+      } catch (error) {
+        console.error("Esto es un error:", error);
+      }
+    });
+
+
+    document
+    .getElementById("stockMotoresFinales")
+    .addEventListener("click", async function () {
+      try {
+        const res = await fetch("http://localhost:5000/api/Motores");
+        if (!res.ok) throw new Error("Error en respuesta del servidor");
+
+        const piezaBrutoEnFabrica = await res.json();
+
+        const piezasLista = {
+          terminado: [
+            "CajaMotor_330",
+            "CajaMotor_300",
+            "CajaMotor_250",
+            "CajaMotor_ECO",
+          ],
+        };
+
+        const datosTabla = piezaBrutoEnFabrica.map((p) => {
+          let categoria = Object.keys(piezasLista).find((key) =>
+            piezasLista[key].includes(p.nombre)
+          );
+          return {
+            nombre: p.nombre,
+            cantidad: p.cantidad?.[categoria]?.cantidad, // Evitar undefined
+          };
+        });
+
+        // Verifica que el div donde se mostrará la tabla exista
+        if (!tablaDiv) {
+          console.error("No se encontró el elemento con id 'tablaDiv'");
+          return;
+        }
+
+        new Tabulator(tablaDiv, {
+          height: 500,
+          layout: "fitColumns",
+          data: datosTabla,
+          initialSort: [{ column: "nombre", dir: "asc" }],
+          columns: [
+            { title: "Nombre", field: "nombre" },
+            { title: "Cantidad", field: "cantidad" },
+          ],
+        });
+      } catch (error) {
+        console.error("Esto es un error:", error);
+      }
+    });
+
   // --------- Columna 3: Pre-Armado ---------
   const preArmadoDiv = document.createElement("div");
   preArmadoDiv.id = "colPreArmado";
@@ -250,6 +418,8 @@ async function boxArmado() {
   preArmadoDiv.style.border = "1px solid #ccc";
   preArmadoDiv.style.padding = "10px";
   preArmadoDiv.style.borderRadius = "8px";
+
+  const preArmadas = generarSelector(ParteMaquinasPrearmado);
 
   preArmadoDiv.innerHTML = `
       <div class="">
@@ -269,7 +439,7 @@ async function boxArmado() {
           <div class="row">
             <label for="piezaEnviarAfilador2">Enviar</label>
             <select id="piezaEnviarAfilador2" class="selector">
-              ${piezaAfilador}
+              ${preArmadas}
             </select>
           </div>
           <div class="row">
@@ -453,7 +623,14 @@ async function boxArmado() {
         const Motores = await res.json();
 
         const PiezaMotores = {
-          bruto: ["BasePreArmada_Inox330", "BasePreArmada_Inox300", "BasePreArmada_Inox250", "BasePreArmada_InoxECO", "BasePreArmada_Pintada330", "BasePreArmada_Pintada300"],
+          bruto: [
+            "BasePreArmada_Inox330",
+            "BasePreArmada_Inox300",
+            "BasePreArmada_Inox250",
+            "BasePreArmada_InoxECO",
+            "BasePreArmada_Pintada330",
+            "BasePreArmada_Pintada300",
+          ],
         };
 
         const motoresFiltrado = Motores.filter((p) =>
@@ -484,7 +661,6 @@ async function boxArmado() {
       }
     });
 
-
   // --------- Columna 4: Armado Final ---------
   const armadoFinalDiv = document.createElement("div");
   armadoFinalDiv.id = "colArmadoFinal";
@@ -494,6 +670,8 @@ async function boxArmado() {
   armadoFinalDiv.style.padding = "10px";
   armadoFinalDiv.style.borderRadius = "8px";
   armadoFinalDiv.style.marginRight = "10px";
+
+  const maquinasArmadas = generarSelector(Maquinas);
 
   armadoFinalDiv.innerHTML = `
       <div class="">
@@ -513,7 +691,7 @@ async function boxArmado() {
         <div class="row">
           <label for="piezaEnviarAfilador3">Enviar</label>
           <select id="piezaEnviarAfilador3" class="selector">
-            ${piezaAfilador}
+            ${maquinasArmadas}
           </select>
         </div>
         <div class="row">
@@ -545,51 +723,50 @@ async function boxArmado() {
     </div>
   </div>`;
 
+  async function cargarPreArmado(idButon, PiezaPreArmado) {
+    document.getElementById(idButon).addEventListener("click", async () => {
+      try {
+        const res = await fetch("http://localhost:5000/api/StockPrearmado");
+        if (!res.ok) throw new Error("Error en respuest del Servidoe");
 
-    async function cargarPreArmado(idButon, PiezaPreArmado) {
-      document.getElementById(idButon).addEventListener("click", async () => {
-        try {
-          const res = await fetch("http://localhost:5000/api/StockPrearmado");
-          if (!res.ok) throw new Error("Error en respuest del Servidoe");
-  
-          const PiezaJsonPrearmado = await res.json();
-  
-          const PiezaValidad = Object.values(PiezaPreArmado).flat();
-          const piezaFiltradass = PiezaJsonPrearmado.filter((p) =>
-            PiezaValidad.includes(p.nombre)
+        const PiezaJsonPrearmado = await res.json();
+
+        const PiezaValidad = Object.values(PiezaPreArmado).flat();
+        const piezaFiltradass = PiezaJsonPrearmado.filter((p) =>
+          PiezaValidad.includes(p.nombre)
+        );
+
+        const datosTabla = piezaFiltradass.map((p) => {
+          let categoria = Object.keys(PiezaPreArmado).find((key) =>
+            PiezaPreArmado[key].includes(p.nombre)
           );
-  
-          const datosTabla = piezaFiltradass.map((p) => {
-            let categoria = Object.keys(PiezaPreArmado).find((key) =>
-              PiezaPreArmado[key].includes(p.nombre)
-            );
-            return {
-              nombre: p.nombre,
-              cantidad: p.cantidad?.[categoria]?.cantidad,
-            };
-          });
-  
-          if (!tablaDiv) {
-            console.error("No se encontró el elemento con id 'tablaDiv'");
-            return;
-          }
-  
-          new Tabulator(tablaDiv, {
-            height: 500,
-            layout: "fitColumns",
-            data: datosTabla,
-            initialSort: [{ column: "nombre", dir: "asc" }],
-            columns: [
-              { title: "Nombre", field: "nombre" },
-              { title: "Cantidad", field: "cantidad" },
-            ],
-          });
-        } catch (error) {
-          console.log("error", error);
+          return {
+            nombre: p.nombre,
+            cantidad: p.cantidad?.[categoria]?.cantidad,
+          };
+        });
+
+        if (!tablaDiv) {
+          console.error("No se encontró el elemento con id 'tablaDiv'");
+          return;
         }
-      });
-    }
-  
+
+        new Tabulator(tablaDiv, {
+          height: 500,
+          layout: "fitColumns",
+          data: datosTabla,
+          initialSort: [{ column: "nombre", dir: "asc" }],
+          columns: [
+            { title: "Nombre", field: "nombre" },
+            { title: "Cantidad", field: "cantidad" },
+          ],
+        });
+      } catch (error) {
+        console.log("error", error);
+      }
+    });
+  }
+
   BoxArmado.appendChild(armadoFinalDiv);
 }
 

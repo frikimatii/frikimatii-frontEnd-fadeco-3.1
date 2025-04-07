@@ -1,4 +1,7 @@
 async function mostrarContenido(nombre) {
+
+  
+
   function generarSelector(pieza) {
     let opcionesSelect = `<option value="">Seleccione Una Pieza</option>`;
     pieza.forEach((pieza) => {

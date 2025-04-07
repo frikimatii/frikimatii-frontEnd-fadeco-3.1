@@ -591,12 +591,14 @@ function box() {
           "Cubrecuchilla 300",
           "Teletubi 300",
           "Tornillo Teletubi Eco",
-          "Caja 330 Armada",
-          "Caja 300 Armada",
-          "Caja 250 Armada",
-          "Caja eco Armada",
           "Tapa Afilador Eco",
         ],
+        fresa:[
+          "CajaMotor_330",
+          "CajaMotor_300",
+          "CajaMotor_250",
+          "CajaMotor_ECO",
+        ]
       };
 
       let datosTabla = [];
@@ -607,7 +609,7 @@ function box() {
             (p) => p.nombre === nombrePieza
           );
 
-          let cantidad ;
+          let cantidad = 0
 
           if (
             pieezaEncontrada &&
