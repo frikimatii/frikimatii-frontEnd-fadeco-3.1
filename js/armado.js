@@ -177,7 +177,6 @@ async function boxArmado() {
 
       const pieza = piezaSeleccionada.value;
       const cantidad = cantidadSeleccionada.value;
-      console.log(cantidad);
       if (pieza && cantidad > 0) {
         fetch(`http://localhost:5000/api/armadoDeMotores/${pieza}`, {
           method: "PUT",
@@ -360,8 +359,7 @@ async function boxArmado() {
       }
     });
 
-
-    document
+  document
     .getElementById("stockMotoresFinales")
     .addEventListener("click", async function () {
       try {
@@ -438,14 +436,14 @@ async function boxArmado() {
           <p class="tituloBtnMotoreArmados" >Entregas de Afilador</p>
           <div class="row">
             <label for="piezaEnviarAfilador2">Enviar</label>
-            <select id="piezaEnviarAfilador2" class="selector">
+            <select id="piezaSeleccionadaPreArmado" class="selector">
               ${preArmadas}
             </select>
           </div>
           <div class="row">
             <label for="cantidadEnviarAfilador2">Cantidad:</label>
-            <input class="cantidades" type="number" id="cantidadEnviarAfilador2" min="0" required />
-            <button class="btnArmarPre">Base PreArmado</button>
+            <input class="cantidades" type="number" id="cantpreArmado" min="0" required />
+            <button class="btnArmarPre" id="btnArmarPre">Base PreArmado</button>
           </div>
         </div>
         <div class="boxmecanizaodMotores">
@@ -515,8 +513,8 @@ async function boxArmado() {
       "Capacitores",
     ],
     augeriado: ["Movimiento", "Carros"],
-    torno: ["Tornillo guia", "Rueditas", "CajaMotor_330"],
-    terminado: ["baseInox330", "Aro Numerador", "Eje Rectificado"],
+    torno: ["Tornillo guia", "Rueditas"],
+    terminado: ["baseInox330", "Aro Numerador", "Eje Rectificado", "CajaMotor_330"],
     balancin: ["Guia U"],
     soldador: ["Varilla 330"],
   });
@@ -533,8 +531,8 @@ async function boxArmado() {
       "Capacitores",
     ],
     augeriado: ["Movimiento", "Carros"],
-    torno: ["Tornillo guia", "Rueditas", "CajaMotor_300"],
-    terminado: ["baseInox300", "Aro Numerador", "Eje Rectificado"],
+    torno: ["Tornillo guia", "Rueditas"],
+    terminado: ["baseInox300", "Aro Numerador", "Eje Rectificado","CajaMotor_300"],
     balancin: ["Guia U"],
     soldador: ["Varilla 300"],
   });
@@ -551,8 +549,8 @@ async function boxArmado() {
       "Capacitores",
     ],
     augeriado: ["Movimiento", "Carros"],
-    torno: ["Tornillo guia", "Rueditas", "CajaMotor_330"],
-    terminado: ["basePintada330", "Aro Numerador", "Eje Rectificado"],
+    torno: ["Tornillo guia", "Rueditas"],
+    terminado: ["basePintada330", "Aro Numerador", "Eje Rectificado", "CajaMotor_330"],
     balancin: ["Guia U"],
     soldador: ["Varilla 330"],
   });
@@ -569,8 +567,8 @@ async function boxArmado() {
       "Capacitores",
     ],
     augeriado: ["Movimiento", "Carros"],
-    torno: ["Tornillo guia", "Rueditas", "CajaMotor_300"],
-    terminado: ["basePintada300", "Aro Numerador", "Eje Rectificado"],
+    torno: ["Tornillo guia", "Rueditas"],
+    terminado: ["basePintada300", "Aro Numerador", "Eje Rectificado", "CajaMotor_300"],
     balancin: ["Guia U"],
     soldador: ["Varilla 300"],
   });
@@ -586,8 +584,8 @@ async function boxArmado() {
       "Capacitores 250",
     ],
     augeriado: ["Movimiento", "Carros 250"],
-    torno: ["Tornillo guia", "Rueditas", "CajaMotor_250"],
-    terminado: ["baseInox250", "Aro Numerador", "Eje Rectificado"],
+    torno: ["Tornillo guia", "Rueditas"],
+    terminado: ["baseInox250", "Aro Numerador", "Eje Rectificado", "CajaMotor_250"],
     balancin: ["Guia U"],
     soldador: ["Varilla 250"],
   });
@@ -607,9 +605,9 @@ async function boxArmado() {
       "Eje Rectificado",
       "CajaMotor_ECO",
     ],
-    torno: ["Rueditas"],
+    torno: ["Rueditas", "Tornillo guia"],
     augeriado: ["Movimiento", "Carros"],
-    balancin: ["Guia U", "Tornillo guia"],
+    balancin: ["Guia U"],
     soldador: ["Varilla 330"],
   });
 
@@ -638,7 +636,7 @@ async function boxArmado() {
         );
         const datosTabla = motoresFiltrado.map((p) => ({
           nombre: p.nombre,
-          cantidad: p.cantidad?.bruto?.cantidad,
+          cantidad: p.cantidad?.terminado?.cantidad,
         }));
 
         if (!tablaDiv) {
@@ -652,14 +650,43 @@ async function boxArmado() {
           data: datosTabla,
           initialSort: [{ column: "nombre", dir: "asc" }],
           columns: [
-            { title: "Nombre", field: "nombre" },
-            { title: "Cantidad", field: "cantidad" },
+            { title: "Nombre", field: "nombre" , minWidth: 200 },
+            { title: "Cantidad", field: "cantidad", with: 100},
           ],
         });
       } catch (error) {
         console.log("ERROR EM EL SERVIDOR", error);
       }
     });
+
+  document.getElementById('btnArmarPre').addEventListener('click', function (){
+    const piezaSeleccionada = document.getElementById("piezaSeleccionadaPreArmado");
+    const cantidadSeleccionada = document.getElementById("cantpreArmado");
+
+    const pieza = piezaSeleccionada.value;
+    const cantidad = cantidadSeleccionada.value;
+    if (pieza && cantidad > 0) {
+      fetch(`http://localhost:5000/api/preArmado/${pieza}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ cantidad: cantidad }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          console.log(data.mensaje);
+          alert(data.mensaje);
+          cantidadSeleccionada.value = "";
+        })
+        .catch((error) => {
+          console.log("Error:", error);
+        });
+    } else {
+      console.log("Por favor, seleccione una pieza y una cantidad válida.");
+      alert("Por favor, seleccione una pieza y una cantidad válida.");
+    }
+  })
 
   // --------- Columna 4: Armado Final ---------
   const armadoFinalDiv = document.createElement("div");
