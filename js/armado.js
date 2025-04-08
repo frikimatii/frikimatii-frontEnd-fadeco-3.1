@@ -24,6 +24,21 @@ async function boxArmado() {
     "BasePreArmada_Pintada300",
   ];
 
+  const meses = [
+    "Enero",
+    "Febrero",
+    "Marzo",
+    "Abril",
+    "Mayo",
+    "Junio",
+    "Julio",
+    "Agosto",
+    "Septiembre",
+    "Octubre",
+    "Noviembre",
+    "Diciembre",
+  ];
+
   function generarSelector(pieza) {
     let opcionesSelect = `<option value="">Seleccione Una Pieza</option>`;
     pieza.forEach((pieza) => {
@@ -132,7 +147,7 @@ async function boxArmado() {
     .getElementById("stockMotores")
     .addEventListener("click", async function () {
       try {
-        const res = await fetch("http://localhost:5000/api/shop");
+        const res = await fetch("http://localhost:50003-2.onrender.com/api/shop");
         if (!res.ok) throw new Error("Error en respuesta del servidor");
 
         const Motores = await res.json();
@@ -514,7 +529,12 @@ async function boxArmado() {
     ],
     augeriado: ["Movimiento", "Carros"],
     torno: ["Tornillo guia", "Rueditas"],
-    terminado: ["baseInox330", "Aro Numerador", "Eje Rectificado", "CajaMotor_330"],
+    terminado: [
+      "baseInox330",
+      "Aro Numerador",
+      "Eje Rectificado",
+      "CajaMotor_330",
+    ],
     balancin: ["Guia U"],
     soldador: ["Varilla 330"],
   });
@@ -532,7 +552,12 @@ async function boxArmado() {
     ],
     augeriado: ["Movimiento", "Carros"],
     torno: ["Tornillo guia", "Rueditas"],
-    terminado: ["baseInox300", "Aro Numerador", "Eje Rectificado","CajaMotor_300"],
+    terminado: [
+      "baseInox300",
+      "Aro Numerador",
+      "Eje Rectificado",
+      "CajaMotor_300",
+    ],
     balancin: ["Guia U"],
     soldador: ["Varilla 300"],
   });
@@ -550,7 +575,12 @@ async function boxArmado() {
     ],
     augeriado: ["Movimiento", "Carros"],
     torno: ["Tornillo guia", "Rueditas"],
-    terminado: ["basePintada330", "Aro Numerador", "Eje Rectificado", "CajaMotor_330"],
+    terminado: [
+      "basePintada330",
+      "Aro Numerador",
+      "Eje Rectificado",
+      "CajaMotor_330",
+    ],
     balancin: ["Guia U"],
     soldador: ["Varilla 330"],
   });
@@ -568,7 +598,12 @@ async function boxArmado() {
     ],
     augeriado: ["Movimiento", "Carros"],
     torno: ["Tornillo guia", "Rueditas"],
-    terminado: ["basePintada300", "Aro Numerador", "Eje Rectificado", "CajaMotor_300"],
+    terminado: [
+      "basePintada300",
+      "Aro Numerador",
+      "Eje Rectificado",
+      "CajaMotor_300",
+    ],
     balancin: ["Guia U"],
     soldador: ["Varilla 300"],
   });
@@ -585,7 +620,12 @@ async function boxArmado() {
     ],
     augeriado: ["Movimiento", "Carros 250"],
     torno: ["Tornillo guia", "Rueditas"],
-    terminado: ["baseInox250", "Aro Numerador", "Eje Rectificado", "CajaMotor_250"],
+    terminado: [
+      "baseInox250",
+      "Aro Numerador",
+      "Eje Rectificado",
+      "CajaMotor_250",
+    ],
     balancin: ["Guia U"],
     soldador: ["Varilla 250"],
   });
@@ -650,8 +690,8 @@ async function boxArmado() {
           data: datosTabla,
           initialSort: [{ column: "nombre", dir: "asc" }],
           columns: [
-            { title: "Nombre", field: "nombre" , minWidth: 200 },
-            { title: "Cantidad", field: "cantidad", with: 100},
+            { title: "Nombre", field: "nombre", minWidth: 200 },
+            { title: "Cantidad", field: "cantidad", with: 100 },
           ],
         });
       } catch (error) {
@@ -659,8 +699,10 @@ async function boxArmado() {
       }
     });
 
-  document.getElementById('btnArmarPre').addEventListener('click', function (){
-    const piezaSeleccionada = document.getElementById("piezaSeleccionadaPreArmado");
+  document.getElementById("btnArmarPre").addEventListener("click", function () {
+    const piezaSeleccionada = document.getElementById(
+      "piezaSeleccionadaPreArmado"
+    );
     const cantidadSeleccionada = document.getElementById("cantpreArmado");
 
     const pieza = piezaSeleccionada.value;
@@ -686,7 +728,7 @@ async function boxArmado() {
       console.log("Por favor, seleccione una pieza y una cantidad válida.");
       alert("Por favor, seleccione una pieza y una cantidad válida.");
     }
-  })
+  });
 
   // --------- Columna 4: Armado Final ---------
   const armadoFinalDiv = document.createElement("div");
@@ -699,17 +741,18 @@ async function boxArmado() {
   armadoFinalDiv.style.marginRight = "10px";
 
   const maquinasArmadas = generarSelector(Maquinas);
+  const todoslosmeses = generarSelector(meses);
 
   armadoFinalDiv.innerHTML = `
-      <div class="">
+      <div class="boxArmado">
         <h3 class="tituloBtnMotoreArmados">Armado Final</h3>
         <div class="boxBotonesMaquinas">
-        <button id="maquinasI330>Inox 330</button>
-        <button id="maquinasP300>Pintada 330</button>
-        <button id="maquinasI250>Inox 250</button>
-        <button id="maquinasI300>Inox 300</button>
-        <button id="maquinasP300>Pintada 300</button>
-        <button id="maquinasIECO>Inox Eco</button>
+        <button id="maquinasi330">Inox 330 </button>
+        <button id="maquinasp330">Pintada 330 </button>
+        <button id="maquinasi250">Inox 250 </button>
+        <button id="maquinasi300">Inox 300 </button>
+        <button id="maquinasp300">Pintada 300 </button>
+        <button id="maquinasiECO">Inox Eco </button>
         </div>
       </div>
   
@@ -717,55 +760,57 @@ async function boxArmado() {
         <p class="tituloBtnMotoreArmados">Maquinas Terminadas</p>
         <div class="row">
           <label for="piezaEnviarAfilador3">Enviar</label>
-          <select id="piezaEnviarAfilador3" class="selector">
+          <select id="maquinaSeleccionada" class="selector">
             ${maquinasArmadas}
           </select>
         </div>
         <div class="row">
           <label for="cantidadEnviarAfilador3">Cantidad:</label>
-          <input class="cantidades" type="number" id="cantidadEnviarAfilador3" min="0" required />
-          <button class="btnArmarfinal">Terminadas</button>
+          <input class="cantidades" type="number" id="cantidadMaquinasArmadas" min="0" required />
+          <button class="btnArmarfinal" id="btnArmarfinal" >Terminadas</button>
         </div>
       </div>
   
       <div class="boxMotoresTorneado">
       <p class="tituloBtnMotoreArmados" >Maquinas Terminadas / grafico</p>
         <div class="boxBotonesCajas">
-          <button>Motores Torno</button>
-          <button>Motores Armado</button>
+          <button id="MaquinasTerminadas" >Maquinas Armadas</button>
+<button id="abrirGraficos">Graficos del Mes</button>            
         </div>
       </div>
 
-        <div style="margin-top: 20px; padding: 10px; border: 1px solid white; border-radius: 8px;">
+    <div style="margin-top: 20px; padding: 10px; border: 1px solid white; border-radius: 8px;">
     <p class="tituloBtnMotoreArmados">Cierre del Mes</p>
     <div class="boxBotonesCajas">
       <div class="row">
-          <label for="piezaEnviarAfilador3">Enviar</label>
-          <select id="piezaEnviarAfilador3" class="selector">
-            ${piezaAfilador}
+          <label for="text">Enviar</label>
+          <select id="mesSeleccionado" class="selector">
+            ${todoslosmeses}
           </select>
-          <button>Ver Historial</button>
+          <button id="CerraMes">Cerra Mes</button>
         </div>
       
     </div>
   </div>`;
 
-  async function cargarPreArmado(idButon, PiezaPreArmado) {
+  BoxArmado.appendChild(armadoFinalDiv);
+
+  async function cargarArmadoFinal(idButon, PiezaArmado) {
     document.getElementById(idButon).addEventListener("click", async () => {
       try {
-        const res = await fetch("http://localhost:5000/api/StockPrearmado");
+        const res = await fetch("http://localhost:5000/api/piezasArmado");
         if (!res.ok) throw new Error("Error en respuest del Servidoe");
 
         const PiezaJsonPrearmado = await res.json();
 
-        const PiezaValidad = Object.values(PiezaPreArmado).flat();
+        const PiezaValidad = Object.values(PiezaArmado).flat();
         const piezaFiltradass = PiezaJsonPrearmado.filter((p) =>
           PiezaValidad.includes(p.nombre)
         );
 
         const datosTabla = piezaFiltradass.map((p) => {
-          let categoria = Object.keys(PiezaPreArmado).find((key) =>
-            PiezaPreArmado[key].includes(p.nombre)
+          let categoria = Object.keys(PiezaArmado).find((key) =>
+            PiezaArmado[key].includes(p.nombre)
           );
           return {
             nombre: p.nombre,
@@ -784,8 +829,8 @@ async function boxArmado() {
           data: datosTabla,
           initialSort: [{ column: "nombre", dir: "asc" }],
           columns: [
-            { title: "Nombre", field: "nombre" },
-            { title: "Cantidad", field: "cantidad" },
+            { title: "Nombre", field: "nombre", minWidth: 200 },
+            { title: "Cantidad", field: "cantidad", width: 100 },
           ],
         });
       } catch (error) {
@@ -794,7 +839,364 @@ async function boxArmado() {
     });
   }
 
-  BoxArmado.appendChild(armadoFinalDiv);
+  cargarArmadoFinal("maquinasi330", {
+    terminado: [
+      "Brazo 330",
+      "Cubrecuchilla 330",
+      "Velero",
+      "Teletubi 330",
+      "Cuchilla 330",
+      "Vela 330",
+      "Planchada 330",
+      "Varilla Brazo 330",
+      "Tapa Afilador",
+      "Tubo Manija",
+      "Afilador",
+      "BasePreArmada_Inox330",
+    ],
+    bruto: [
+      "Cubre Motor Rectangulo",
+      "Cubre Motor Cuadrado",
+      "Perilla Brazo",
+      "Resorte Brazo",
+      "Pipas",
+      "Perilla Cubrecuchilla",
+      "Perilla Afilador",
+      "Base Afilador 330",
+      "Piedra Afilador",
+      "Pinche Frontal",
+      "Pinche lateral",
+    ],
+    soldador: ["Cuadrado Regulador", "cabezal_inox"],
+  });
+
+  cargarArmadoFinal("maquinasi300", {
+    terminado: [
+      "Brazo 300",
+      "Cubrecuchilla 300",
+      "Velero",
+      "Teletubi 300",
+      "Cuchilla 300",
+      "Vela 300",
+      "Planchada 300",
+      "Varilla Brazo 300",
+      "Tapa Afilador",
+      "Tubo Manija",
+      "Afilador",
+      "BasePreArmada_Inox300",
+    ],
+    bruto: [
+      "Cubre Motor Rectangulo",
+      "Cubre Motor Cuadrado",
+      "Perilla Brazo",
+      "Resorte Brazo",
+      "Pipas",
+      "Perilla Cubrecuchilla",
+      "Perilla Afilador",
+      "Base Afilador 300",
+      "Piedra Afilador",
+      "Pinche Frontal",
+      "Pinche lateral",
+    ],
+    soldador: ["Cuadrado Regulador", "cabezal_inox"],
+  });
+
+  cargarArmadoFinal("maquinasp330", {
+    terminado: [
+      "Brazo 330",
+      "Cubrecuchilla 330",
+      "Velero",
+      "Teletubi 330",
+      "Cuchilla 330",
+      "Vela 330",
+      "Planchada 330",
+      "Varilla Brazo 330",
+      "Tapa Afilador",
+      "Tubo Manija",
+      "Afilador",
+      "BasePreArmada_Pintada330",
+    ],
+    bruto: [
+      "Cubre Motor Rectangulo",
+      "Cubre Motor Cuadrado",
+      "Perilla Brazo",
+      "Resorte Brazo",
+      "Pipas",
+      "Perilla Cubrecuchilla",
+      "Perilla Afilador",
+      "Base Afilador 330",
+      "Piedra Afilador",
+      "Pinche Frontal",
+      "Pinche lateral",
+    ],
+    soldador: ["Cuadrado Regulador", "cabezal_Pintada"],
+  });
+
+  cargarArmadoFinal("maquinasp300", {
+    terminado: [
+      "Brazo 300",
+      "Cubrecuchilla 300",
+      "Velero",
+      "Teletubi 300",
+      "Cuchilla 300",
+      "Vela 300",
+      "Planchada 300",
+      "Varilla Brazo 300",
+      "Tapa Afilador",
+      "Tubo Manija",
+      "Afilador",
+      "BasePreArmada_Pintada300",
+    ],
+    bruto: [
+      "Cubre Motor Rectangulo",
+      "Cubre Motor Cuadrado",
+      "Perilla Brazo",
+      "Resorte Brazo",
+      "Pipas",
+      "Perilla Cubrecuchilla",
+      "Perilla Afilador",
+      "Base Afilador 300",
+      "Piedra Afilador",
+      "Pinche Frontal",
+      "Pinche lateral",
+    ],
+    soldador: ["Cuadrado Regulador", "cabezal_Pintada"],
+  });
+
+  cargarArmadoFinal("maquinasiECO", {
+    terminado: [
+      "Brazo 330",
+      "Cubrecuchilla 330",
+      "Velero",
+      "Cuchilla 330",
+      "Vela 330",
+      "Planchada 330",
+      "Varilla Brazo 330",
+      "Tubo Manija",
+      "Afilador",
+      "BasePreArmada_InoxECO",
+      "Tapa Afilador Eco",
+      "Teletubi Eco",
+    ],
+    bruto: [
+      "Perilla Brazo",
+      "Resorte Brazo",
+      "Pipas",
+      "Perilla Cubrecuchilla",
+      "Perilla Afilador",
+      "Base Afilador 250",
+      "Piedra Afilador",
+      "Pinche Frontal",
+      "Pinche lateral",
+      "Pitito Teletubi Eco",
+    ],
+    soldador: ["Cuadrado Regulador", "cabezal_inox"],
+  });
+
+  cargarArmadoFinal("maquinasi250", {
+    terminado: [
+      "Brazo 250",
+      "Cubrecuchilla 250",
+      "Velero",
+      "Teletubi 250",
+      "Cuchilla 250",
+      "Vela 250",
+      "Planchada 250",
+      "Varilla Brazo 250",
+      "Tapa Afilador 250",
+      "Tubo Manija 250",
+      "Afilador",
+      "BasePreArmada_Inox250",
+    ],
+    bruto: [
+      "Cubre Motor Rectangulo",
+      "Perilla Brazo",
+      "Resorte Brazo",
+      "Pipas",
+      "Perilla Cubrecuchilla",
+      "Perilla Afilador",
+      "Base Afilador 250",
+      "Piedra Afilador",
+      "Pinche Frontal 250",
+      "Pinche lateral 250",
+    ],
+    soldador: ["Cuadrado Regulador", "cabezal i250"],
+  });
+
+  document
+    .getElementById("MaquinasTerminadas")
+    .addEventListener("click", async function () {
+      try {
+        const res = await fetch("http://localhost:5000/api/maquinasTerminadas");
+        if (!res.ok) throw new Error("Error en respuesta del servidor");
+
+        const piezaBrutoEnFabrica = await res.json();
+
+        const piezasLista = {
+          terminadas: [
+            "Inox_330",
+            "Inox_300",
+            "Inox_250",
+            "Pintada_330",
+            "Pintada_300",
+            "Inox_ECO",
+          ],
+        };
+
+        const datosTabla = piezaBrutoEnFabrica.map((p) => {
+          let categoria = Object.keys(piezasLista).find((key) =>
+            piezasLista[key].includes(p.nombre)
+          );
+          return {
+            nombre: p.nombre,
+            cantidad: p.cantidad?.[categoria]?.cantidad, // Evitar undefined
+          };
+        });
+
+        // Verifica que el div donde se mostrará la tabla exista
+        if (!tablaDiv) {
+          console.error("No se encontró el elemento con id 'tablaDiv'");
+          return;
+        }
+
+        new Tabulator(tablaDiv, {
+          height: 500,
+          layout: "fitColumns",
+          data: datosTabla,
+          initialSort: [{ column: "nombre", dir: "asc" }],
+          columns: [
+            { title: "Nombre", field: "nombre" },
+            { title: "Cantidad", field: "cantidad" },
+          ],
+        });
+      } catch (error) {
+        console.error("Esto es un error:", error);
+      }
+    });
+
+  document
+    .getElementById("btnArmarfinal")
+    .addEventListener("click", async function () {
+      const piezaSeleccionada = document.getElementById("maquinaSeleccionada");
+      const cantidadSeleccionada = document.getElementById(
+        "cantidadMaquinasArmadas"
+      );
+
+      const pieza = piezaSeleccionada.value;
+      const cantidad = cantidadSeleccionada.value;
+      if (pieza && cantidad > 0) {
+        fetch(`http://localhost:5000/api/ArmadoFinal/${pieza}`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ cantidad: cantidad }),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            console.log(data.mensaje);
+            alert(data.mensaje);
+            cantidadSeleccionada.value = "";
+          })
+          .catch((error) => {
+            console.log("Error:", error);
+          });
+      } else {
+        console.log("Por favor, seleccione una pieza y una cantidad válida.");
+        alert("Por favor, seleccione una pieza y una cantidad válida.");
+      }
+    });
+
+
+  ///////// GRAFICOS
+  document.getElementById("abrirGraficos").addEventListener("click", () => {
+    const nuevaVentana = window.open("", "Graficos", "width=500,height=500");
+
+    nuevaVentana.document.write(`
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <title>Gráficos del Mes</title>
+          <style>
+            body {
+              background: #222;
+              color: white;
+              font-family: sans-serif;
+              display: flex;
+              flex-direction: column;
+              align-items: center;
+              justify-content: center;
+              padding: 20px;
+            }
+            canvas {
+              max-width: 90%;
+            }
+            body.dark-mode {
+                background-color: #121212;
+                color: #e0e0e0;
+            }
+          </style>
+          <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        </head>
+        <body>
+          <p>Gráficos del Mes</p>
+          <canvas id="myChart" width="300" height="200"></canvas>
+          <script>
+             fetch("http://localhost:5000/api/datosGraficos") 
+    .then(res => res.json())
+    .then(data => {
+      const labels = data.map(item => item.nombre.replace("_", " "));
+      const cantidades = data.map(item => item.cantidad);
+      
+      // 👉 Calcular el total de todas las máquinas terminadas
+      const totalMaquinas = cantidades.reduce((acc, curr) => acc + curr, 0);
+
+      // 👉 Insertar el total en el DOM (crear un elemento antes del canvas)
+      const totalElement = document.createElement("h3");
+      totalElement.textContent = "Total de máquinas terminadas: " + totalMaquinas;
+      totalElement.style.marginBottom = "20px";
+      totalElement.style.color = "#4bc0c0";
+      document.body.insertBefore(totalElement, document.getElementById("myChart"));
+
+      const ctx = document.getElementById("myChart").getContext("2d");
+
+      new Chart(ctx, {
+        type: "bar",
+        data: {
+          labels: labels,
+          datasets: [{
+            label: "Máquinas Terminadas",
+            data: cantidades,
+            backgroundColor: "#4bc0c0",
+            borderColor: "#36a2eb",
+            borderWidth: 1
+          }]
+        },
+        options: {
+          scales: {
+            y: {
+              beginAtZero: true
+            }
+          }
+        }
+      });
+    })
+    .catch(err => {
+      console.error("Error al cargar los datos:", err);
+    });
+          <\/script>
+        </body>
+      </html>
+    `);
+  });
+
+
+  document.getElementById("CerraMes").addEventListener('click', () =>{
+    const mesSeleccionado = document.getElementById("mesSeleccionado")
+
+    console.log(mesSeleccionado.value)
+  })
+
 }
 
 module.exports = { boxArmado };
