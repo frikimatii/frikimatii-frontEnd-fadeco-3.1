@@ -20,7 +20,7 @@ function llenarProcesosDropdown() {
     console.error("El elemento 'instrucDropdown' no existe en el DOM.");
     return;
   }
-
+  procesos_armado.sort()
   procesos_armado.forEach((proceso) => {
     const option = document.createElement("option");
     option.value = proceso;
@@ -109,30 +109,32 @@ async function mostrarSeleccion() {
 
 
 async function cargarPiezas() {
-  try {
+    try {
       const response = await fetch("http://localhost:5000/api/piezas");
-      const piezas = await response.json();  // Corregido
-
+      const piezas = await response.json();
+  
       const piezasDropdown = document.getElementById('piezasDropdown');
-      const resultado = document.getElementById("resultado")
-
-
+      const resultado = document.getElementById("resultado");
+  
+      // Ordenar las piezas alfabéticamente por nombre
+      piezas.sort((a, b) => a.nombre.localeCompare(b.nombre));
+  
       piezas.forEach(pieza => {
-          const option = document.createElement('option');
-          option.value = pieza.detallesGeneral;
-          option.textContent = pieza.nombre;
-          piezasDropdown.appendChild(option)
-          ;  // Corregido el nombre de la variable
-
+        const option = document.createElement('option');
+        option.value = pieza.detallesGeneral;
+        option.textContent = pieza.nombre;
+        piezasDropdown.appendChild(option);
       });
-
+  
       piezasDropdown.addEventListener('change', function () {
-          resultado.value = this.value
-      })
-  } catch (err) {
+        resultado.value = this.value;
+      });
+  
+    } catch (err) {
       console.log("Error al Cargar las Piezas", err);
+    }
   }
-}
+  
 
 
 module.exports = { llenarProcesosDropdown, mostrarSeleccion, cargarPiezas };

@@ -62,11 +62,7 @@ async function boxArmado() {
   BoxArmado.style.alignItems = "flex-start";
 
   // Simulación de las opciones para el selector de piezas
-  const piezaAfilador = `
-      <option value="pieza1">Pieza 1</option>
-      <option value="pieza2">Pieza 2</option>
-      <option value="pieza3">Pieza 3</option>
-    `;
+  data = []
 
   // --------- Columna 1: Tabla de Armado ---------
   const tablaDiv = document.createElement("div");
@@ -77,7 +73,6 @@ async function boxArmado() {
   tablaDiv.style.margin = "10px";
   BoxArmado.appendChild(tablaDiv);
 
-  const data = [{ nombre: "matiasd", cantidad: 32 }]; // datos de prueba vacíos
   const columnas = [
     { title: "Nombre", field: "nombre" },
     { title: "Cantidad", field: "cantidad" },
@@ -135,7 +130,6 @@ async function boxArmado() {
         <div class="boxmecanizaodMotores">
           <p class="tituloBtnMotoreArmados">Motores Armado / Torno</p>
           <div class="boxMotoresTorneado">
-            <button id="stockMotoresTorno">Motores Torno</button>
             <button id="stockMotoresFinales">Motores Armado</button>
           </div>
         </div>
@@ -325,54 +319,7 @@ async function boxArmado() {
 
   ///Stock de motores
 
-  document
-    .getElementById("stockMotoresTorno")
-    .addEventListener("click", async function () {
-      try {
-        const res = await fetch("http://localhost:5000/api/Motores");
-        if (!res.ok) throw new Error("Error en respuesta del servidor");
 
-        const piezaBrutoEnFabrica = await res.json();
-
-        const piezasLista = {
-          fresa: [
-            "CajaMotor_330",
-            "CajaMotor_300",
-            "CajaMotor_250",
-            "CajaMotor_ECO",
-          ],
-        };
-
-        const datosTabla = piezaBrutoEnFabrica.map((p) => {
-          let categoria = Object.keys(piezasLista).find((key) =>
-            piezasLista[key].includes(p.nombre)
-          );
-          return {
-            nombre: p.nombre,
-            cantidad: p.cantidad?.[categoria]?.cantidad, // Evitar undefined
-          };
-        });
-
-        // Verifica que el div donde se mostrará la tabla exista
-        if (!tablaDiv) {
-          console.error("No se encontró el elemento con id 'tablaDiv'");
-          return;
-        }
-
-        new Tabulator(tablaDiv, {
-          height: 500,
-          layout: "fitColumns",
-          data: datosTabla,
-          initialSort: [{ column: "nombre", dir: "asc" }],
-          columns: [
-            { title: "Nombre", field: "nombre" },
-            { title: "Cantidad", field: "cantidad" },
-          ],
-        });
-      } catch (error) {
-        console.error("Esto es un error:", error);
-      }
-    });
 
   document
     .getElementById("stockMotoresFinales")

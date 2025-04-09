@@ -101,9 +101,10 @@ async function mostrarTabla(tabla) {
         height: 500,
         layout: "fitColumns",
         data: tableData,
+        initialSort: [{ column: "nombre", dir: "asc" }],
         columns: [
-          { title: "Nombre", field: "nombre" },
-          { title: "Cantidad", field: "cantidad" },
+          { title: "Nombre", field: "nombre" , minWidth: 200},
+          { title: "Cantidad", field: "cantidad" , width: 100},
         ],
         selectable: 1,
       });

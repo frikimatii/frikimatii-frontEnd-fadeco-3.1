@@ -2,7 +2,9 @@ function box() {
   ///mostar plegadora bruto, terminado
   async function mostrarTablasPlegadora() {
     const TablaMecanizado = document.getElementById("TablaMecanizado");
-    if (!TablaMecanizado) {
+    const titulo = document.getElementById("tituloDeTabla")
+
+    if (!TablaMecanizado && !titulo) {
       console.error("Nos se encontro el elemento ID ");
       return;
     }
@@ -21,6 +23,9 @@ function box() {
           "Bandeja Cabezal Inox 250",
           "Bandeja Cabezal Pintada",
           "Bandeja Cabezal Inox",
+          "Chapa U inox 250",
+          "Chapa U Pintada",
+          "Chapa U inox",
         ],
         plasma: [
           "Lateral i330 contecla",
@@ -35,12 +40,11 @@ function box() {
           "Lateral p300 sintecla",
           "Lateral i330 eco",
         ],
-        balancin: ["Chapa U inox 250", "Chapa U Pintada", "Chapa U inox"],
+        balancin: [],
         fresa: ["Planchada 300", "Planchada 330", "Planchada 250"],
       };
 
       let datosTabla = [];
-
       for (let categoria in piezaPorCategoria) {
         piezaPorCategoria[categoria].forEach((nombrePieza) => {
           let piezaEncontrada = piezaplegadoras.find(
@@ -48,6 +52,7 @@ function box() {
           );
 
           let cantidad = 0;
+          let origen = categoria;
 
           if (
             piezaEncontrada &&
@@ -56,20 +61,25 @@ function box() {
             cantidad = piezaEncontrada.cantidad[categoria].cantidad;
           }
 
-          datosTabla.push({ nombre: nombrePieza, cantidad: cantidad });
+          datosTabla.push({
+            nombre: nombrePieza,
+            cantidad: cantidad,
+            origen: origen,
+          });
         });
       }
-
+      titulo.innerText= "Tabla de Plegadoras Piezas Brutas"
       new Tabulator(TablaMecanizado, {
-        height: 400,
+        height: 320,
         layout: "fitColumns",
         data: datosTabla,
         initialSort: [
           { column: "nombre", dir: "asc" }, // Orden ascendente (A-Z)
         ],
         columns: [
-          { title: "Nombre", field: "nombre" },
-          { title: "Cantidad", field: "cantidad" },
+          { title: "Nombre", field: "nombre", minWidth: 130 },
+          { title: "Cantidad", field: "cantidad", width: 50 },
+          { title: "Origen", field: "origen", width: 100 },
         ],
       });
     } catch (error) {
@@ -78,33 +88,48 @@ function box() {
   }
   async function mostrarStockTerminadosPlegadora() {
     const TablaMecanizado = document.getElementById("TablaMecanizado");
-    if (!TablaMecanizado) {
-      console.error("Nos se encontro el elemento ID ");
+    const titulo = document.getElementById("tituloDeTabla")
+
+    if (!TablaMecanizado && !titulo) {
+      console.error("No se encontró el elemento con ID 'TablaMecanizado'");
       return;
     }
+
     try {
       const response = await fetch(`http://localhost:5000/api/plegadora`);
-      if (!response.ok) throw new Error("Error en responder el servidor");
-      const piezaplegadoras = await response.json();
-      const tableData = piezaplegadoras.map((p) => ({
-        nombre: p.nombre || "sin nombre",
-        cantidad: p.cantidad?.plegadora?.cantidad || 0,
-      }));
+      if (!response.ok) throw new Error("Error al responder el servidor");
 
+      const piezas = await response.json();
+
+      const piezasTerminadas = [
+        "Bandeja Cabezal Inox 250",
+        "Bandeja Cabezal Pintada",
+        "Bandeja Cabezal Inox",
+      ];
+
+      const tableData = piezas.map((p) => {
+        const nombre = p.nombre || "sin nombre";
+
+        // Si es una de las piezas terminadas, usamos cantidad.terminado
+        const cantidad = piezasTerminadas.includes(nombre)
+          ? p.cantidad?.terminado?.cantidad || 0
+          : p.cantidad?.plegadora?.cantidad || 0;
+        return { nombre, cantidad };
+      });
+      
+      titulo.innerText= "Tabla de Plegadoras Piezas Terminadas"
       new Tabulator(TablaMecanizado, {
-        height: 400,
+        height: 320,
         layout: "fitColumns",
         data: tableData,
-        initialSort: [
-          { column: "nombre", dir: "asc" }, // Orden ascendente (A-Z)
-        ],
+        initialSort: [{ column: "nombre", dir: "asc" }],
         columns: [
-          { title: "Nombre", field: "nombre" },
-          { title: "Cantidad", field: "cantidad" },
+          { title: "Nombre", field: "nombre", minWidth: 200 },
+          { title: "Cantidad", field: "cantidad", width: 100 },
         ],
       });
     } catch (error) {
-      console.log("esto es un erro ", error);
+      console.log("Ocurrió un error:", error);
     }
   }
   async function actualizarPiezasPlegadora(
@@ -124,25 +149,46 @@ function box() {
           body: JSON.stringify({ cantidad: cantidadSeleccionada }),
         }
       );
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.mensaje || "Error en el servidor");
-      }
-      // Obtener la respuesta y manejar el resultado
       const data = await response.json();
-      alert(data.mensaje);
+      if (!response.ok) {
+        throw new Error(data.mensaje || "Error en el servidor");
+      }
+
+      alert(data.mensaje || "✅ Actualización exitosa");
+
+      // 👉 Si llegamos acá, fue exitoso → guardamos en historial
+      await fetch("http://localhost:5000/guardar", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          mecanizado: "plegadora", // Lo dejamos fijo porque esta función es solo para plegadora
+          pieza: piezaSeleccionada,
+          cantidad: cantidadSeleccionada,
+        }),
+      });
+
+      return true;
     } catch (error) {
-      console.error("Error al actualizar la pieza:", error);
-      alert(error.message); // Muestra el mensaje de error devuelto por el backend
+      console.error("❌ Error al actualizar la pieza:", error);
+      alert(error.message);
+      return false;
     }
   }
 
   ////
 
-  async function actualizarPiezasPlasma(piezaSeleccionada ,cantidadSeleccionada) { 
+  async function actualizarPiezasPlasma(
+    piezaSeleccionada,
+    cantidadSeleccionada
+  ) {
     try {
+      // 1. Actualizamos la pieza
       const response = await fetch(
-        `http://localhost:5000/api/piezas/plasma/${encodeURIComponent(piezaSeleccionada)}`,
+        `http://localhost:5000/api/piezas/plasma/${encodeURIComponent(
+          piezaSeleccionada
+        )}`,
         {
           method: "PUT",
           headers: {
@@ -151,29 +197,41 @@ function box() {
           body: JSON.stringify({ cantidad: cantidadSeleccionada }),
         }
       );
-  
-      if (!response.ok) {
-        let errorMessage = "Error en el servidor";
-        try {
-          const errorData = await response.json();
-          errorMessage = errorData.mensaje || errorMessage;
-        } catch (jsonError) {
-          console.error("Error al leer el JSON de respuesta:", jsonError);
-        }
-        throw new Error(errorMessage);
-      }
-  
-      // Obtener la respuesta y manejar el resultado si todo está bien
+
       const data = await response.json();
-      alert(data.mensaje);
+
+      if (!response.ok) {
+        throw new Error(data.mensaje || "Error en el servidor");
+      }
+
+      // 2. Mostramos mensaje de éxito
+      alert(data.mensaje || "✅ Actualización exitosa");
+
+      // 3. Guardamos el historial
+      await fetch("http://localhost:5000/guardar", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          mecanizado: "plasma",
+          pieza: piezaSeleccionada,
+          cantidad: cantidadSeleccionada,
+        }),
+      });
+
+      return true;
     } catch (error) {
-      console.error("Error al actualizar la pieza:", error);
-      alert(error.message); // Muestra el mensaje de error devuelto por el backend
+      console.error("❌ Error al actualizar la pieza:", error);
+      alert(error.message);
+      return false;
     }
   }
   async function mostrarTablasPlasma() {
     const TablaMecanizado = document.getElementById("TablaMecanizado");
-    if (!TablaMecanizado) {
+    const titulo = document.getElementById("tituloDeTabla")
+
+    if (!TablaMecanizado && !titulo) {
       console.error("Nos se encontro el elemento ID ");
       return;
     }
@@ -189,9 +247,6 @@ function box() {
           "ChapaBase 330Pintada",
           "ChapaBase 300Pintada",
           "ChapaBase 250Inox",
-          "Bandeja Cabezal Inox 250",
-          "Bandeja Cabezal Pintada",
-          "Bandeja Cabezal Inox",
         ],
         bruto: [
           "Lateral i330 contecla",
@@ -225,7 +280,7 @@ function box() {
           );
 
           let cantidad = 0;
-
+          let origen = categoria;
           if (
             piezaEncontrada &&
             piezaEncontrada.cantidad?.[categoria]?.cantidad
@@ -233,18 +288,24 @@ function box() {
             cantidad = piezaEncontrada.cantidad[categoria].cantidad;
           }
 
-          datosTabla.push({ nombre: nombrePieza, cantidad: cantidad });
+          datosTabla.push({
+            nombre: nombrePieza,
+            cantidad: cantidad,
+            origen: origen,
+          });
         });
       }
+      titulo.innerText= "Tabla de Plasma Piezas Brutas"
 
       new Tabulator(TablaMecanizado, {
-        height: 400,
+        height: 320,
         layout: "fitColumns",
         data: datosTabla,
         initialSort: [{ column: "nombre", dir: "asc" }],
         columns: [
-          { title: "Nombre", field: "nombre" },
-          { title: "Cantidad", field: "cantidad" },
+          { title: "Nombre", field: "nombre", minWidth: 130 },
+          { title: "Cantidad", field: "cantidad", width: 50 },
+          { title: "Origen", field: "origen", width: 100 },
         ],
       });
     } catch (error) {
@@ -253,7 +314,9 @@ function box() {
   }
   async function mostrarStockTerminadosPlasma() {
     const TablaMecanizado = document.getElementById("TablaMecanizado");
-    if (!TablaMecanizado) {
+    const titulo = document.getElementById("tituloDeTabla")
+
+    if (!TablaMecanizado && titulo) {
       console.error("Nos se encontro el elemento ID ");
       return;
     }
@@ -267,8 +330,11 @@ function box() {
         cantidad: p.cantidad?.plasma?.cantidad || 0,
       }));
 
+
+      titulo.innerText= "Tabla de Plasma Piezas Terminadas"
+
       new Tabulator(TablaMecanizado, {
-        height: 400,
+        height: 320,
         layout: "fitColumns",
         data: tableData,
         initialSort: [
@@ -348,7 +414,7 @@ function box() {
       console.log(datosTabla);
 
       new Tabulator(TablaMecanizado, {
-        height: 400,
+        height: 320,
         layout: "fitColumns",
         data: datosTabla,
         initialSort: [{ column: "nombre", dir: "asc" }],
@@ -363,7 +429,9 @@ function box() {
   }
   async function mostrarStockTerminadosCorte() {
     const TablaMecanizado = document.getElementById("TablaMecanizado");
-    if (!TablaMecanizado) {
+    const titulo = document.getElementById("tituloDeTabla")
+
+    if (!TablaMecanizado && !titulo) {
       console.error("Nos se encontro el elemento ID ");
       return;
     }
@@ -374,29 +442,37 @@ function box() {
       console.log(piezaplegadoras);
       const tableData = piezaplegadoras.map((p) => ({
         nombre: p.nombre || "sin nombre",
-        cantidad: p.cantidad?.corte?.cantidad || 0,
+        cantidad: p.cantidad?.corte?.cantidad,
+        origen: "corte",
       }));
 
+      titulo.innerText= "Tabla de Corte Piezas Terminadas"
       new Tabulator(TablaMecanizado, {
-        height: 400,
+        height: 300,
         layout: "fitColumns",
         data: tableData,
         initialSort: [
           { column: "nombre", dir: "asc" }, // Orden ascendente (A-Z)
         ],
         columns: [
-          { title: "Nombre", field: "nombre" },
-          { title: "Cantidad", field: "cantidad" },
+          { title: "Nombre", field: "nombre", minWidth: 200 },
+          { title: "Cantidad", field: "cantidad", width: 50 },
+          { title: "Origen", field: "origen" },
         ],
       });
     } catch (error) {
       console.log("esto es un erro ", error);
     }
   }
-  async function actualizarPiezasCorte(piezaSeleccionada ,cantidadSeleccionada) { 
+  async function actualizarPiezasCorte(
+    piezaSeleccionada,
+    cantidadSeleccionada
+  ) {
     try {
       const response = await fetch(
-        `http://localhost:5000/api/piezas/corte/${encodeURIComponent(piezaSeleccionada)}`,
+        `http://localhost:5000/api/piezas/corte/${encodeURIComponent(
+          piezaSeleccionada
+        )}`,
         {
           method: "PUT",
           headers: {
@@ -405,7 +481,7 @@ function box() {
           body: JSON.stringify({ cantidad: cantidadSeleccionada }),
         }
       );
-  
+
       if (!response.ok) {
         let errorMessage = "Error en el servidor";
         try {
@@ -416,20 +492,37 @@ function box() {
         }
         throw new Error(errorMessage);
       }
-  
-      // Obtener la respuesta y manejar el resultado si todo está bien
+
       const data = await response.json();
-      alert(data.mensaje);
+      alert(data.mensaje || "✅ Actualización exitosa");
+
+      // Guardar en historial
+      await fetch("http://localhost:5000/guardar", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          mecanizado: "corte",
+          pieza: piezaSeleccionada,
+          cantidad: cantidadSeleccionada,
+        }),
+      });
+
+      return true;
     } catch (error) {
-      console.error("Error al actualizar la pieza:", error);
-      alert(error.message); // Muestra el mensaje de error devuelto por el backend
+      console.error("❌ Error al actualizar la pieza:", error);
+      alert(error.message);
+      return false;
     }
   }
 
   //////  mostrar augeriado bruto, terminado
   async function mostrarTablasAugeriado() {
     const TablaMecanizado = document.getElementById("TablaMecanizado");
-    if (!TablaMecanizado) {
+    const titulo = document.getElementById("tituloDeTabla")
+
+    if (!TablaMecanizado && !titulo) {
       console.error("Nos se encontro el elemento ID ");
       return;
     }
@@ -440,23 +533,15 @@ function box() {
 
       const piezaPorCategoria = {
         bruto: [
-          "Cuadrado Regulador",
           "Brazo 330",
           "Brazo 300",
           "Brazo 250",
           "Caja Soldada Eco",
           "Carcaza Afilador",
-
         ],
-        balancin:[
-          "PortaEje",
-        ],
-        torno:[
-          "Tornillo Teletubi Eco",
-          "Carros",
-          "Carros 250",
-          "Movimiento"
-        ]
+        balancin: ["PortaEje"],
+        torno: ["Tornillo Teletubi Eco", "Carros", "Carros 250", "Movimiento"],
+        corte: ["Cuadrado Regulador"],
       };
 
       let datosTabla = [];
@@ -467,8 +552,8 @@ function box() {
             (p) => p.nombre === nombrePieza
           );
 
-          let cantidad ;
-
+          let cantidad = 0;
+          let origen = categoria;
           if (
             pieezaEncontrada &&
             pieezaEncontrada.cantidad?.[categoria]?.cantidad
@@ -476,19 +561,25 @@ function box() {
             cantidad = pieezaEncontrada.cantidad[categoria].cantidad;
           }
 
-          datosTabla.push({ nombre: nombrePieza, cantidad: cantidad });
+          datosTabla.push({
+            nombre: nombrePieza,
+            cantidad: cantidad,
+            origen: origen,
+          });
         });
       }
-      console.log(datosTabla);
+
+      titulo.innerText= "Tabla de Augeriado Piezas Brutas"
 
       new Tabulator(TablaMecanizado, {
-        height: 400,
+        height: 320,
         layout: "fitColumns",
         data: datosTabla,
         initialSort: [{ column: "nombre", dir: "asc" }],
         columns: [
-          { title: "Nombre", field: "nombre" },
-          { title: "Cantidad", field: "cantidad" },
+          { title: "Nombre", field: "nombre", minWidth: 130 },
+          { title: "Cantidad", field: "cantidad", width: 50 },
+          { title: "Origen", field: "origen", width: 100 },
         ],
       });
     } catch (error) {
@@ -497,7 +588,9 @@ function box() {
   }
   async function mostrarStockTerminadosAugeriado() {
     const TablaMecanizado = document.getElementById("TablaMecanizado");
-    if (!TablaMecanizado) {
+    const titulo = document.getElementById("tituloDeTabla")
+
+    if (!TablaMecanizado && !titulo) {
       console.error("Nos se encontro el elemento ID ");
       return;
     }
@@ -506,14 +599,15 @@ function box() {
       if (!response.ok) throw new Error("Error en responder el servidor");
       const piezaplegadoras = await response.json();
       console.log(piezaplegadoras);
-      
+
       const tableData = piezaplegadoras.map((p) => ({
         nombre: p.nombre || "sin nombre",
         cantidad: p.cantidad?.augeriado?.cantidad || 0,
       }));
+      titulo.innerText= "Tabla de Augeriado Piezas Terminadas"
 
       new Tabulator(TablaMecanizado, {
-        height: 400,
+        height: 320,
         layout: "fitColumns",
         data: tableData,
         initialSort: [
@@ -528,10 +622,15 @@ function box() {
       console.log("esto es un erro ", error);
     }
   }
-  async function actualizarPiezasAugeriado(piezaSeleccionada ,cantidadSeleccionada) { 
+  async function actualizarPiezasAugeriado(
+    piezaSeleccionada,
+    cantidadSeleccionada
+  ) {
     try {
       const response = await fetch(
-        `http://localhost:5000/api/piezas/augeriado/${encodeURIComponent(piezaSeleccionada)}`,
+        `http://localhost:5000/api/piezas/augeriado/${encodeURIComponent(
+          piezaSeleccionada
+        )}`,
         {
           method: "PUT",
           headers: {
@@ -540,7 +639,7 @@ function box() {
           body: JSON.stringify({ cantidad: cantidadSeleccionada }),
         }
       );
-  
+
       if (!response.ok) {
         let errorMessage = "Error en el servidor";
         try {
@@ -551,20 +650,37 @@ function box() {
         }
         throw new Error(errorMessage);
       }
-  
-      // Obtener la respuesta y manejar el resultado si todo está bien
+
       const data = await response.json();
-      alert(data.mensaje);
+      alert(data.mensaje || "✅ Actualización exitosa");
+
+      // Guardar en historial
+      await fetch("http://localhost:5000/guardar", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          mecanizado: "augeriado",
+          pieza: piezaSeleccionada,
+          cantidad: cantidadSeleccionada,
+        }),
+      });
+
+      return true;
     } catch (error) {
-      console.error("Error al actualizar la pieza:", error);
-      alert(error.message); // Muestra el mensaje de error devuelto por el backend
+      console.error("❌ Error al actualizar la pieza:", error);
+      alert(error.message);
+      return false;
     }
   }
-  
+
   /////  mostrar Torno bruto, terminado
   async function mostrarTablasTorno() {
     const TablaMecanizado = document.getElementById("TablaMecanizado");
-    if (!TablaMecanizado) {
+    const titulo = document.getElementById("tituloDeTabla")
+
+    if (!TablaMecanizado && !titulo) {
       console.error("Nos se encontro el elemento ID ");
       return;
     }
@@ -593,12 +709,6 @@ function box() {
           "Tornillo Teletubi Eco",
           "Tapa Afilador Eco",
         ],
-        fresa:[
-          "CajaMotor_330",
-          "CajaMotor_300",
-          "CajaMotor_250",
-          "CajaMotor_ECO",
-        ]
       };
 
       let datosTabla = [];
@@ -609,8 +719,8 @@ function box() {
             (p) => p.nombre === nombrePieza
           );
 
-          let cantidad = 0
-
+          let cantidad = 0;
+          let origen = categoria;
           if (
             pieezaEncontrada &&
             pieezaEncontrada.cantidad?.[categoria]?.cantidad
@@ -618,19 +728,24 @@ function box() {
             cantidad = pieezaEncontrada.cantidad[categoria].cantidad;
           }
 
-          datosTabla.push({ nombre: nombrePieza, cantidad: cantidad });
+          datosTabla.push({
+            nombre: nombrePieza,
+            cantidad: cantidad,
+            origen: origen,
+          });
         });
       }
-      console.log(datosTabla);
 
+      titulo.innerText= "Tabla de Torno Piezas Brutas"
       new Tabulator(TablaMecanizado, {
-        height: 400,
+        height: 320,
         layout: "fitColumns",
         data: datosTabla,
         initialSort: [{ column: "nombre", dir: "asc" }],
         columns: [
-          { title: "Nombre", field: "nombre" },
-          { title: "Cantidad", field: "cantidad" },
+          { title: "Nombre", field: "nombre", minWidth: 130 },
+          { title: "Cantidad", field: "cantidad", width: 50 },
+          { title: "Origen", field: "origen", width: 100 },
         ],
       });
     } catch (error) {
@@ -639,7 +754,9 @@ function box() {
   }
   async function mostrarStockTerminadosTorno() {
     const TablaMecanizado = document.getElementById("TablaMecanizado");
-    if (!TablaMecanizado) {
+    const titulo = document.getElementById("tituloDeTabla")
+
+    if (!TablaMecanizado && !titulo) {
       console.error("Nos se encontro el elemento ID ");
       return;
     }
@@ -653,8 +770,9 @@ function box() {
         cantidad: p.cantidad?.torno?.cantidad || 0,
       }));
 
+      titulo.innerText= "Tabla de Torno Piezas Terminadas"
       new Tabulator(TablaMecanizado, {
-        height: 400,
+        height: 320,
         layout: "fitColumns",
         data: tableData,
         initialSort: [
@@ -669,10 +787,15 @@ function box() {
       console.log("esto es un erro ", error);
     }
   }
-  async function actualizarPiezasTorno(piezaSeleccionada ,cantidadSeleccionada) { 
+  async function actualizarPiezasTorno(
+    piezaSeleccionada,
+    cantidadSeleccionada
+  ) {
     try {
       const response = await fetch(
-        `http://localhost:5000/api/piezas/torno/${encodeURIComponent(piezaSeleccionada)}`,
+        `http://localhost:5000/api/piezas/torno/${encodeURIComponent(
+          piezaSeleccionada
+        )}`,
         {
           method: "PUT",
           headers: {
@@ -681,7 +804,7 @@ function box() {
           body: JSON.stringify({ cantidad: cantidadSeleccionada }),
         }
       );
-  
+
       if (!response.ok) {
         let errorMessage = "Error en el servidor";
         try {
@@ -692,20 +815,37 @@ function box() {
         }
         throw new Error(errorMessage);
       }
-  
-      // Obtener la respuesta y manejar el resultado si todo está bien
+
       const data = await response.json();
-      alert(data.mensaje);
+      alert(data.mensaje || "✅ Actualización exitosa");
+
+      // Guardar en historial
+      await fetch("http://localhost:5000/guardar", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          mecanizado: "torno",
+          pieza: piezaSeleccionada,
+          cantidad: cantidadSeleccionada,
+        }),
+      });
+
+      return true;
     } catch (error) {
-      console.error("Error al actualizar la pieza:", error);
-      alert(error.message); // Muestra el mensaje de error devuelto por el backend
+      console.error("❌ Error al actualizar la pieza:", error);
+      alert(error.message);
+      return false;
     }
   }
 
   //// mostrar Fresa bruto, terminado
   async function mostrarTablasFresa() {
     const TablaMecanizado = document.getElementById("TablaMecanizado");
-    if (!TablaMecanizado) {
+    const titulo = document.getElementById("tituloDeTabla")
+
+    if (!TablaMecanizado && !titulo) {
       console.error("Nos se encontro el elemento ID ");
       return;
     }
@@ -734,6 +874,7 @@ function box() {
           );
 
           let cantidad = 0;
+          let origen = categoria;
 
           if (
             pieezaEncontrada &&
@@ -742,19 +883,24 @@ function box() {
             cantidad = pieezaEncontrada.cantidad[categoria].cantidad;
           }
 
-          datosTabla.push({ nombre: nombrePieza, cantidad: cantidad });
+          datosTabla.push({
+            nombre: nombrePieza,
+            cantidad: cantidad,
+            origen: origen,
+          });
         });
       }
-      console.log(datosTabla);
 
+      titulo.innerText= "Tabla de Fresa Piezas Brutas "
       new Tabulator(TablaMecanizado, {
-        height: 400,
+        height: 320,
         layout: "fitColumns",
         data: datosTabla,
         initialSort: [{ column: "nombre", dir: "asc" }],
         columns: [
-          { title: "Nombre", field: "nombre" },
-          { title: "Cantidad", field: "cantidad" },
+          { title: "Nombre", field: "nombre", minWidth: 130 },
+          { title: "Cantidad", field: "cantidad", width: 50 },
+          { title: "Origen", field: "origen", width: 100 },
         ],
       });
     } catch (error) {
@@ -763,7 +909,9 @@ function box() {
   }
   async function mostrarStockTerminadosFresa() {
     const TablaMecanizado = document.getElementById("TablaMecanizado");
-    if (!TablaMecanizado) {
+    const titulo = document.getElementById("tituloDeTabla")
+
+    if (!TablaMecanizado && !titulo) {
       console.error("Nos se encontro el elemento ID ");
       return;
     }
@@ -777,8 +925,9 @@ function box() {
         cantidad: p.cantidad?.fresa?.cantidad || 0,
       }));
 
+      titulo.innerText= "Tabla de Fresa Piezas Terminadas"
       new Tabulator(TablaMecanizado, {
-        height: 400,
+        height: 320,
         layout: "fitColumns",
         data: tableData,
         initialSort: [
@@ -793,10 +942,15 @@ function box() {
       console.log("esto es un erro ", error);
     }
   }
-  async function actualizarPiezasFresa(piezaSeleccionada ,cantidadSeleccionada) { 
+  async function actualizarPiezasFresa(
+    piezaSeleccionada,
+    cantidadSeleccionada
+  ) {
     try {
       const response = await fetch(
-        `http://localhost:5000/api/piezas/fresa/${encodeURIComponent(piezaSeleccionada)}`,
+        `http://localhost:5000/api/piezas/fresa/${encodeURIComponent(
+          piezaSeleccionada
+        )}`,
         {
           method: "PUT",
           headers: {
@@ -805,7 +959,7 @@ function box() {
           body: JSON.stringify({ cantidad: cantidadSeleccionada }),
         }
       );
-  
+
       if (!response.ok) {
         let errorMessage = "Error en el servidor";
         try {
@@ -816,20 +970,37 @@ function box() {
         }
         throw new Error(errorMessage);
       }
-  
-      // Obtener la respuesta y manejar el resultado si todo está bien
+
       const data = await response.json();
-      alert(data.mensaje);
+      alert(data.mensaje || "✅ Actualización exitosa");
+
+      // Guardar en historial
+      await fetch("http://localhost:5000/guardar", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          mecanizado: "fresa",
+          pieza: piezaSeleccionada,
+          cantidad: cantidadSeleccionada,
+        }),
+      });
+
+      return true;
     } catch (error) {
-      console.error("Error al actualizar la pieza:", error);
-      alert(error.message); // Muestra el mensaje de error devuelto por el backend
+      console.error("❌ Error al actualizar la pieza:", error);
+      alert(error.message);
+      return false;
     }
   }
 
   ////mostrar augeriado bruto, terminado
   async function mostrarTablasSoldador() {
     const TablaMecanizado = document.getElementById("TablaMecanizado");
-    if (!TablaMecanizado) {
+    const titulo = document.getElementById("tituloDeTabla")
+
+    if (!TablaMecanizado && titulo) {
       console.error("Nos se encontro el elemento ID ");
       return;
     }
@@ -860,7 +1031,7 @@ function box() {
           );
 
           let cantidad = 0;
-
+          let origen = categoria;
           if (
             pieezaEncontrada &&
             pieezaEncontrada.cantidad?.[categoria]?.cantidad
@@ -868,19 +1039,24 @@ function box() {
             cantidad = pieezaEncontrada.cantidad[categoria].cantidad;
           }
 
-          datosTabla.push({ nombre: nombrePieza, cantidad: cantidad });
+          datosTabla.push({
+            nombre: nombrePieza,
+            cantidad: cantidad,
+            origen: origen,
+          });
         });
       }
-      console.log(datosTabla);
 
+      titulo.innerText= "Tabla de Soldador Piezas Brutas"
       new Tabulator(TablaMecanizado, {
-        height: 400,
+        height: 320,
         layout: "fitColumns",
         data: datosTabla,
         initialSort: [{ column: "nombre", dir: "asc" }],
         columns: [
-          { title: "Nombre", field: "nombre" },
-          { title: "Cantidad", field: "cantidad" },
+          { title: "Nombre", field: "nombre", minWidth: 130 },
+          { title: "Cantidad", field: "cantidad", width: 50 },
+          { title: "Origen", field: "origen", width: 100 },
         ],
       });
     } catch (error) {
@@ -889,7 +1065,9 @@ function box() {
   }
   async function mostrarStockTerminadosSoldador() {
     const TablaMecanizado = document.getElementById("TablaMecanizado");
-    if (!TablaMecanizado) {
+    const titulo = document.getElementById("tituloDeTabla")
+
+    if (!TablaMecanizado && !titulo) {
       console.error("Nos se encontro el elemento ID ");
       return;
     }
@@ -903,8 +1081,9 @@ function box() {
         cantidad: p.cantidad?.soldador?.cantidad || 0,
       }));
 
+      titulo.innerText= "Tabla de Soldador Piezas Terminadas"
       new Tabulator(TablaMecanizado, {
-        height: 400,
+        height: 320,
         layout: "fitColumns",
         data: tableData,
         initialSort: [
@@ -919,10 +1098,15 @@ function box() {
       console.log("esto es un erro ", error);
     }
   }
-  async function actualizarPiezasSoldador(piezaSeleccionada ,cantidadSeleccionada) { 
+  async function actualizarPiezasSoldador(
+    piezaSeleccionada,
+    cantidadSeleccionada
+  ) {
     try {
       const response = await fetch(
-        `http://localhost:5000/api/piezas/soldador/${encodeURIComponent(piezaSeleccionada)}`,
+        `http://localhost:5000/api/piezas/soldador/${encodeURIComponent(
+          piezaSeleccionada
+        )}`,
         {
           method: "PUT",
           headers: {
@@ -931,7 +1115,7 @@ function box() {
           body: JSON.stringify({ cantidad: cantidadSeleccionada }),
         }
       );
-  
+
       if (!response.ok) {
         let errorMessage = "Error en el servidor";
         try {
@@ -942,20 +1126,37 @@ function box() {
         }
         throw new Error(errorMessage);
       }
-  
-      // Obtener la respuesta y manejar el resultado si todo está bien
+
       const data = await response.json();
-      alert(data.mensaje);
+      alert(data.mensaje || "✅ Actualización exitosa");
+
+      // Segundo fetch para guardar el historial
+      await fetch("http://localhost:5000/guardar", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          mecanizado: "soldador",
+          pieza: piezaSeleccionada,
+          cantidad: cantidadSeleccionada,
+        }),
+      });
+
+      return true;
     } catch (error) {
-      console.error("Error al actualizar la pieza:", error);
-      alert(error.message); // Muestra el mensaje de error devuelto por el backend
+      console.error("❌ Error al actualizar la pieza:", error);
+      alert(error.message);
+      return false;
     }
   }
 
   /// mostrar augeriado bruto, terminado
   async function mostrarTablasBalancin() {
     const TablaMecanizado = document.getElementById("TablaMecanizado");
-    if (!TablaMecanizado) {
+    const titulo = document.getElementById("tituloDeTabla")
+
+    if (!TablaMecanizado && !titulo) {
       console.error("Nos se encontro el elemento ID ");
       return;
     }
@@ -974,12 +1175,8 @@ function box() {
           "Eje Largo",
           "Teletubi Eco",
         ],
-        bruto: [
-          "Chapa U Inox",
-          "Chapa U Pintada",
-          "Chapa U Inox 250",
-          "PortaEje",
-        ],
+        bruto: ["Chapa U Inox", "Chapa U Pintada", "Chapa U Inox 250"],
+        balancin: ["PortaEje"],
       };
 
       let datosTabla = [];
@@ -991,7 +1188,7 @@ function box() {
           );
 
           let cantidad = 0;
-
+          let origen = categoria;
           if (
             pieezaEncontrada &&
             pieezaEncontrada.cantidad?.[categoria]?.cantidad
@@ -999,19 +1196,24 @@ function box() {
             cantidad = pieezaEncontrada.cantidad[categoria].cantidad;
           }
 
-          datosTabla.push({ nombre: nombrePieza, cantidad: cantidad });
+          datosTabla.push({
+            nombre: nombrePieza,
+            cantidad: cantidad,
+            origen: origen,
+          });
         });
       }
-      console.log(datosTabla);
 
+      titulo.innerText= "Tabla de Balancin Piezas Brutas"
       new Tabulator(TablaMecanizado, {
-        height: 400,
+        height: 320,
         layout: "fitColumns",
         data: datosTabla,
         initialSort: [{ column: "nombre", dir: "asc" }],
         columns: [
-          { title: "Nombre", field: "nombre" },
-          { title: "Cantidad", field: "cantidad" },
+          { title: "Nombre", field: "nombre", minWidth: 130 },
+          { title: "Cantidad", field: "cantidad", width: 50 },
+          { title: "Origen", field: "origen", width: 100 },
         ],
       });
     } catch (error) {
@@ -1020,7 +1222,9 @@ function box() {
   }
   async function mostrarStockTerminadosBalancin() {
     const TablaMecanizado = document.getElementById("TablaMecanizado");
-    if (!TablaMecanizado) {
+    const titulo = document.getElementById("tituloDeTabla")
+
+    if (!TablaMecanizado && !titulo) {
       console.error("Nos se encontro el elemento ID ");
       return;
     }
@@ -1034,8 +1238,9 @@ function box() {
         cantidad: p.cantidad?.balancin?.cantidad || 0,
       }));
 
+      titulo.innerText= "Tabla de Balancin Piezas Terminadas"
       new Tabulator(TablaMecanizado, {
-        height: 400,
+        height: 320,
         layout: "fitColumns",
         data: tableData,
         initialSort: [
@@ -1050,10 +1255,15 @@ function box() {
       console.log("esto es un erro ", error);
     }
   }
-  async function actualizarPiezasBalancin(piezaSeleccionada ,cantidadSeleccionada) { 
+  async function actualizarPiezasBalancin(
+    piezaSeleccionada,
+    cantidadSeleccionada
+  ) {
     try {
       const response = await fetch(
-        `http://localhost:5000/api/piezas/balancin/${encodeURIComponent(piezaSeleccionada)}`,
+        `http://localhost:5000/api/piezas/balancin/${encodeURIComponent(
+          piezaSeleccionada
+        )}`,
         {
           method: "PUT",
           headers: {
@@ -1062,7 +1272,7 @@ function box() {
           body: JSON.stringify({ cantidad: cantidadSeleccionada }),
         }
       );
-  
+
       if (!response.ok) {
         let errorMessage = "Error en el servidor";
         try {
@@ -1073,13 +1283,28 @@ function box() {
         }
         throw new Error(errorMessage);
       }
-  
-      // Obtener la respuesta y manejar el resultado si todo está bien
+
       const data = await response.json();
-      alert(data.mensaje);
+      alert(data.mensaje || "✅ Actualización exitosa");
+
+      // Segundo fetch para guardar el historial
+      await fetch("http://localhost:5000/guardar", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          mecanizado: "balancin",
+          pieza: piezaSeleccionada,
+          cantidad: cantidadSeleccionada,
+        }),
+      });
+
+      return true;
     } catch (error) {
-      console.error("Error al actualizar la pieza:", error);
-      alert(error.message); // Muestra el mensaje de error devuelto por el backend
+      console.error("❌ Error al actualizar la pieza:", error);
+      alert(error.message);
+      return false;
     }
   }
 
@@ -1100,7 +1325,7 @@ function box() {
       }));
 
       new Tabulator(TablaMecanizado, {
-        height: 400,
+        height: 320,
         layout: "fitColumns",
         data: tableData,
         columns: [
@@ -1112,11 +1337,16 @@ function box() {
       console.error("Error al Obtener datos", error);
     }
   }
-  
-  async function actualizarPiezasPulido(piezaSeleccionada ,cantidadSeleccionada) { 
+
+  async function actualizarPiezasPulido(
+    piezaSeleccionada,
+    cantidadSeleccionada
+  ) {
     try {
       const response = await fetch(
-        `http://localhost:5000/api/piezas/torno/${encodeURIComponent(piezaSeleccionada)}`,
+        `http://localhost:5000/api/piezas/pulido/${encodeURIComponent(
+          piezaSeleccionada
+        )}`,
         {
           method: "PUT",
           headers: {
@@ -1125,7 +1355,7 @@ function box() {
           body: JSON.stringify({ cantidad: cantidadSeleccionada }),
         }
       );
-  
+
       if (!response.ok) {
         let errorMessage = "Error en el servidor";
         try {
@@ -1136,15 +1366,71 @@ function box() {
         }
         throw new Error(errorMessage);
       }
-  
-      // Obtener la respuesta y manejar el resultado si todo está bien
+
       const data = await response.json();
-      alert(data.mensaje);
+      alert(data.mensaje || "✅ Actualización exitosa");
+
+      // Segundo fetch para guardar el historial
+      await fetch("http://localhost:5000/guardar", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          mecanizado: "pulido",
+          pieza: piezaSeleccionada,
+          cantidad: cantidadSeleccionada,
+        }),
+      });
+
+      return true;
     } catch (error) {
-      console.error("Error al actualizar la pieza:", error);
-      alert(error.message); // Muestra el mensaje de error devuelto por el backend
+      console.error("❌ Error al actualizar la pieza:", error);
+      alert(error.message);
+      return false;
     }
   }
+
+
+
+  /////////////////////////////////////////////////
+
+
+
+
+  async function hola(tipo){
+    const contenedor = document.getElementById("historial");
+    const titulo = document.getElementById("his")
+
+    if (!contenedor && !titulo) {
+      console.error(`No se encontró el contenedor con ID historial`);
+      return;
+    }
+    try{
+      const response = await fetch("http://localhost:5000/api/historial");
+      if (!response.ok) throw new Error("Error al obtener historial");
+
+      const historial = await response.json();
+
+      const proceso = historial.find((item) => item.nombre === tipo);
+
+      if (!proceso || !proceso.acciones.length) {
+        contenedor.innerHTML = `<p>No hay acciones registradas para ${tipo}.</p>`;
+        return;
+      }
+
+      const ultimasAcciones = proceso.acciones.slice(-4).reverse();
+      titulo.innerText = `Historial de ${tipo}`
+      contenedor.innerHTML = ultimasAcciones
+        .map((accion) => `<p>${accion}<p>`)
+        .join("");
+    }catch(error){
+      console.error("Error al mostrar historial:", error);
+
+    }
+    
+  }
+
 
   const objetosMecanizados = [
     {
@@ -1167,6 +1453,7 @@ function box() {
         funcion: mostrarTablasAugeriado,
         funcionStock: mostrarStockTerminadosAugeriado,
         actualiarP: "",
+        historiales : () => hola("augeriado")
       },
       fresa: {
         piezas: [
@@ -1182,6 +1469,7 @@ function box() {
         funcion: mostrarTablasFresa,
         funcionStock: mostrarStockTerminadosFresa,
         actualizarP: "",
+        historiales: () => hola("fresa")
       },
       pulido: {
         piezas: ["cabezal Inox", "cabezal 250"],
@@ -1222,6 +1510,8 @@ function box() {
         funcion: mostrarTablasPlegadora,
         funcionStock: mostrarStockTerminadosPlegadora,
         actualiarP: "",
+        historiales : () => hola("plegadora")
+
       },
       plasma: {
         piezas: [
@@ -1247,9 +1537,6 @@ function box() {
           "Vela 330",
           "Vela 300",
           "Vela 250",
-          "Bandeja Cabezal Inox 250",
-          "Bandeja Cabezal Pintada",
-          "Bandeja Cabezal Inox",
           "Pieza Caja Eco",
           "Media Luna",
         ],
@@ -1258,6 +1545,7 @@ function box() {
         funcion: mostrarTablasPlasma,
         funcionStock: mostrarStockTerminadosPlasma,
         actualizarP: "",
+        historiales : () => hola("plasma")
       },
       corte: {
         piezas: [
@@ -1288,9 +1576,10 @@ function box() {
         ],
         imagen: "https://i.postimg.cc/yYBz8ch8/sierra.png",
         mecanizado: "corte",
-        funcion: mostrarTablasCorte,
         funcionStock: mostrarStockTerminadosCorte,
         actualizarP: "",
+        historiales : () => hola("corte")
+
       },
       balancin: {
         piezas: [
@@ -1311,6 +1600,8 @@ function box() {
         funcion: mostrarTablasBalancin,
         funcionStock: mostrarStockTerminadosBalancin,
         actualizarP: "",
+        historiales : () => hola("balancin")
+
       },
       torno: {
         piezas: [
@@ -1330,10 +1621,6 @@ function box() {
           "Cubrecuchilla 300",
           "Teletubi 300",
           "Tornillo Teletubi Eco",
-          "Caja 330 Armada",
-          "Caja 300 Armada",
-          "Caja 250 Armada",
-          "Caja eco Armada",
           "Tapa Afilador Eco",
         ],
         imagen: "https://i.postimg.cc/bwVXg57Z/torno.png",
@@ -1341,6 +1628,8 @@ function box() {
         funcion: mostrarTablasTorno,
         funcionStock: mostrarStockTerminadosTorno,
         actualizarP: "",
+        historiales : () => hola("torno")
+
       },
       soldador: {
         piezas: [
@@ -1363,6 +1652,8 @@ function box() {
         funcion: mostrarTablasSoldador,
         funcionStock: mostrarStockTerminadosSoldador,
         actualizarP: "",
+        historiales : () => mostrarHisotrial("soldador")
+
       },
     },
   ];
@@ -1422,7 +1713,6 @@ function box() {
             console.log(`Mecanizado: ${mecanizadoId}`);
             console.log(`Pieza seleccionada: ${piezaSeleccionada}`);
             console.log(`Cantidad seleccionada: ${cantidadSeleccionada}`);
-            // Resetear el input
             inputCantidad.value = "";
           } else {
             alert("Selecciona una pieza y una cantidad válida.");
@@ -1458,8 +1748,10 @@ function box() {
       const fun = mecanizado.funcion || ""; // Función de respaldo
       const fun2 = mecanizado.funcionStock || ""; // Función de respaldo
       const actualizarpiezas = mecanizado.actualizarP || "";
+      const his = mecanizado.historiales ;
       // Generar las opciones para el <select>
       let opcionesSelect = `<option value="">Selecciona una pieza</option>`;
+      piezas.sort((a, b) => a.localeCompare(b));
       piezas.forEach((pieza) => {
         opcionesSelect += `<option value="${pieza}">${pieza}</option>`;
       });
@@ -1473,6 +1765,7 @@ function box() {
                     </div>
                     <div class="box-boton">
                         <button class="btn" id="accionemecanizado-${r}">${r}</button>
+                        <button class="btn-historiall" id="hitorial-${r}">historial</button>
                     </div>
                     <div class="sepa"></div>
                     <div class="cajonBotones">
@@ -1494,10 +1787,16 @@ function box() {
 
       if (actualizarpiezas) {
         const btnActualizar = caja.querySelector(`#accionemecanizado-${r}`);
-        btnActualizar.addEventListener("click", actualizarpiezas);
+        btnActualizar.addEventListener("click", actualizarpiezas, his);
       }
 
       columna.appendChild(caja);
+
+      if (his){
+        const historia = caja.querySelector(`#hitorial-${r}`)
+        historia.addEventListener("click", his )
+      }
+
     });
   }
 }
