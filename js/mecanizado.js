@@ -1419,10 +1419,10 @@ function box() {
         return;
       }
 
-      const ultimasAcciones = proceso.acciones.slice(-4).reverse();
+      const ultimasAcciones = proceso.acciones.slice(-5).reverse();
       titulo.innerText = `Historial de ${tipo}`
       contenedor.innerHTML = ultimasAcciones
-        .map((accion) => `<p>${accion}<p>`)
+        .map((accion) => `<p class="historial-mecanizado">${accion}<p>`)
         .join("");
     }catch(error){
       console.error("Error al mostrar historial:", error);

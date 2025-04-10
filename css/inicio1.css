@@ -1,7 +1,6 @@
 
 
 h2 {
-  margin-top: 5px;
   font-size: 20px;
   color: #4e4e4e;
   text-align: center;
@@ -9,7 +8,7 @@ h2 {
 
 .container {
   max-width: 1200px;
-  padding: 20px;
+  padding: 15px;
 }
 
 /* Diseño de las columnas */
@@ -35,7 +34,7 @@ h2 {
 }
 
 .column h3 {
-  font-size: 30PX;
+  font-size: 25px;
   margin-bottom: 5px;
   color: #333;
 }
@@ -43,7 +42,6 @@ h2 {
 .column p {
   text-decoration: underline;
   font-size: 20PX;
-  margin: 5px 0;
   color: #666;
 }
 
@@ -62,7 +60,6 @@ h2 {
 }
 
 .col p {
-  margin: 0 0 5px;
   font-size: 14px;
   color: #333;
 }

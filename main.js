@@ -13,11 +13,11 @@ function createWindow() {
     },
   });
 
-  // Cargar el archivo HTML principal
-  mainWindow.loadFile(path.join(__dirname, 'index.html')); // Cambiado a 'index.html'
+  // 🔥 Esta línea oculta las pestañas del menú superior
+  mainWindow.setMenu(null);
 
-  // Abrir herramientas de desarrollo (opcional, para depuración)
-  // mainWindow.webContents.openDevTools();
+  // Cargar el archivo HTML principal
+  mainWindow.loadFile(path.join(__dirname, 'index.html'));
 }
 
 app.whenReady().then(createWindow);

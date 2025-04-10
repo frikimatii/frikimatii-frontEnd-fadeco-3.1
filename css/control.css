@@ -1,0 +1,97 @@
+p {
+  margin: 0;
+  padding: 0;
+  text-align: center;
+}
+.btn-maquinasTermiandas {
+  margin-left: 50px;
+  margin-bottom: 10px;
+  color: rgb(252, 225, 73);
+}
+.btnEmbalar {
+  margin-left: 100px;
+  margin-bottom: 10px;
+  color: rgb(109, 230, 98);
+}
+.btnVentas {
+  margin-left: 88px;
+  margin-bottom: 10px;
+  color: rgb(241, 122, 122);
+}
+.box-btn-ventas {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 10px;
+}
+.labelcontrol {
+  font-size: 15px;
+}
+.selecConsultorio {
+  width: 60%;
+  margin: 3px;
+}
+.btnConsultas {
+  margin: 10px;
+  color: rgb(252, 225, 73);
+  margin-left: 76px;
+}
+.controlTitulo {
+  font-weight: 800;
+  margin: 5px;
+  text-decoration: underline;
+}
+.container-Control {
+  border-bottom: solid rgb(92, 94, 247) 1px;
+  margin: 15px;
+  padding-bottom: 10px;
+}
+.pedidos {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  max-width: 320px;
+  margin: 0 auto;
+  font-family: sans-serif;
+}
+
+.pedidos > div {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+}
+
+.pedidos label {
+  width: 100px;
+  font-weight: bold;
+}
+
+.pedidos input {
+  padding: 6px 10px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  width: 100px;
+}
+
+.botones {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-top: 10px;
+}
+
+.botones button {
+  padding: 8px 12px;
+  font-size: 14px;
+  background-color: #3498db;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  margin-bottom: 10px;
+}
+
+.botones button:hover {
+  background-color: #d4e7f3;
+}

@@ -150,17 +150,8 @@ padding: 0;}
     height: 150px;
     margin: 5px;
 }
-.box-historial{
-    display: flex;
-    flex-direction: column;
 
-}
-.box-historial p{
-    margin: 0;
-    padding: 0;
-}
-.box-historial textarea{
-    margin: 0;
-    padding: 0;
-    width: 500px;
+
+#historial-aluminio, #historial-chapa, #historial-fundicion, #historial-shop, #historial-plastico{
+    font-size: 15px;
 }

@@ -39,6 +39,7 @@ async function mostrarTabla(tabla) {
     try {
       if (tabla === "aluminio") {
         const response = await fetch("http://localhost:5000/api/aluminio");
+        
         if (!response.ok) throw new Error("Error en la respuesta del servidor");
         const piezas = await response.json();
         tableData = piezas.map((p) => ({
@@ -46,6 +47,7 @@ async function mostrarTabla(tabla) {
           cantidad: p.cantidad?.bruto?.cantidad || 0,
           img: p.cantidad?.bruto?.img || "default-image.png",
           detalle: p.detallesGeneral || "Sin detalles",
+          
         }));
       } else if (tabla === "chapa") {
         const response = await fetch("http://localhost:5000/api/chapa");
@@ -136,6 +138,7 @@ async function mostrarTabla(tabla) {
                 );
 
                 nuevoBotonAgregar.addEventListener("click", async () => {
+                  
                   const nombrePieza =
                     document.getElementById("pieza-aluminio")?.value;
                   let cantidadInput =
@@ -184,12 +187,14 @@ async function mostrarTabla(tabla) {
                     console.error("Error al actualizar la cantidad:", error);
                     alert("Error al actualizar la cantidad.");
                   }
+                  
                 });
               } else {
                 console.error(
                   "El botón 'agregar-aluminio' no existe en el DOM."
                 );
               }
+              cargarHistorialAluminio()
               break;
             case "chapa":
               document.getElementById("pieza-chapa").value =
@@ -248,6 +253,7 @@ async function mostrarTabla(tabla) {
                       nombrePiezachapa,
                       chapaCantidadNueva
                     );
+                    
 
                     await mostrarTabla("chapa");
 
@@ -261,6 +267,7 @@ async function mostrarTabla(tabla) {
               } else {
                 console.error('El Boton "AGREGAR CHAPA NO EXISYE EN EL DOM');
               }
+              cargarHistorialchapa()
               break;
             case "shop":
               document.getElementById("pieza-shop").value = selectedData.nombre;
@@ -326,6 +333,7 @@ async function mostrarTabla(tabla) {
               } else {
                 console.error('El Boton "AGREGAR shop NO EXISYE EN EL DOM');
               }
+              cargarHistorialshop()
               break;
             case "plastico":
               document.getElementById("pieza-plastico").value =
@@ -406,6 +414,7 @@ async function mostrarTabla(tabla) {
               } else {
                 console.error('El Boton "AGREGAR plastico NO EXISYE EN EL DOM');
               }
+              cargarHistorialplastico()
               break;
             case "fundicion":
               document.getElementById("pieza-fundicion").value =
@@ -486,6 +495,7 @@ async function mostrarTabla(tabla) {
               } else {
                 console.error('El Boton "AGREGAR fundicion NO EXISYE EN EL DOM');
               }
+              cargarHistorialfundicion()
               break;
           }
         } catch (err) {
@@ -493,32 +503,49 @@ async function mostrarTabla(tabla) {
         }
       });
 
-
-      
       function agregarAlHistorialChapa(pieza, cantidad) {
         const timestamp = new Date().toLocaleString();
-        const nuevoCambio = `🛠️ ${timestamp} - Se agregaron ${cantidad} unidades a la pieza "${pieza}".`;
+        const nuevoCambio = `🛠️ ${timestamp}-Se agregaron ${cantidad} unidades a la pieza "${pieza}".`;
         historialCambios.unshift(nuevoCambio);
-
         if (historialCambios.length > 10) {
           historialCambios.pop();
         }
-        actualizarHistorialchapa();
+      
+        fetch('http://localhost:5000/api/historiales', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ pieza: "chapa", cantidad: nuevoCambio }),
+        })
+          .then((res) => res.json())
+          .then((data) => console.log(data))
+          .catch((err) => console.error('Error al guardar:', err));
+
+          cargarHistorialchapa()
       }
-
-      function actualizarHistorialchapa() {
-        const historialContainer = document.getElementById(
-          "historial-cambios-chapa"
-        );
-        historialContainer.innerHTML = "";
-
-        historialCambios.slice(0, 5).forEach((cambio) => {
-          const li = document.createElement("li");
-          li.textContent = cambio;
-          historialContainer.appendChild(li);
-        });
+      function cargarHistorialchapa() {
+        fetch('http://localhost:5000/api/historiales/chapa')
+          .then(res => res.json())
+          .then(data => {
+            if (data.success) {
+              const historialContainer = document.getElementById("historial-cambios-chapa");
+              historialContainer.innerHTML = "";
+      
+              data.cambios.forEach(cambio => {
+                const li = document.createElement("li");
+                li.textContent = cambio;
+                li.id = "historial-chapa"
+                historialContainer.appendChild(li);
+              });
+            } else {
+              console.error("No se pudo cargar el historial");
+            }
+          })
+          .catch(err => {
+            console.error('Error al cargar historial:', err);
+          });
       }
-
       function agregarAlHistorialshop(pieza, cantidad) {
         const timestamp = new Date().toLocaleString();
         const nuevoCambio = `🛠️ ${timestamp} - Se agregaron ${cantidad} unidades a la pieza "${pieza}".`;
@@ -527,22 +554,41 @@ async function mostrarTabla(tabla) {
         if (historialCambios.length > 10) {
           historialCambios.pop();
         }
-        actualizarHistorialshop();
+        fetch('http://localhost:5000/api/historiales', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ pieza: "shop", cantidad: nuevoCambio }),
+        })
+          .then((res) => res.json())
+          .then((data) => console.log(data))
+          .catch((err) => console.error('Error al guardar:', err));
+
+          cargarHistorialshop()
       }
-
-      function actualizarHistorialshop() {
-        const historialContainer = document.getElementById(
-          "historial-cambios-shop"
-        );
-        historialContainer.innerHTML = "";
-
-        historialCambios.slice(0, 5).forEach((cambio) => {
-          const li = document.createElement("li");
-          li.textContent = cambio;
-          historialContainer.appendChild(li);
-        });
+      function cargarHistorialshop() {
+        fetch('http://localhost:5000/api/historiales/shop')
+          .then(res => res.json())
+          .then(data => {
+            if (data.success) {
+              const historialContainer = document.getElementById("historial-cambios-shop");
+              historialContainer.innerHTML = "";
+      
+              data.cambios.forEach(cambio => {
+                const li = document.createElement("li");
+                li.textContent = cambio;
+                li.id = "historial-shop"
+                historialContainer.appendChild(li);
+              });
+            } else {
+              console.error("No se pudo cargar el historial");
+            }
+          })
+          .catch(err => {
+            console.error('Error al cargar historial:', err);
+          });
       }
-
       function agregarAlHistorialplastico(pieza, cantidad) {
         const timestamp = new Date().toLocaleString();
         const nuevoCambio = `🛠️ ${timestamp} - Se agregaron ${cantidad} unidades a la pieza "${pieza}".`;
@@ -551,23 +597,41 @@ async function mostrarTabla(tabla) {
         if (historialCambios.length > 10) {
           historialCambios.pop();
         }
-        actualizarHistorialplastico();
+        fetch('http://localhost:5000/api/historiales', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ pieza: "plastico", cantidad: nuevoCambio }),
+        })
+          .then((res) => res.json())
+          .then((data) => console.log(data))
+          .catch((err) => console.error('Error al guardar:', err));
+
+          cargarHistorialplastico()
       }
-
-      function actualizarHistorialplastico() {
-        const historialContainer = document.getElementById(
-          "historial-cambios-plastico"
-        );
-        historialContainer.innerHTML = "";
-
-        historialCambios.slice(0, 5).forEach((cambio) => {
-          const li = document.createElement("li");
-          li.textContent = cambio;
-          historialContainer.appendChild(li);
-        });
+      function cargarHistorialplastico() {
+        fetch('http://localhost:5000/api/historiales/plastico')
+          .then(res => res.json())
+          .then(data => {
+            if (data.success) {
+              const historialContainer = document.getElementById("historial-cambios-plastico");
+              historialContainer.innerHTML = "";
+      
+              data.cambios.forEach(cambio => {
+                const li = document.createElement("li");
+                li.textContent = cambio;
+                li.id = "historial-plastico"
+                historialContainer.appendChild(li);
+              });
+            } else {
+              console.error("No se pudo cargar el historial");
+            }
+          })
+          .catch(err => {
+            console.error('Error al cargar historial:', err);
+          });
       }
-
-
       function agregarAlHistorialfundicion(pieza, cantidad) {
         const timestamp = new Date().toLocaleString();
         const nuevoCambio = `🛠️ ${timestamp} - Se agregaron ${cantidad} unidades a la pieza "${pieza}".`;
@@ -576,22 +640,41 @@ async function mostrarTabla(tabla) {
         if (historialCambios.length > 10) {
           historialCambios.pop();
         }
-        actualizarHistorialfundicion();
-      }
+        fetch('http://localhost:5000/api/historiales', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ pieza: "fundicion", cantidad: nuevoCambio }),
+        })
+          .then((res) => res.json())
+          .then((data) => console.log(data))
+          .catch((err) => console.error('Error al guardar:', err));
 
-      function actualizarHistorialfundicion() {
-        const historialContainer = document.getElementById(
-          "historial-cambios-fundicion"
-        );
-        historialContainer.innerHTML = "";
-
-        historialCambios.slice(0, 5).forEach((cambio) => {
-          const li = document.createElement("li");
-          li.textContent = cambio;
-          historialContainer.appendChild(li);
-        });
+          cargarHistorialfundicion()
       }
-      // Función para agregar cambios al historial
+      function cargarHistorialfundicion() {
+        fetch('http://localhost:5000/api/historiales/fundicion')
+          .then(res => res.json())
+          .then(data => {
+            if (data.success) {
+              const historialContainer = document.getElementById("historial-cambios-fundicion");
+              historialContainer.innerHTML = "";
+      
+              data.cambios.forEach(cambio => {
+                const li = document.createElement("li");
+                li.textContent = cambio;
+                li.id = "historial-fundicion"
+                historialContainer.appendChild(li);
+              });
+            } else {
+              console.error("No se pudo cargar el historial");
+            }
+          })
+          .catch(err => {
+            console.error('Error al cargar historial:', err);
+          });
+      }
       function agregarAlHistorial(pieza, cantidad) {
         const timestamp = new Date().toLocaleString(); // Obtener fecha y hora actual
         const nuevoCambio = `🛠️ ${timestamp} - Se agregaron ${cantidad} unidades a la pieza "${pieza}".`;
@@ -602,25 +685,52 @@ async function mostrarTabla(tabla) {
           historialCambios.pop();
         }
 
-        // Mostrar historial en el HTML
-        actualizarHistorial();
+        fetch('http://localhost:5000/api/historiales', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ pieza: "aluminio", cantidad: nuevoCambio }),
+        })
+          .then((res) => res.json())
+          .then((data) => console.log(data))
+          .catch((err) => console.error('Error al guardar:', err));
+
+          cargarHistorialAluminio()
+      }
+      function cargarHistorialAluminio() {
+        fetch('http://localhost:5000/api/historiales/aluminio')
+          .then(res => res.json())
+          .then(data => {
+            if (data.success) {
+              const historialContainer = document.getElementById("historial-cambios-aluminio");
+              historialContainer.innerHTML = "";
+      
+              data.cambios.forEach(cambio => {
+                const li = document.createElement("li");
+                li.textContent = cambio;
+                li.id = "historial-aluminio"
+                historialContainer.appendChild(li);
+              });
+            } else {
+              console.error("No se pudo cargar el historial");
+            }
+          })
+          .catch(err => {
+            console.error('Error al cargar historial:', err);
+          });
       }
 
-      // Función para actualizar la lista en el HTML
-      function actualizarHistorial() {
-        const historialContainer = document.getElementById(
-          "historial-cambios-aluminio"
-        );
-        historialContainer.innerHTML = ""; // Limpiar lista
-
-        historialCambios.slice(0, 5).forEach((cambio) => {
-          const li = document.createElement("li");
-          li.textContent = cambio;
-          historialContainer.appendChild(li);
-        });
-      }
+      // Llamá a esta función cuando cargue la página
+      cargarHistorialAluminio()
+      cargarHistorialfundicion()
+      cargarHistorialplastico()
+      cargarHistorialshop()
+      cargarHistorialchapa()
     }
   } 
+
+
 }
 
 
