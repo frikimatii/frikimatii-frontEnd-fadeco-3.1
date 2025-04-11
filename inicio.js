@@ -32,6 +32,7 @@ async function loadSection(section) {
   const contentDiv = document.getElementById("content");
   try {
     const response = await fetch(`./view/${section}.html`); // Asegúrate de que la ruta sea correcta
+    
     if (!response.ok) throw new Error("Error al cargar la sección");
     const html = await response.text();
     contentDiv.innerHTML = html;
@@ -64,7 +65,7 @@ async function loadSection(section) {
 }
 
 window.loadSection = loadSection;
-window.onload = () => loadSection("control");
+window.onload = () => loadSection("provedores");
 // Tema oscuro/claro
 document.addEventListener("DOMContentLoaded", () => {
   const themeToggleBtn = document.getElementById("themeToggleBtn");

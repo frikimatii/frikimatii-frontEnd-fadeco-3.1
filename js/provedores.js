@@ -1,12 +1,17 @@
 async function mostrarContenido(nombre) {
 
-  
-
   function generarSelector(pieza) {
     let opcionesSelect = `<option value="">Seleccione Una Pieza</option>`;
-    pieza.forEach((pieza) => {
+  
+    // Ordenar alfabéticamente (ignorando mayúsculas/minúsculas)
+    const piezasOrdenadas = pieza.slice().sort((a, b) =>
+      a.toLowerCase().localeCompare(b.toLowerCase())
+    );
+  
+    piezasOrdenadas.forEach((pieza) => {
       opcionesSelect += `<option value="${pieza}">${pieza}</option>`;
     });
+  
     return opcionesSelect;
   }
 
@@ -18,7 +23,7 @@ async function mostrarContenido(nombre) {
   }
 
   // Limpiar el contenedor antes de agregar nueva tabla y elementos
-  contenedor.innerHTML = `<h2>${nombre || "Hola"}</h2>`;
+  contenedor.innerHTML = ``;
 
   // Crear un contenedor de diseño flexbox para organizar tabla y botones
   const layoutDiv = document.createElement("div");
@@ -30,6 +35,10 @@ async function mostrarContenido(nombre) {
   const tablaDiv = document.createElement("div");
   layoutDiv.appendChild(tablaDiv);
 
+  const titulotabla = document.createElement("p")
+  titulotabla.id = "tituloProvedoresTabla"
+  titulotabla.innerText = "Tabla"
+  contenedor.appendChild(titulotabla)
   // Crear contenedor para los botones
   const divLay = document.createElement("div");
   divLay.style.display = "flex";
@@ -41,6 +50,8 @@ async function mostrarContenido(nombre) {
   const botonesVarios = document.createElement("div");
   layoutDiv.appendChild(botonesVarios);
 
+
+  
   // Agregar el contenedor de layout al contenedor principal
   contenedor.appendChild(layoutDiv);
 
@@ -49,13 +60,44 @@ async function mostrarContenido(nombre) {
     { title: "Cantidad", field: "cantidad" },
   ];
   
+  function mostrarJson(provedor, cajasbox) {
+    fetch(`http://localhost:5000/api/historialProvedores/${provedor}`)
+      .then(response => {
+        if (!response.ok) {
+          throw new Error("Error al obtener historial");
+        }
+        return response.json();
+      })
+      .then(data => {
+        const historial = document.createElement("div");
+        historial.classList.add("historial-contenedor");
+  
+        historial.innerHTML = `
+          <div class="historial-columnas">
+            <div class="columna-envios">
+              <strong>📦 Envíos:</strong>
+              <ul>${data.envios.map(e => `<li>${e}</li>`).join("")}</ul>
+            </div>
+            <div class="columna-entregas">
+              <strong>📬 Entregas:</strong>
+              <ul>${data.entregas.map(e => `<li>${e}</li>`).join("")}</ul>
+            </div>
+          </div>
+        `;
+  
+        cajasbox.appendChild(historial);
+      })
+      .catch(err => {
+        console.error("❌ Error:", err.message);
+      });
+  }
+  
   data = [];
 
   switch (nombre) {
     case "Soldador":
       const caja = document.createElement("div");
       const botonerBases = document.createElement("div");
-
       const piezaSoldador = [
         "baseInox330",
         "baseInox300",
@@ -65,7 +107,8 @@ async function mostrarContenido(nombre) {
         "baseInoxECO",
         "CajaSoldadaEco",
       ];
-
+      let bttt = document.createElement("div");
+      
       const opcionesSelect = generarSelector(piezaSoldador);
 
       const html = `
@@ -111,14 +154,16 @@ async function mostrarContenido(nombre) {
               <tr>
                   <td><button class="botonesPiezas" data-tipo="baseInox330">Inox 330</button></td>
                   <td><button class="botonesPiezas" data-tipo="baseInox300">Inox 300</button></td>
+                   <td><button class="botonesPiezas" data-tipo="basePintada300">Pintada 300</button></td>
               </tr>
               <tr>
-                  <td><button class="botonesPiezas" data-tipo="basePintada300">Pintada 300</button></td>
-                  <td><button class="botonesPiezas" data-tipo="basePintada330">Pintada 330</button></td>
+                 
+
               </tr>
               <tr>
                   <td><button class="botonesPiezas" data-tipo="baseInox250">Inox 250</button></td>
                   <td><button class="botonesPiezas" data-tipo="baseInoxECO">Inox ECO</button></td>
+                  <td><button class="botonesPiezas" data-tipo="basePintada330">Pintada 330</button></td>
               </tr>
               <tr>
                   <td><button class="botonesPiezas" data-tipo="CajaMotor_ECO">Caja Eco</button></td>
@@ -130,8 +175,8 @@ async function mostrarContenido(nombre) {
       botonerBases.innerHTML = html2;
 
       layoutDiv.appendChild(caja);
-      layoutDiv.appendChild(botonerBases);
-
+      caja.appendChild(botonerBases);
+      layoutDiv.appendChild(bttt)
       async function cargarDatosTablas(url, piezasPorCategoria) {
         try {
           const res = await fetch(url);
@@ -260,8 +305,8 @@ async function mostrarContenido(nombre) {
 
       document.addEventListener("click", async (event) => {
         if (event.target.classList.contains("enFabrica")) {
-          const tipo = event.target.getAttribute("data-tipo");
-          console.log("Seleccionado: ", tipo);
+
+          titulotabla.innerText = "Tabla En Fabrica"
 
           try {
             const res = await fetch("http://localhost:5000/api/stockbruto");
@@ -333,8 +378,7 @@ async function mostrarContenido(nombre) {
             console.error("Esto es un error:", error);
           }
         } else if (event.target.classList.contains("enSoldador")) {
-          const tipo = event.target.getAttribute("data-tipo");
-          console.log("Seleccionado:", tipo);
+          titulotabla.innerText = "Tabla En Soldador"
 
           try {
             const res = await fetch("http://localhost:5000/api/stocksoldador");
@@ -383,8 +427,7 @@ async function mostrarContenido(nombre) {
             console.error("es un error");
           }
         } else if (event.target.classList.contains("enFabricaTerminado")) {
-          const tipo = event.target.getAttribute("data-tipo");
-          console.log("Seleccionado:", tipo);
+          titulotabla.innerText = "Tabla Terminados "
 
           try {
             const res = await fetch("http://localhost:5000/api/stocksoldador");
@@ -399,7 +442,8 @@ async function mostrarContenido(nombre) {
                 "basePintada330",
                 "basePintada300",
                 "baseInoxECO",
-                "Caja Soldada Eco",
+                "Caja Soldada Eco"
+                
               ],
               augeriado: [],
             };
@@ -433,45 +477,73 @@ async function mostrarContenido(nombre) {
       });
 
       document
-        .getElementById("btnEnviarSoldador")
-        .addEventListener("click", function () {
-          const selectElement = document.getElementById("soldadorEnvios");
-          const inputCantidad = document.getElementById("cantidadEnvios");
-
-          const piezaSeleccionada = selectElement.value;
-          const cantidad = inputCantidad.value;
-
-          if (piezaSeleccionada && cantidad > 0) {
-            fetch(
-              `http://localhost:5000/api/enviosSoldador/${piezaSeleccionada}`,
-              {
+      .getElementById("btnEnviarSoldador")
+      .addEventListener("click", function () {
+        mostrarJson("soldador", caja)
+        const selectElement = document.getElementById("soldadorEnvios");
+        const inputCantidad = document.getElementById("cantidadEnvios");
+    
+        const piezaSeleccionada = selectElement.value;
+        const cantidad = inputCantidad.value;
+    
+        if (piezaSeleccionada && cantidad > 0) {
+          // PRIMER FETCH: Verifica y descuenta stock
+          fetch(
+            `http://localhost:5000/api/enviosSoldador/${piezaSeleccionada}`,
+            {
+              method: "PUT",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ cantidad: cantidad }),
+            }
+          )
+          .then((response) => {
+            if (!response.ok) {
+              return response.json().then((errorData) => {
+                alert(errorData.mensaje); // <- CAMBIASTE "message" por "mensaje"
+                throw new Error(errorData.mensaje); // igual acá
+              });
+            }
+            return response.json();
+          })
+            .then((data) => {
+              console.log(data.mensaje);
+              alert(data.mensaje);
+              inputCantidad.value = "";
+    
+              // SOLO si fue exitoso, ejecutamos el segundo fetch para guardar en historial
+              return fetch("http://localhost:5000/api/envios/soldador", {
                 method: "PUT",
                 headers: {
                   "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ cantidad: cantidad }),
-              }
-            )
-              .then((response) => response.json())
-              .then((data) => {
-                console.log(data.mensaje);
-                alert(data.mensaje);
-                inputCantidad.value = "";
-              })
-              .catch((error) => {
-                console.log("Error:", error);
+                body: JSON.stringify({
+                  cantidad: cantidad,
+                  pieza: piezaSeleccionada,
+                }),
               });
-          } else {
-            console.log(
-              "Por favor, seleccione una pieza y una cantidad válida."
-            );
-            alert("Por favor, seleccione una pieza y una cantidad válida.");
-          }
-        });
+            })
+            .then((historialResponse) => {
+              if (historialResponse && !historialResponse.ok) {
+                return historialResponse.json().then((errorData) => {
+                  console.warn("Error al guardar historial:", errorData.message);
+                });
+              }
+            })
+            .catch((error) => {
+              console.error("Error general:", error.message);
+            });
+        } else {
+          alert("Por favor, seleccione una pieza y una cantidad válida.");
+        }
+      });
+    
 
       document
         .getElementById("btnEntrega")
         .addEventListener("click", function () {
+          mostrarJson("soldador", caja)
           const selectElement = document.getElementById("soldadorEntrega");
           const inputCantidad = document.getElementById("cantidadEntrega");
 
@@ -498,6 +570,16 @@ async function mostrarContenido(nombre) {
               .catch((error) => {
                 console.log("Error:", error);
               });
+              fetch("http://localhost:5000/api/entregas/soldador", {
+                method: "PUT",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                  cantidad: cantidad,
+                  pieza: piezaSeleccionada
+                })
+              })
           } else {
             console.log(
               "Por favor, seleccione una pieza y una cantidad válida."
@@ -505,6 +587,7 @@ async function mostrarContenido(nombre) {
             alert("Por favor, seleccione una pieza y una cantidad válida.");
           }
         });
+        mostrarJson("soldador", bttt)
 
       break;
 
@@ -532,10 +615,10 @@ async function mostrarContenido(nombre) {
         "Teletubi 330",
         "Teletubi 300",
         "Teletubi 250",
-        "BaseInox_330",
-        "BaseInox_300",
-        "BaseInox_250",
-        "BaseECO",
+        "baseInox330",
+        "baseInox300",
+        "baseInox250",
+        "baseInoxECO",
         "Tapa Afilador Eco",
       ];
 
@@ -543,14 +626,18 @@ async function mostrarContenido(nombre) {
       let envioCarmerlo = document.createElement("div");
       let entregaCarmerlo = document.createElement("div");
       let piezaCamelelo = generarSelector(lista_piezas_carmerlo);
+      let eddd = document.createElement("div");
+   
 
       const htmlCarmelo = `
       <div>
         <p>Carmerlo</p>
           <div class="boxBtnStock">
+            <button class="stockFabrica"  data-tipo="StockEnFabrica">En Fabrica Bruto</button>
+
             <button class="stockCarmelo"  data-tipo="StockEnCarmelo">En Carmelo
             </button>
-            <button class="stockFabrica"  data-tipo="StockEnFabrica">En Fabrica Bruto</button>
+
             <button class="stockFabricaTerminado"  data-tipo="StockEnFabrica">En Fabrica Terminado</button>
           </div>
 
@@ -591,11 +678,12 @@ async function mostrarContenido(nombre) {
       layoutDiv.appendChild(cajaCarmelo);
       cajaCarmelo.appendChild(envioCarmerlo);
       cajaCarmelo.appendChild(entregaCarmerlo);
-
+      layoutDiv.appendChild(eddd);
+      
       document.addEventListener("click", async (event) => {
         if (event.target.classList.contains("stockFabrica")) {
-          const tipo = event.target.getAttribute("data-tipo");
-          console.log("Seleccionado: ", tipo);
+          titulotabla.innerText = "Tabla En Fabrica "
+
           try {
             const res = await fetch(
               "http://localhost:5000/api/carmelostockfabrica"
@@ -608,12 +696,6 @@ async function mostrarContenido(nombre) {
                 "Brazo 250",
                 "Brazo 300",
                 "Brazo 330",
-                "baseInox330",
-                "baseInox300",
-                "baseInox250",
-                "basePintada330",
-                "basePintada300",
-                "baseInoxECO",
                 "Caja Soldada Eco",
               ],
 
@@ -627,6 +709,10 @@ async function mostrarContenido(nombre) {
                 "Teletubi 330",
                 "Teletubi 250",
                 "Tapa Afilador Eco",
+                "baseInox330",
+                "baseInox300",
+                "baseInox250",
+                "baseInoxECO",
               ],
               torno: [
                 "Cubrecuchilla 300",
@@ -643,14 +729,8 @@ async function mostrarContenido(nombre) {
                 "Planchada 300",
                 "Planchada 250",
               ],
-              varios: [
-                "cajas_torneadas_250",
-                "cajas_torneadas_300",
-                "cajas_torneadas_330",
-                "baseInox330",
-                "baseInox300",
-                "baseInox250",
-                "baseInoxECO",
+              terminado: [
+
               ],
             };
 
@@ -683,8 +763,7 @@ async function mostrarContenido(nombre) {
             console.error("Esto es un error", error);
           }
         } else if (event.target.classList.contains("stockCarmelo")) {
-          const tipo = event.target.getAttribute("data-tipo");
-          console.log("Seleccionado:", tipo);
+          titulotabla.innerText = "Tabla en Carmelo "
           try {
             const res = await fetch(
               "http://localhost:5000/api/carmelostockfabrica"
@@ -764,6 +843,7 @@ async function mostrarContenido(nombre) {
             console.error("Esto es un error", error);
           }
         } else if (event.target.classList.contains("stockFabricaTerminado")) {
+          titulotabla.innerText = "Tabla Terminados"
           try {
             const res = await fetch(
               "http://localhost:5000/api/carmelostockfabrica"
@@ -846,84 +926,121 @@ async function mostrarContenido(nombre) {
       });
 
       document
-        .getElementById("btnEnviarCarmelo")
-        .addEventListener("click", function () {
-          const selectElement = document.getElementById(
-            "piezaACarmerloSelector"
-          );
-          const inputCantidad = document.getElementById(
-            "cantidadEnviarCarmerlo"
-          );
-
-          const piezaSeleccionada = selectElement.value;
-          const cantidad = inputCantidad.value;
-
-          if (piezaSeleccionada && cantidad > 0) {
-            fetch(
-              `http://localhost:5000/api/enviosCarmelo/${piezaSeleccionada}`,
-              {
+      .getElementById("btnEnviarCarmelo")
+      .addEventListener("click", function () {
+        const selectElement = document.getElementById("piezaACarmerloSelector");
+        const inputCantidad = document.getElementById("cantidadEnviarCarmerlo");
+    
+        const piezaSeleccionada = selectElement.value;
+        const cantidad = parseInt(inputCantidad.value);
+    
+        if (piezaSeleccionada && !isNaN(cantidad) && cantidad > 0) {
+          fetch(`http://localhost:5000/api/enviosCarmelo/${piezaSeleccionada}`, {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ cantidad: cantidad }),
+          })
+            .then((response) => {
+              if (!response.ok) {
+                throw new Error("Error en el primer envío");
+              }
+              return response.json();
+            })
+            .then((data) => {
+              console.log(data.mensaje);
+              alert(data.mensaje);
+              inputCantidad.value = "";
+    
+              // Solo después de que el primer fetch fue exitoso:
+              return fetch("http://localhost:5000/api/envios/carmelo", {
                 method: "PUT",
                 headers: {
                   "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ cantidad: cantidad }),
-              }
-            )
-              .then((response) => response.json())
-              .then((data) => {
-                console.log(data.mensaje);
-                alert(data.mensaje);
-                inputCantidad.value = "";
-              })
-              .catch((error) => {
-                console.log("Error:", error);
+                body: JSON.stringify({
+                  cantidad: cantidad,
+                  pieza: piezaSeleccionada,
+                }),
               });
-          } else {
-            console.log(
-              "Por favor, seleccione una pieza y una cantidad válida."
-            );
-            alert("Por favor, seleccione una pieza y una cantidad válida.");
-          }
-        });
+            })
+            .then((response) => {
+              if (response && !response.ok) {
+                throw new Error("Error en el segundo envío");
+              }
+              // Podés agregar una respuesta opcional si querés
+            })
+            .catch((error) => {
+              console.error("Error:", error);
+              alert("No Ahi PieZas Suficientes en fabrica.");
+            });
+        } else {
+          console.log("Por favor, seleccione una pieza y una cantidad válida.");
+          alert("Por favor, seleccione una pieza y una cantidad válida.");
+        }
+      });
 
+      
       document
-        .getElementById("btnEntregaCarmelo")
-        .addEventListener("click", function () {
-          const selectElement = document.getElementById("piezaEntregaCarmelo");
-          const inputCantidad = document.getElementById(
-            "cantidadEmtregacarmelo"
-          );
-
-          const piezaSeleccionada = selectElement.value;
-          const cantidad = inputCantidad.value;
-
-          if (piezaSeleccionada && cantidad > 0) {
-            fetch(
-              `http://localhost:5000/api/entregasCarmelo/${piezaSeleccionada}`,
-              {
+      .getElementById("btnEntregaCarmelo")
+      .addEventListener("click", function () {
+        const selectElement = document.getElementById("piezaEntregaCarmelo");
+        const inputCantidad = document.getElementById("cantidadEmtregacarmelo");
+    
+        const piezaSeleccionada = selectElement.value;
+        const cantidad = parseInt(inputCantidad.value);
+    
+        if (piezaSeleccionada && !isNaN(cantidad) && cantidad > 0) {
+          fetch(
+            `http://localhost:5000/api/entregasCarmelo/${piezaSeleccionada}`,
+            {
+              method: "PUT",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ cantidad: cantidad }),
+            }
+          )
+            .then((response) => {
+              if (!response.ok) {
+                throw new Error("Error en el primer envío");
+              }
+              return response.json();
+            })
+            .then((data) => {
+              console.log(data.mensaje);
+              alert(data.mensaje);
+              inputCantidad.value = "";
+    
+              // Solo después del primer fetch exitoso:
+              return fetch("http://localhost:5000/api/entregas/carmelo", {
                 method: "PUT",
                 headers: {
                   "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ cantidad: cantidad }),
-              }
-            )
-              .then((response) => response.json())
-              .then((data) => {
-                console.log(data.mensaje);
-                alert(data.mensaje);
-                inputCantidad.value = "";
-              })
-              .catch((error) => {
-                console.log("Error:", error);
+                body: JSON.stringify({
+                  cantidad: cantidad,
+                  pieza: piezaSeleccionada,
+                }),
               });
-          } else {
-            console.log(
-              "Por favor, seleccione una pieza y una cantidad válida."
-            );
-            alert("Por favor, seleccione una pieza y una cantidad válida.");
-          }
-        });
+            })
+            .then((response) => {
+              if (response && !response.ok) {
+                throw new Error("Error en el segundo envío");
+              }
+            })
+            .catch((error) => {
+              console.error("Error:", error);
+              alert("No Ahi PieZas Suficientes en fabrica.");
+            });
+        } else {
+          console.log("Por favor, seleccione una pieza y una cantidad válida.");
+          alert("Por favor, seleccione una pieza y una cantidad válida.");
+        }
+      });
+    
+      mostrarJson("carmelo", eddd)
 
       break;
 
@@ -951,10 +1068,10 @@ async function mostrarContenido(nombre) {
         "Teletubi 330",
         "Teletubi 300",
         "Teletubi 250",
-        "BaseInox_330",
-        "BaseInox_300",
-        "BaseInox_250",
-        "BaseECO",
+        "BaseInox330",
+        "BaseInox300",
+        "BaseInox250",
+        "BaseInoxECO",
         "Tapa Afilador Eco",
       ];
 
@@ -962,13 +1079,16 @@ async function mostrarContenido(nombre) {
       let envioMaxi = document.createElement("div");
       let entregaMaxi = document.createElement("div");
       let piezaMaxi = generarSelector(lista_piezas_Maxi);
+      let ess = document.createElement("div");
 
       const htmlMaxi = `
       <div>
         <p>Maxi</p>
           <div class="boxBtnStock">
-            <button class="stockMaxi"  data-tipo="StockEnMaxi" >En Maxi</button>
             <button class="stockFabrica"  data-tipo="StockEnFabrica">En Fabrica Bruto</button>
+
+            <button class="stockMaxi"  data-tipo="StockEnMaxi" >En Maxi</button>
+            
             <button class="stockFabricaTerminado"  data-tipo="StockEnFabrica">En Fabrica Terminado</button>
           </div>
 
@@ -1009,11 +1129,12 @@ async function mostrarContenido(nombre) {
       layoutDiv.appendChild(cajaMaxi);
       cajaMaxi.appendChild(envioMaxi);
       cajaMaxi.appendChild(entregaMaxi);
+      layoutDiv.appendChild(ess)
 
       document.addEventListener("click", async (event) => {
         if (event.target.classList.contains("stockFabrica")) {
-          const tipo = event.target.getAttribute("data-tipo");
-          console.log("Seleccionado: ", tipo);
+          titulotabla.innerText = "Tabla En Fabrica "
+
           try {
             const res = await fetch(
               "http://localhost:5000/api/carmelostockfabrica"
@@ -1027,12 +1148,6 @@ async function mostrarContenido(nombre) {
                 "Brazo 250",
                 "Brazo 300",
                 "Brazo 330",
-                "baseInox330",
-                "baseInox300",
-                "baseInox250",
-                "basePintada330",
-                "basePintada300",
-                "baseInoxECO",
                 "Caja Soldada Eco",
               ],
 
@@ -1046,6 +1161,10 @@ async function mostrarContenido(nombre) {
                 "Teletubi 330",
                 "Teletubi 250",
                 "Tapa Afilador Eco",
+                "baseInox330",
+                "baseInox300",
+                "baseInox250",
+                "baseInoxECO",
               ],
               torno: [
                 "Cubrecuchilla 300",
@@ -1102,6 +1221,7 @@ async function mostrarContenido(nombre) {
             console.error("Esto es un error", error);
           }
         } else if (event.target.classList.contains("stockMaxi")) {
+          titulotabla.innerText = "Tabla En Maxi "
           try {
             const res = await fetch(
               "http://localhost:5000/api/carmelostockfabrica"
@@ -1181,6 +1301,7 @@ async function mostrarContenido(nombre) {
             console.error("Esto es un error", error);
           }
         } else if (event.target.classList.contains("stockFabricaTerminado")) {
+          titulotabla.innerText = "Tabla Terminado "
           try {
             const res = await fetch(
               "http://localhost:5000/api/carmelostockfabrica"
@@ -1263,76 +1384,123 @@ async function mostrarContenido(nombre) {
       });
 
       document
-        .getElementById("EnviosAMaxi")
-        .addEventListener("click", function () {
-          const piezasSeleccionada =
-            document.getElementById("PiezasSeleccionada");
-          const CantidadSeleccionada = document.getElementById("cantidad");
+      .getElementById("EnviosAMaxi")
+      .addEventListener("click", function () {
+        const piezasSeleccionada = document.getElementById("PiezasSeleccionada");
+        const CantidadSeleccionada = document.getElementById("cantidad");
+    
+        const piezaSeleccionada = piezasSeleccionada.value;
+        const cantidad = parseInt(CantidadSeleccionada.value);
+    
+        if (piezaSeleccionada && !isNaN(cantidad) && cantidad > 0) {
+          fetch(`http://localhost:5000/api/enviosMaxi/${piezaSeleccionada}`, {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ cantidad: cantidad }),
+          })
+            .then((response) => {
+              if (!response.ok) {
+                throw new Error("Error en el primer envío");
+              }
+              return response.json();
+            })
+            .then((data) => {
+              console.log(data.mensaje);
+              alert(data.mensaje);
+              CantidadSeleccionada.value = "";
+    
+              // Solo después de que el primer fetch fue exitoso:
+              return fetch("http://localhost:5000/api/envios/maxi", {
+                method: "PUT",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                  cantidad: cantidad,
+                  pieza: piezaSeleccionada,
+                }),
+              });
+            })
+            .then((response) => {
+              if (response && !response.ok) {
+                throw new Error("Error en el segundo envío");
+              }
+            })
+            .catch((error) => {
+              console.error("Error:", error);
+              alert("Hubo un problema al procesar el envío.");
+            });
+        } else {
+          console.log("Por favor, seleccione una pieza y una cantidad válida.");
+          alert("Por favor, seleccione una pieza y una cantidad válida.");
+        }
+      });
+    
 
-          const piezaSeleccionada = piezasSeleccionada.value;
-          const cantidad = CantidadSeleccionada.value;
-
-          if (piezaSeleccionada && cantidad > 0) {
-            fetch(`http://localhost:5000/api/enviosMaxi/${piezaSeleccionada}`, {
+      document
+      .getElementById("btnEntregaMaxi")
+      .addEventListener("click", function () {
+        const selectElement = document.getElementById("piezaEntregaMaxi");
+        const inputCantidad = document.getElementById("cantidadEmtregaMaxi");
+    
+        const piezaSeleccionada = selectElement.value;
+        const cantidad = parseInt(inputCantidad.value);
+    
+        if (piezaSeleccionada && !isNaN(cantidad) && cantidad > 0) {
+          fetch(
+            `http://localhost:5000/api/entregasMaxi/${piezaSeleccionada}`,
+            {
               method: "PUT",
               headers: {
                 "Content-Type": "application/json",
               },
               body: JSON.stringify({ cantidad: cantidad }),
+            }
+          )
+            .then((response) => {
+              if (!response.ok) {
+                throw new Error("Error en el primer envío de entrega a Maxi");
+              }
+              return response.json();
             })
-              .then((response) => response.json())
-              .then((data) => {
-                console.log(data.mensaje);
-                alert(data.mensaje);
-                inputCantidad.value = "";
-              })
-              .catch((error) => {
-                console.log("Error:", error);
-              });
-          } else {
-            console.log(
-              "Por favor, seleccione una pieza y una cantidad válida."
-            );
-            alert("Por favor, seleccione una pieza y una cantidad válida.");
-          }
-        });
-
-      document
-        .getElementById("btnEntregaMaxi")
-        .addEventListener("click", function () {
-          const selectElement = document.getElementById("piezaEntregaMaxi");
-          const inputCantidad = document.getElementById("cantidadEmtregaMaxi");
-
-          const piezaSeleccionada = selectElement.value;
-          const cantidad = inputCantidad.value;
-
-          if (piezaSeleccionada && cantidad > 0) {
-            fetch(
-              `http://localhost:5000/api/entregasMaxi/${piezaSeleccionada}`,
-              {
+            .then((data) => {
+              console.log(data.mensaje);
+              alert(data.mensaje);
+              inputCantidad.value = "";
+    
+              // Solo si el primer fetch fue exitoso
+              return fetch("http://localhost:5000/api/entregas/maxi", {
                 method: "PUT",
                 headers: {
                   "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ cantidad: cantidad }),
-              }
-            )
-              .then((response) => response.json())
-              .then((data) => {
-                console.log(data.mensaje);
-                alert(data.mensaje);
-                inputCantidad.value = "";
-              })
-              .catch((error) => {
-                console.log("Error:", error);
+                body: JSON.stringify({
+                  cantidad: cantidad,
+                  pieza: piezaSeleccionada,
+                }),
               });
-          } else {
-            console.log(
-              "Por favor, seleccione una pieza y una cantidad válida."
-            );
-            alert("Por favor, seleccione una pieza y una cantidad válida.");
-          }
-        });
+            })
+            .then((response) => {
+              if (response && !response.ok) {
+                throw new Error("Error en el registro de entrega global");
+              }
+            })
+            .catch((error) => {
+              console.error("Error:", error);
+              alert("Hubo un problema al procesar la entrega.");
+            });
+        } else {
+          console.log(
+            "Por favor, seleccione una pieza y una cantidad válida."
+          );
+          alert("Por favor, seleccione una pieza y una cantidad válida.");
+        }
+      });
+    
+
+      mostrarJson("maxi", ess)
 
       break;
 
@@ -1349,6 +1517,9 @@ async function mostrarContenido(nombre) {
       let envioPintura = document.createElement("div");
       let entregaPintura = document.createElement("div");
       let piezaPintura = generarSelector(lista_piezas_Pintura);
+      let edddcs = document.createElement("div");
+
+
 
       const htmlPintura = `
       <div>
@@ -1396,9 +1567,11 @@ async function mostrarContenido(nombre) {
       layoutDiv.appendChild(cajaPintura);
       cajaPintura.appendChild(envioPintura);
       cajaPintura.appendChild(entregaPintura);
+      layoutDiv.appendChild(edddcs)
 
       document.addEventListener("click", async (event) => {
         if (event.target.classList.contains("stockFabrica")) {
+          titulotabla.innerText = "Tabla En Fabrica"
           try {
             const res = await fetch(
               "http://localhost:5000/api/piezasbrutapintada"
@@ -1446,6 +1619,7 @@ async function mostrarContenido(nombre) {
             console.error("Esto es un error", error);
           }
         } else if (event.target.classList.contains("stockPintura")) {
+          titulotabla.innerText = "Tabla De Pintor"
           try {
             const res = await fetch("http://localhost:5000/api/stockPintura");
             if (!res.ok) throw new Error("Error en respuesta del servidor");
@@ -1491,6 +1665,7 @@ async function mostrarContenido(nombre) {
             console.error("es un error");
           }
         } else if (event.target.classList.contains("stockTerminado")) {
+          titulotabla.innerText = "Tabla Terminado "
           try {
             const res = await fetch("http://localhost:5000/api/stockPintura");
             if (!res.ok) throw new Error("Error en respuesta del servidor");
@@ -1535,86 +1710,117 @@ async function mostrarContenido(nombre) {
       });
 
       document
-        .getElementById("btnEnviarPintura")
-        .addEventListener("click", function () {
-          const selectElement = document.getElementById(
-            "soldadorEnviosPintura"
-          );
-          const inputCantidad = document.getElementById(
-            "cantidadEnviosPintura"
-          );
-
-          const piezaSeleccionada = selectElement.value;
-          const cantidad = inputCantidad.value;
-
-          if (piezaSeleccionada && cantidad > 0) {
-            fetch(
-              `http://localhost:5000/api/enviosPintura/${piezaSeleccionada}`,
-              {
+      .getElementById("btnEnviarPintura")
+      .addEventListener("click", function () {
+        const selectElement = document.getElementById("soldadorEnviosPintura");
+        const inputCantidad = document.getElementById("cantidadEnviosPintura");
+    
+        const piezaSeleccionada = selectElement.value;
+        const cantidad = parseInt(inputCantidad.value);
+    
+        if (piezaSeleccionada && !isNaN(cantidad) && cantidad > 0) {
+          fetch(`http://localhost:5000/api/enviosPintura/${piezaSeleccionada}`, {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ cantidad: cantidad }),
+          })
+            .then((response) => {
+              if (!response.ok) {
+                throw new Error("Error en el envío a pintura (detalle individual).");
+              }
+              return response.json();
+            })
+            .then((data) => {
+              console.log(data.mensaje);
+              alert(data.mensaje);
+              inputCantidad.value = "";
+    
+              // Solo si el primer fetch fue exitoso:
+              return fetch("http://localhost:5000/api/envios/pintura", {
                 method: "PUT",
                 headers: {
                   "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ cantidad: cantidad }),
-              }
-            )
-              .then((response) => response.json())
-              .then((data) => {
-                console.log(data.mensaje);
-                alert(data.mensaje);
-                inputCantidad.value = "";
-              })
-              .catch((error) => {
-                console.log("Error:", error);
+                body: JSON.stringify({
+                  cantidad: cantidad,
+                  pieza: piezaSeleccionada,
+                }),
               });
-          } else {
-            console.log(
-              "Por favor, seleccione una pieza y una cantidad válida."
-            );
-            alert("Por favor, seleccione una pieza y una cantidad válida.");
-          }
-        });
+            })
+            .then((response) => {
+              if (response && !response.ok) {
+                throw new Error("Error al registrar envío global a pintura.");
+              }
+            })
+            .catch((error) => {
+              console.error("Error:", error);
+              alert("Hubo un problema al procesar el envío a pintura.");
+            });
+        } else {
+          console.log("Por favor, seleccione una pieza y una cantidad válida.");
+          alert("Por favor, seleccione una pieza y una cantidad válida.");
+        }
+      });
+    
 
       document
-        .getElementById("btnEntregaPintura")
-        .addEventListener("click", function () {
-          const selectElement = document.getElementById(
-            "soldadorEntregaPintura"
-          );
-          const inputCantidad = document.getElementById(
-            "cantidadEntregaPintura"
-          );
-
-          const piezaSeleccionada = selectElement.value;
-          const cantidad = inputCantidad.value;
-
-          if (piezaSeleccionada && cantidad > 0) {
-            fetch(
-              `http://localhost:5000/api/entregasPintura/${piezaSeleccionada}`,
-              {
+      .getElementById("btnEntregaPintura")
+      .addEventListener("click", function () {
+        const selectElement = document.getElementById("soldadorEntregaPintura");
+        const inputCantidad = document.getElementById("cantidadEntregaPintura");
+    
+        const piezaSeleccionada = selectElement.value;
+        const cantidad = parseInt(inputCantidad.value);
+    
+        if (piezaSeleccionada && !isNaN(cantidad) && cantidad > 0) {
+          fetch(`http://localhost:5000/api/entregasPintura/${piezaSeleccionada}`, {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ cantidad: cantidad }),
+          })
+            .then((response) => {
+              if (!response.ok) {
+                throw new Error("Error en entrega individual a pintura.");
+              }
+              return response.json();
+            })
+            .then((data) => {
+              console.log(data.mensaje);
+              alert(data.mensaje);
+              inputCantidad.value = "";
+    
+              // Registro global
+              return fetch("http://localhost:5000/api/entregas/pintura", {
                 method: "PUT",
                 headers: {
                   "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ cantidad: cantidad }),
-              }
-            )
-              .then((response) => response.json())
-              .then((data) => {
-                console.log(data.mensaje);
-                alert(data.mensaje);
-                inputCantidad.value = "";
-              })
-              .catch((error) => {
-                console.log("Error:", error);
+                body: JSON.stringify({
+                  cantidad: cantidad,
+                  pieza: piezaSeleccionada,
+                }),
               });
-          } else {
-            console.log(
-              "Por favor, seleccione una pieza y una cantidad válida."
-            );
-            alert("Por favor, seleccione una pieza y una cantidad válida.");
-          }
-        });
+            })
+            .then((response) => {
+              if (response && !response.ok) {
+                throw new Error("Error al registrar entrega global a pintura.");
+              }
+            })
+            .catch((error) => {
+              console.error("Error:", error);
+              alert("Hubo un problema al procesar la entrega a pintura.");
+            });
+        } else {
+          console.log("Por favor, seleccione una pieza y una cantidad válida.");
+          alert("Por favor, seleccione una pieza y una cantidad válida.");
+        }
+      });
+    
+      mostrarJson("pintura", edddcs)
 
       break;
 
@@ -1633,6 +1839,7 @@ async function mostrarContenido(nombre) {
       let envioNiquelado = document.createElement("div");
       let entregaNiquelado = document.createElement("div");
       let piezaNiquelado = generarSelector(lista_piezas_Niquelado);
+      let edddww = document.createElement("div");
 
       const htmlNiquelado = `
         <div>
@@ -1679,11 +1886,12 @@ async function mostrarContenido(nombre) {
       layoutDiv.appendChild(cajaNiquelado);
       cajaNiquelado.appendChild(envioNiquelado);
       cajaNiquelado.appendChild(entregaNiquelado);
+      layoutDiv.appendChild(edddww)
 
       document.addEventListener("click", async (event) => {
         if (event.target.classList.contains("stockBruto")) {
-          const tipo = event.target.getAttribute("data-tipo");
-          console.log("Seleccionado: ", tipo);
+          titulotabla.innerText = "Tabla En Fabrica"
+
           try {
             const res = await fetch(
               "http://localhost:5000/api/piezasbrutaniquelado"
@@ -1733,6 +1941,8 @@ async function mostrarContenido(nombre) {
             console.error("Esto es un error", error);
           }
         } else if (event.target.classList.contains("stockNiquelado")) {
+          titulotabla.innerText = "Tabla En Niquelado"
+
           try {
             const res = await fetch(
               "http://localhost:5000/api/piezasbrutaniquelado"
@@ -1782,6 +1992,8 @@ async function mostrarContenido(nombre) {
             console.error("es un error");
           }
         } else if (event.target.classList.contains("stockEnFabrica")) {
+          titulotabla.innerText = "Tabla En Fabrica"
+
           try {
             const res = await fetch(
               "http://localhost:5000/api/piezasbrutaniquelado"
@@ -1830,87 +2042,117 @@ async function mostrarContenido(nombre) {
       });
 
       document
-        .getElementById("btnEnviarNiquelado")
-        .addEventListener("click", function () {
-          const selectElement = document.getElementById(
-            "soldadorEnviosNiquelado"
-          );
-          const inputCantidad = document.getElementById(
-            "cantidadEnviosNiquelado"
-          );
-
-          const piezaSeleccionada = selectElement.value;
-          const cantidad = inputCantidad.value;
-
-          if (piezaSeleccionada && cantidad > 0) {
-            fetch(
-              `http://localhost:5000/api/enviosNiquelado/${piezaSeleccionada}`,
-              {
+      .getElementById("btnEnviarNiquelado")
+      .addEventListener("click", function () {
+        const selectElement = document.getElementById("soldadorEnviosNiquelado");
+        const inputCantidad = document.getElementById("cantidadEnviosNiquelado");
+    
+        const piezaSeleccionada = selectElement.value;
+        const cantidad = parseInt(inputCantidad.value);
+    
+        if (piezaSeleccionada && !isNaN(cantidad) && cantidad > 0) {
+          fetch(`http://localhost:5000/api/enviosNiquelado/${piezaSeleccionada}`, {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ cantidad: cantidad }),
+          })
+            .then((response) => {
+              if (!response.ok) {
+                throw new Error("Error al actualizar envío individual a niquelado.");
+              }
+              return response.json();
+            })
+            .then((data) => {
+              console.log(data.mensaje);
+              alert(data.mensaje);
+              inputCantidad.value = "";
+    
+              // Registro global
+              return fetch("http://localhost:5000/api/envios/niquelado", {
                 method: "PUT",
                 headers: {
                   "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ cantidad: cantidad }),
-              }
-            )
-              .then((response) => response.json())
-              .then((data) => {
-                console.log(data.mensaje);
-                alert(data.mensaje);
-                inputCantidad.value = "";
-              })
-              .catch((error) => {
-                console.log("Error:", error);
+                body: JSON.stringify({
+                  cantidad: cantidad,
+                  pieza: piezaSeleccionada,
+                }),
               });
-          } else {
-            console.log(
-              "Por favor, seleccione una pieza y una cantidad válida."
-            );
-            alert("Por favor, seleccione una pieza y una cantidad válida.");
-          }
-        });
+            })
+            .then((response) => {
+              if (response && !response.ok) {
+                throw new Error("Error al registrar envío global a niquelado.");
+              }
+            })
+            .catch((error) => {
+              console.error("Error:", error);
+              alert("Hubo un problema al procesar el envío a niquelado.");
+            });
+        } else {
+          console.log("Por favor, seleccione una pieza y una cantidad válida.");
+          alert("Por favor, seleccione una pieza y una cantidad válida.");
+        }
+      });
+    
 
-      document
+        document
         .getElementById("btnEntregaNiquelado")
         .addEventListener("click", function () {
-          const selectElement = document.getElementById(
-            "soldadorEntregaNiquelado"
-          );
-          const inputCantidad = document.getElementById(
-            "cantidadEntregaNiquelado"
-          );
-
+          const selectElement = document.getElementById("soldadorEntregaNiquelado");
+          const inputCantidad = document.getElementById("cantidadEntregaNiquelado");
+      
           const piezaSeleccionada = selectElement.value;
-          const cantidad = inputCantidad.value;
-
-          if (piezaSeleccionada && cantidad > 0) {
-            fetch(
-              `http://localhost:5000/api/entregasNiquelado/${piezaSeleccionada}`,
-              {
-                method: "PUT",
-                headers: {
-                  "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ cantidad: cantidad }),
-              }
-            )
-              .then((response) => response.json())
+          const cantidad = parseInt(inputCantidad.value);
+      
+          if (piezaSeleccionada && !isNaN(cantidad) && cantidad > 0) {
+            fetch(`http://localhost:5000/api/entregasNiquelado/${piezaSeleccionada}`, {
+              method: "PUT",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ cantidad: cantidad }),
+            })
+              .then((response) => {
+                if (!response.ok) {
+                  throw new Error("Error en entrega individual a niquelado.");
+                }
+                return response.json();
+              })
               .then((data) => {
                 console.log(data.mensaje);
                 alert(data.mensaje);
                 inputCantidad.value = "";
+      
+                // Registro global
+                return fetch("http://localhost:5000/api/entregas/niquelado", {
+                  method: "PUT",
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify({
+                    cantidad: cantidad,
+                    pieza: piezaSeleccionada,
+                  }),
+                });
+              })
+              .then((response) => {
+                if (response && !response.ok) {
+                  throw new Error("Error al registrar entrega global a niquelado.");
+                }
               })
               .catch((error) => {
-                console.log("Error:", error);
+                console.error("Error:", error);
+                alert("Hubo un problema al procesar la entrega a niquelado.");
               });
           } else {
-            console.log(
-              "Por favor, seleccione una pieza y una cantidad válida."
-            );
+            console.log("Por favor, seleccione una pieza y una cantidad válida.");
             alert("Por favor, seleccione una pieza y una cantidad válida.");
           }
         });
-
+      
+        mostrarJson("niquelado", edddww)
       break;
 
     case "Afilador":
@@ -1928,6 +2170,7 @@ async function mostrarContenido(nombre) {
       const cajaAfilador = document.createElement("div");
       let entregaAfilador = document.createElement("div");
       let resivirAfiladores = document.createElement("div");
+      let edddfila = document.createElement("div");
 
       let piezaAfilador = generarSelector(lista_piezas_Afilador);
 
@@ -1976,11 +2219,13 @@ async function mostrarContenido(nombre) {
       layoutDiv.appendChild(cajaAfilador);
       cajaAfilador.appendChild(entregaAfilador);
       cajaAfilador.appendChild(resivirAfiladores);
+      layoutDiv.appendChild(edddfila)
+
 
       document.addEventListener("click", async (event) => {
         if (event.target.classList.contains("stockFabrica")) {
-          const tipo = event.target.getAttribute("data-tipo");
-          console.log("Seleccionado: ", tipo);
+          titulotabla.innerText = "Tabla En Fabrica"
+
           try {
             const res = await fetch(
               "http://localhost:5000/api/piezasbrutaAfilador"
@@ -2029,6 +2274,8 @@ async function mostrarContenido(nombre) {
             console.error("Esto es un error", error);
           }
         } else if (event.target.classList.contains("stockRoman")) {
+          titulotabla.innerText = "Tabla en Roman"
+
           try {
             const res = await fetch(
               "http://localhost:5000/api/piezasbrutaAfilador"
@@ -2079,6 +2326,8 @@ async function mostrarContenido(nombre) {
             console.error("es un error");
           }
         } else if (event.target.classList.contains("stockEnFabricaAfilador")) {
+          titulotabla.innerText = "Tabla de afiladores"
+
           try {
             const res = await fetch("http://localhost:5000/api/afilador");
             if (!res.ok) throw new Error("Error en respuesta del servidor");
@@ -2121,80 +2370,116 @@ async function mostrarContenido(nombre) {
       .addEventListener("click", function () {
         const selectElement = document.getElementById("piezaEnviarAfilador");
         const inputCantidad = document.getElementById("cantidadEnviarAfilador");
-
+    
         const piezaSeleccionada = selectElement.value;
-        const cantidad = inputCantidad.value;
-
-        if (piezaSeleccionada && cantidad > 0) {
-          fetch(
-            `http://localhost:5000/api/enviosAfiladores/${piezaSeleccionada}`,
-            {
-              method: "PUT",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({ cantidad: cantidad }),
-            }
-          )
-            .then((response) => response.json())
+        const cantidad = parseInt(inputCantidad.value);
+    
+        if (piezaSeleccionada && !isNaN(cantidad) && cantidad > 0) {
+          fetch(`http://localhost:5000/api/enviosAfiladores/${piezaSeleccionada}`, {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ cantidad: cantidad }),
+          })
+            .then((response) => {
+              if (!response.ok) {
+                throw new Error("Error al actualizar envío individual al afilador.");
+              }
+              return response.json();
+            })
             .then((data) => {
               console.log(data.mensaje);
               alert(data.mensaje);
-              inputCantidad.value = "";
-            })
-            .catch((error) => {
-              console.log("Error:", error);
-            });
-        } else {
-          console.log(
-            "Por favor, seleccione una pieza y una cantidad válida."
-          );
-          alert("Por favor, seleccione una pieza y una cantidad válida.");
-        }
-      });
-      document
-        .getElementById("EntregaAfiladores")
-        .addEventListener("click", function () {
-          const inputCantidad = document.getElementById(
-            "cantidadEmtregacarmelo"
-          );
-
-          const piezaSeleccionada = "Afilador";
-          const cantidad = inputCantidad.value;
-
-          if (piezaSeleccionada && cantidad > 0) {
-            fetch(
-              `http://localhost:5000/api/antregaAfiladores/${piezaSeleccionada}`,
-              {
+    
+              // Segunda petición para el registro general
+              return fetch("http://localhost:5000/api/envios/afilador", {
                 method: "PUT",
                 headers: {
                   "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ cantidad: cantidad }),
-              }
-            )
-              .then((response) => response.json())
-              .then((data) => {
-                console.log(data.mensaje);
-                alert(data.mensaje);
-                inputCantidad.value = "";
-              })
-              .catch((error) => {
-                console.log("Error:", error);
+                body: JSON.stringify({
+                  cantidad: cantidad,
+                  pieza: piezaSeleccionada,
+                }),
               });
-          } else {
-            console.log(
-              "Por favor, seleccione una pieza y una cantidad válida."
-            );
-            alert("Por favor, seleccione una pieza y una cantidad válida.");
-          }
-        });
+            })
+            .then((response) => {
+              if (response && !response.ok) {
+                throw new Error("Error al registrar el envío global al afilador.");
+              }
+              inputCantidad.value = ""; // Limpia solo si todo salió bien
+            })
+            .catch((error) => {
+              console.error("Error:", error);
+              alert("Hubo un problema al procesar el envío al afilador.");
+            });
+        } else {
+          console.log("Por favor, seleccione una pieza y una cantidad válida.");
+          alert("Por favor, seleccione una pieza y una cantidad válida.");
+        }
+      });
 
+      
+      document
+      .getElementById("EntregaAfiladores")
+      .addEventListener("click", function () {
+        const inputCantidad = document.getElementById("cantidadEmtregacarmelo");
+    
+        const piezaSeleccionada = "Afilador";
+        const cantidad = parseInt(inputCantidad.value);
+    
+        if (piezaSeleccionada && !isNaN(cantidad) && cantidad > 0) {
+          fetch(`http://localhost:5000/api/entregaAfiladores/${piezaSeleccionada}`, {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ cantidad: cantidad }),
+          })
+            .then((response) => {
+              if (!response.ok) {
+                throw new Error("Error al registrar entrega individual.");
+              }
+              return response.json();
+            })
+            .then((data) => {
+              console.log(data.mensaje);
+              alert(data.mensaje);
+    
+              // Segunda petición para el registro global
+              return fetch("http://localhost:5000/api/entregas/afilador", {
+                method: "PUT",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                  cantidad: cantidad,
+                  pieza: piezaSeleccionada,
+                }),
+              });
+            })
+            .then((response) => {
+              if (response && !response.ok) {
+                throw new Error("Error al registrar entrega global.");
+              }
+              inputCantidad.value = "";
+            })
+            .catch((error) => {
+              console.error("Error:", error);
+              alert("Hubo un problema al procesar la entrega al afilador.");
+            });
+        } else {
+          console.log("Por favor, seleccione una pieza y una cantidad válida.");
+          alert("Por favor, seleccione una pieza y una cantidad válida.");
+        }
+      });
+      mostrarJson("afilador", edddfila)
 
       break;
     default:
       console.log(`No hay datos para ${nombre}`);
-      return;
+      return; 
   }
   // Crear la tabla con Tabulator
   new Tabulator(tablaDiv, {

@@ -13,8 +13,6 @@ function createWindow() {
     },
   });
 
-  // 🔥 Esta línea oculta las pestañas del menú superior
-  mainWindow.setMenu(null);
 
   // Cargar el archivo HTML principal
   mainWindow.loadFile(path.join(__dirname, 'index.html'));

@@ -27,6 +27,7 @@ async function handleLogin() {
       console.log('Inicio de sesión exitoso:', data);
       localStorage.setItem('token', data.token);
       alert('Inicio de sesión exitoso');
+      document.getElementById('loader').style.display = 'block';
       window.location.href = 'inicio.html';
     } catch (error) {
       console.error('Error al comunicarse con el servidor:', error);

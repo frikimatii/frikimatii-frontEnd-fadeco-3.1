@@ -3,7 +3,7 @@
 }
 
 .barralateral {
-  width: 20%;
+  width: 16%;
   display: flex;
   flex-direction: column;
 }
@@ -47,4 +47,44 @@
   width: 100px;
   height:50px;
   gap: px
+}
+
+#tituloProvedoresTabla{
+  text-align: start;
+  font-size: 25px;
+  font-weight: 700;
+  margin-left: 60px;
+
+}
+.historial-contenedor {
+  display: flex;
+  flex-direction: column; /* Apila los bloques uno abajo del otro */
+  gap: 20px;
+  margin-top: 10px;
+}
+
+.columna-envios,
+.columna-entregas {
+  padding: 10px;
+  border-radius: 8px;
+  box-shadow: 0 0 5px rgba(0,0,0,0.1);
+}
+
+.columna-envios ul,
+.columna-entregas ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.columna-envios li,
+.columna-entregas li {
+  padding: 5px 0;
+  font-family: Arial, sans-serif;
+  font-size: 12px;
+}
+
+.columna-envios li:last-child,
+.columna-entregas li:last-child {
+  border-bottom: none;
 }
