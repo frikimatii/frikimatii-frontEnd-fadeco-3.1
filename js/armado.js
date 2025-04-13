@@ -141,7 +141,7 @@ async function boxArmado() {
     .getElementById("stockMotores")
     .addEventListener("click", async function () {
       try {
-        const res = await fetch("http://localhost:50003-2.onrender.com/api/shop");
+        const res = await fetch("http://localhost:5000/api/shop");
         if (!res.ok) throw new Error("Error en respuesta del servidor");
 
         const Motores = await res.json();
