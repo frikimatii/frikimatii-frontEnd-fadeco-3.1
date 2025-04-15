@@ -562,6 +562,7 @@ async function boxArmado() {
       "Cable 220w",
       "Resorte Carro",
       "Capacitores",
+      "Bandeja 330"
     ],
     augeriado: ["Movimiento", "Carros"],
     torno: ["Tornillo guia", "Rueditas"],
@@ -585,6 +586,7 @@ async function boxArmado() {
       "Cable 220w",
       "Resorte Carro",
       "Capacitores",
+      "Bandeja 300"
     ],
     augeriado: ["Movimiento", "Carros"],
     torno: ["Tornillo guia", "Rueditas"],
@@ -876,7 +878,8 @@ async function boxArmado() {
       "Pinche Frontal",
       "Pinche lateral",
     ],
-    soldador: ["Cuadrado Regulador", "cabezal_inox"],
+    soldador: ["Cuadrado Regulador"],
+    pulido: ["CabezalInox"]
   });
 
   cargarArmadoFinal("maquinasi300", {
@@ -907,7 +910,8 @@ async function boxArmado() {
       "Pinche Frontal",
       "Pinche lateral",
     ],
-    soldador: ["Cuadrado Regulador", "cabezal_inox"],
+    soldador: ["Cuadrado Regulador"],
+    pulido: ["CabezalInox"]
   });
 
   cargarArmadoFinal("maquinasp330", {
@@ -923,6 +927,7 @@ async function boxArmado() {
       "Tubo Manija",
       "Afilador",
       "BasePreArmada_Pintada330",
+      "CabezalPintada"
     ],
     bruto: [
       "Cubre Motor Rectangulo",
@@ -938,7 +943,7 @@ async function boxArmado() {
       "Pinche Frontal",
       "Pinche lateral",
     ],
-    soldador: ["Cuadrado Regulador", "cabezal_Pintada"],
+    soldador: ["Cuadrado Regulador"],
   });
 
   cargarArmadoFinal("maquinasp300", {
@@ -954,6 +959,7 @@ async function boxArmado() {
       "Tubo Manija",
       "Afilador",
       "BasePreArmada_Pintada300",
+      "CabezalPintada"
     ],
     bruto: [
       "Cubre Motor Rectangulo",
@@ -969,7 +975,7 @@ async function boxArmado() {
       "Pinche Frontal",
       "Pinche lateral",
     ],
-    soldador: ["Cuadrado Regulador", "cabezal_Pintada"],
+    soldador: ["Cuadrado Regulador"],
   });
 
   cargarArmadoFinal("maquinasiECO", {
@@ -999,7 +1005,8 @@ async function boxArmado() {
       "Pinche lateral",
       "Pitito Teletubi Eco",
     ],
-    soldador: ["Cuadrado Regulador", "cabezal_inox"],
+    soldador: ["Cuadrado Regulador"],
+    pulido: ["CabezalInox"]
   });
 
   cargarArmadoFinal("maquinasi250", {
@@ -1029,7 +1036,8 @@ async function boxArmado() {
       "Pinche Frontal 250",
       "Pinche lateral 250",
     ],
-    soldador: ["Cuadrado Regulador", "cabezal i250"],
+    soldador: ["Cuadrado Regulador"],
+    pulido: ["Cabezal250"]
   });
 
   document
@@ -1042,7 +1050,7 @@ async function boxArmado() {
         const piezaBrutoEnFabrica = await res.json();
 
         const piezasLista = {
-          terminadas: [
+          terminado: [
             "Inox_330",
             "Inox_300",
             "Inox_250",
@@ -1199,12 +1207,29 @@ async function boxArmado() {
     `);
   });
 
-
-  document.getElementById("CerraMes").addEventListener('click', () =>{
-    const mesSeleccionado = document.getElementById("mesSeleccionado")
-
-    console.log(mesSeleccionado.value)
-  })
+  document.getElementById("CerraMes").addEventListener('click', async () => {
+    try {
+      const res = await fetch("http://localhost:5000/api/mesReset", {
+        method: "PUT",
+        headers: {
+          'Content-Type': 'application/json'
+        }
+        // No hace falta enviar body ya que no usamos datos
+      });
+  
+      const data = await res.json();
+  
+      if (res.ok) {
+        alert(data.mensaje);
+      } else {
+        alert("Error al cerrar el mes: " + data.mensaje);
+      }
+    } catch (error) {
+      console.error("Error de conexión:", error);
+      alert("Error de conexión con el servidor.");
+    }
+  });
+  
 
 }
 

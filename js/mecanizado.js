@@ -23,9 +23,7 @@ function box() {
           "Bandeja Cabezal Inox 250",
           "Bandeja Cabezal Pintada",
           "Bandeja Cabezal Inox",
-          "Chapa U inox 250",
-          "Chapa U Pintada",
-          "Chapa U inox",
+
         ],
         plasma: [
           "Lateral i330 contecla",
@@ -42,6 +40,11 @@ function box() {
         ],
         balancin: [],
         fresa: ["Planchada 300", "Planchada 330", "Planchada 250"],
+        balancin: [
+          "Chapa U inox 250",
+          "Chapa U Pintada",
+          "Chapa U inox",
+        ]
       };
 
       let datosTabla = [];
@@ -1098,7 +1101,7 @@ function box() {
         plegadora:[         
           "Planchada 330",
           "Planchada 300",
-          "Planchada 250",]
+          "Planchada 250"],
       };
 
       let datosTabla = [];
@@ -1267,7 +1270,13 @@ function box() {
           "Eje Largo",
           "Teletubi Eco",
         ],
-        bruto: ["Chapa U inox", "Chapa U Pintada", "Chapa U inox 250"],
+        bruto: [
+          "Chapa U inox", 
+          "Chapa U Pintada", 
+          "Chapa U inox 250",          
+          "Chapa CubreCabezal inox",
+          "Chapa CubreCabezal Pintada",
+          "Chapa CubreCabezal inox 250" ],
         balancin: ["PortaEje"],
       };
 
@@ -1424,9 +1433,18 @@ function box() {
       const response = await fetch(`http://localhost:5000/api/pulido`);
       if (!response.ok) throw new Error("Error en responder el servidor");
       const piezaplegadoras = await response.json();
+
+      const piezaPorCategoria = {
+        soldador:[
+          "CabezalInox",
+          "Cabezal250"
+        ]
+      }
       const tableData = piezaplegadoras.map((p) => ({
         nombre: p.nombre || "sin nombre",
-        cantidad: p.cantidad?.bruto?.cantidad || 0,
+        cantidad: p.cantidad?.soldador?.cantidad || 0,
+        stock: p.cantidad?.soldador?.stock_deseado
+        
       }));
 
       new Tabulator(TablaMecanizado, {
@@ -1437,12 +1455,55 @@ function box() {
           { title: "Nombre", field: "nombre" },
           { title: "Cantidad", field: "cantidad" },
         ],
+        rowFormatter: function (row) {
+          const data = row.getData();
+
+          if (data.cantidad < data.stock) {
+            row.getElement().style.backgroundColor = "#f8d7da"; // rojo claro (menos del deseado)
+          } else {
+            row.getElement().style.backgroundColor = "#d4edda"; // verde claro (ok o más del deseado)
+          }
+        },
       });
     } catch (error) {
       console.error("Error al Obtener datos", error);
     }
   }
+  async function mostrarStockTerminadosPulido() {
+    const TablaMecanizado = document.getElementById("TablaMecanizado");
+    const titulo = document.getElementById("tituloDeTabla")
 
+    if (!TablaMecanizado && !titulo) {
+      console.error("Nos se encontro el elemento ID ");
+      return;
+    }
+    try {
+      const response = await fetch(`http://localhost:5000/api/pulido`);
+      if (!response.ok) throw new Error("Error en responder el servidor");
+      const piezaplegadoras = await response.json();
+      console.log(piezaplegadoras);
+      const tableData = piezaplegadoras.map((p) => ({
+        nombre: p.nombre || "sin nombre",
+        cantidad: p.cantidad?.pulido?.cantidad || 0,
+      }));
+
+      titulo.innerText= "Tabla de Fresa Piezas Terminadas"
+      new Tabulator(TablaMecanizado, {
+        height: 320,
+        layout: "fitColumns",
+        data: tableData,
+        initialSort: [
+          { column: "nombre", dir: "asc" }, // Orden ascendente (A-Z)
+        ],
+        columns: [
+          { title: "Nombre", field: "nombre" },
+          { title: "Cantidad", field: "cantidad" },
+        ],
+      });
+    } catch (error) {
+      console.log("esto es un erro ", error);
+    }
+  }
   async function actualizarPiezasPulido(
     piezaSeleccionada,
     cantidadSeleccionada
@@ -1577,10 +1638,13 @@ function box() {
         historiales: () => hola("fresa")
       },
       pulido: {
-        piezas: ["cabezal Inox", "cabezal 250"],
+        piezas: ["CabezalInox", "Cabezal250"],
         imagen: "https://i.postimg.cc/2jnDY2Zt/pulido.png",
         mecanizado: "pulido",
-        funcion: "",
+        funcion: mostrarTablasPulido,
+        funcionStock: mostrarStockTerminadosPulido,
+        actualizarP: "",
+        historiales: () => hola("pulido")
       },
       plegadora: {
         piezas: [
@@ -1673,9 +1737,6 @@ function box() {
           "Buje Eje Eco",
           "Teletubi Eco",
           "Guia U",
-          "Chapa CubreCabezal inox",
-          "Chapa CubreCabezal pintada",
-          "Chapa CubreCabezal inox 250",
           "Planchuela Inferior",
           "Planchuela Interna",
         ],
@@ -1694,11 +1755,14 @@ function box() {
           "PortaEje",
           "Guia U",
           "Teletubi Eco",
-          "Chapa U Inox",
+          "Chapa U inox",
           "Chapa U Pintada",
-          "Chapa U Inox 250",
+          "Chapa U inox 250",
           "Eje Corto",
           "Eje Largo",
+          "Chapa CubreCabezal inox",
+          "Chapa CubreCabezal Pintada",
+          "Chapa CubreCabezal inox 250",
         ],
         imagen: "https://i.postimg.cc/1RF9tyLJ/balancin.png",
         mecanizado: "balancin",
@@ -1748,9 +1812,9 @@ function box() {
           "Varilla 300",
           "Varilla 250",
           "Cuadrado Regulador",
-          "cabezal_inox",
-          "cabezal_pintada",
-          "cabezal_eco",
+          "CabezalInox",
+          "CabezalPintada",
+          "Cabezal250",
         ],
         imagen: "https://i.postimg.cc/Nf4v9Fb7/soldador.png",
         mecanizado: "soldador",

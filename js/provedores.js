@@ -1508,9 +1508,9 @@ async function mostrarContenido(nombre) {
       const lista_piezas_Pintura = [
         "basePintada330",
         "basePintada300",
-        "Cabezal Pintada",
         "Caja Soldada Eco",
         "Teletubi Eco",
+        "CabezalPintada"
       ];
 
       const cajaPintura = document.createElement("div");
@@ -1582,7 +1582,7 @@ async function mostrarContenido(nombre) {
 
             const piezasLista = {
               balancin: ["Teletubi Eco"],
-              soldador: ["cabezal_pintada"],
+              soldador: ["CabezalPintada"],
               augeriado: [
                 "Caja Soldada Eco",
               ],
@@ -1630,7 +1630,7 @@ async function mostrarContenido(nombre) {
               pintura: [
                 "basePintada330",
                 "basePintada300",
-                "cabezal_pintada",
+                "CabezalPintada",
                 "Caja Soldada Eco",
                 "Teletubi Eco",
               ],
@@ -1676,7 +1676,7 @@ async function mostrarContenido(nombre) {
               terminado: [
                 "basePintada330",
                 "basePintada300",
-                "cabezal_pintada",
+                "CabezalPintada",
                 "Teletubi Eco",
                 "Caja Soldada Eco",
               ],

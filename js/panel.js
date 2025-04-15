@@ -423,6 +423,24 @@ function panel() {
         piezaSeleccionadaInfo += crearContenedorVarillaBrazo300(selectData);
       } else if (selectData.nombre === "Varilla Brazo 330") {
         piezaSeleccionadaInfo += crearContenedorVarillaBrazo330(selectData);
+      } else if (selectData.nombre === "CabezalInox") {
+        piezaSeleccionadaInfo += crearContenedorCabezalInox(selectData);
+      } else if (selectData.nombre === "CabezalPintada") {
+        piezaSeleccionadaInfo += crearContenedorCabezalPintada(selectData);
+      } else if (selectData.nombre === "Cabezal250") {
+        piezaSeleccionadaInfo += crearContenedorCabezal250(selectData);
+      } else if (selectData.nombre === "Inox_330") {
+        piezaSeleccionadaInfo += crearContenedorInox330(selectData);
+      } else if (selectData.nombre === "Inox_ECO") {
+        piezaSeleccionadaInfo += crearContenedorInoxECO(selectData);
+      } else if (selectData.nombre === "Inox_250") {
+        piezaSeleccionadaInfo += crearContenedorInox250(selectData);
+      } else if (selectData.nombre === "Inox_300") {
+        piezaSeleccionadaInfo += crearContenedorInox300(selectData);
+      } else if (selectData.nombre === "Pintada_330") {
+        piezaSeleccionadaInfo += crearContenedorPintada330(selectData);
+      } else if (selectData.nombre === "Pintada_300") {
+        piezaSeleccionadaInfo += crearContenedorPintada300(selectData);
       } else {
         piezaSeleccionadaInfo += `
           <b>Detalles:</b> ${selectData.detallesGeneral || "No disponible"}
@@ -432,10 +450,11 @@ function panel() {
       document.getElementById("piezaSeleccionada").innerHTML =
         piezaSeleccionadaInfo;
 
+
       // Agregar el evento de clic en el botón de actualizar bruto
+
       const btnActualizarBruto = document.getElementById(
-        `btnActualizarBruto_${selectData._id}`
-      );
+        `btnActualizarBruto_${selectData._id}`);
       if (btnActualizarBruto) {
         btnActualizarBruto.addEventListener("click", async () => {
           const cantidadBruto = document.getElementById(
@@ -478,8 +497,7 @@ function panel() {
 
       // Agregar el evento de clic en el botón de actualizar piezas augeriado
       const btnActualizarAugeriado = document.getElementById(
-        `btnActualizarAugeriado_${selectData._id}`
-      );
+        `btnActualizarAugeriado_${selectData._id}`);
       if (btnActualizarAugeriado) {
         btnActualizarAugeriado.addEventListener("click", async () => {
           const cantidadAugeriado = document.getElementById(
@@ -521,8 +539,7 @@ function panel() {
 
       // Agregar el evento de clic en el botón de actualizar piezas corte
       const btnActualizarCorte = document.getElementById(
-        `btnActualizarCorte_${selectData._id}`
-      );
+        `btnActualizarCorte_${selectData._id}`);
       if (btnActualizarCorte) {
         btnActualizarCorte.addEventListener("click", async () => {
           const cantidadCorte = document.getElementById(
@@ -563,10 +580,8 @@ function panel() {
       }
 
       // Agregar el evento de clic en el botón de actualizar piezas balancin
-
       const btnActualizarBalancin = document.getElementById(
-        `btnActualizarBalancin_${selectData._id}`
-      );
+        `btnActualizarBalancin_${selectData._id}`);
       if (btnActualizarBalancin) {
         btnActualizarBalancin.addEventListener("click", async () => {
           const cantidadBalancin = document.getElementById(
@@ -607,9 +622,7 @@ function panel() {
 
       // Agregar el evento de clic en el botón de actualizar piezas torno
       const btnActualizarTorno = document.getElementById(
-        `btnActualizarTorno_${selectData._id}`
-      );
-
+        `btnActualizarTorno_${selectData._id}`);
       if (btnActualizarTorno) {
         btnActualizarTorno.addEventListener("click", async () => {
           const cantidadTorno = document.getElementById(
@@ -651,9 +664,7 @@ function panel() {
 
       // Agregar el evento de clic en el botón de actualizar piezas plegadora
       const btnActualizarPlegadora = document.getElementById(
-        `btnActualizarPlegadora_${selectData._id}`
-      );
-
+        `btnActualizarPlegadora_${selectData._id}`);
       if (btnActualizarPlegadora) {
         btnActualizarPlegadora.addEventListener("click", async () => {
           const cantidadPlegadora = document.getElementById(
@@ -695,7 +706,6 @@ function panel() {
       const btnActualizarPlasma = document.getElementById(
         `btnActualizarPlasma_${selectData._id}`
       );
-
       if (btnActualizarPlasma) {
         btnActualizarPlasma.addEventListener("click", async () => {
           const cantidadPlasma = document.getElementById(
@@ -734,10 +744,8 @@ function panel() {
       }
 
       // Agregar el evento de clic en el botón de actualizar piezas Fresa
-
       const btnActualizarFresa = document.getElementById(
-        `btnActualizarFresa_${selectData._id}`
-      );
+        `btnActualizarFresa_${selectData._id}`);
       if (btnActualizarFresa) {
         btnActualizarFresa.addEventListener("click", async () => {
           const cantidadFresa = document.getElementById(
@@ -776,10 +784,8 @@ function panel() {
       }
 
       // Agregar el evento de clic en el botón de actualizar piezas Soldador
-
       const btnActualizarSoldador = document.getElementById(
-        `btnActualizarSoldador_${selectData._id}`
-      );
+        `btnActualizarSoldador_${selectData._id}`);
       if (btnActualizarSoldador) {
         btnActualizarSoldador.addEventListener("click", async () => {
           const cantidadSoldador = document.getElementById(
@@ -817,10 +823,52 @@ function panel() {
         });
       }
 
+      // Agregar el evento de clic en el botón de actualizar piezas Pulido
+
+      const btnActualizarPulido = document.getElementById(
+        `btnActualizarPulido_${selectData._id}`
+      );
+      if (btnActualizarPulido) {
+        btnActualizarPulido.addEventListener("click", async () => {
+          const cantidadPulido = document.getElementById(
+            `inputCantidadPulido_${selectData._id}`
+          ).value;
+          const stockDeseadoPulido = document.getElementById(
+            `inputStockDeseadoPulido_${selectData._id}`
+          ).value;
+      
+          try {
+            const response = await fetch(
+              `http://localhost:5000/api/piezasPulidoActualizar/nombre/${selectData.nombre}`,
+              {
+                method: "PUT",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                  cantidadBruto: cantidadPulido,
+                  stockDeseadoBruto: stockDeseadoPulido,
+                }),
+              }
+            );
+      
+            const result = await response.json();
+            if (response.ok) {
+              alert(result.mensaje);
+            } else {
+              alert(result.mensaje);
+            }
+          } catch (err) {
+            console.error("Error al actualizar la pieza:", err);
+            alert("Error al actualizar la pieza");
+          }
+        });
+      }
+      
+
       // Agregar el evento de clic en el botón de actualizar piezas terminadas
       const btnActualizarTerminado = document.getElementById(
-        `btnActualizarTerminado_${selectData._id}`
-      );
+        `btnActualizarTerminado_${selectData._id}`);
       if (btnActualizarTerminado) {
         btnActualizarTerminado.addEventListener("click", async () => {
           const cantidadTerminado = document.getElementById(
@@ -4180,25 +4228,24 @@ function panel() {
             </div>
         </div>
 
-
-<div style="border: 1px solid #ccc; border-radius: 8px; padding: 10px;">
-  <p style="margin-bottom: 10px;"><b>Datos Plegadora</b></p>
-
-  <div style="margin-bottom: 5px; display: flex; flex-direction: row; align-items: center; gap: 10px;">
-    <b style="min-width: 130px;">Cantidad Plegadora:</b>
-    <input type="number" min="0" id="inputCantidadPlegadora_${selectData._id}" value="${selectData.cantidad.plegadora.cantidad}" style="width: 70px;">
-  </div>
-
-  <div style="margin-bottom: 5px; display: flex; flex-direction: row; align-items: center; gap: 10px;">
-    <b style="min-width: 130px;">Stock Deseado Plegadora:</b>
-    <input type="number" min="0" id="inputStockDeseadoPlegadora_${selectData._id}" value="${selectData.cantidad.plegadora.stock_deseado}" style="width: 70px;">
-  </div>
-
-  <div style="margin-top: 10px; display: flex; justify-content: center; align-items: center; gap: 20px;">
-    <img src="${selectData.cantidad.plegadora.img}" alt="Imagen Aro Plegadora" style="max-width: 70px;">
-    <button id="btnActualizarPlegadora_${selectData._id}">Actualizar Plegadora</button>
-  </div>
-</div>
+        <div style="border: 1px solid #ccc; border-radius: 8px; padding: 10px;">
+            <p style="margin-bottom: 10px;"><b>Datos Terminado</b></p>
+        
+            <div style="margin-bottom: 5px; display: flex; flex-direction: row; align-items: center; gap: 10px;">
+                <b style="min-width: 130px;">Cantidad Terminado:</b>
+                <input type="number" min=0 id="inputCantidadTerminado_${selectData._id}" value="${selectData.cantidad.terminado.cantidad}" style="width: 70px;">
+            </div>
+        
+            <div style="margin-bottom: 5px; display: flex; flex-direction: row; align-items: center; gap: 10px;">
+                <b style="min-width: 130px;">Stock Deseado Terminado:</b>
+                <input type="number" min=0 id="inputStockDeseadoTerminado_${selectData._id}" value="${selectData.cantidad.terminado.stock_deseado}" style="width: 70px;">
+            </div>
+        
+            <div style="margin-top: 10px; display: flex; justify-content: center; align-items: center; gap: 20px;">
+                <img src="${selectData.cantidad.terminado.img}" alt="Imagen Aro Terminado" style="max-width: 70px;">
+                <button id="btnActualizarTerminado_${selectData._id}">Actualizar Terminado</button>
+            </div>
+        </div>
 
         
       </div>
@@ -4230,24 +4277,24 @@ function panel() {
         </div>
 
 
-<div style="border: 1px solid #ccc; border-radius: 8px; padding: 10px;">
-  <p style="margin-bottom: 10px;"><b>Datos Plegadora</b></p>
-
-  <div style="margin-bottom: 5px; display: flex; flex-direction: row; align-items: center; gap: 10px;">
-    <b style="min-width: 130px;">Cantidad Plegadora:</b>
-    <input type="number" min="0" id="inputCantidadPlegadora_${selectData._id}" value="${selectData.cantidad.plegadora.cantidad}" style="width: 70px;">
-  </div>
-
-  <div style="margin-bottom: 5px; display: flex; flex-direction: row; align-items: center; gap: 10px;">
-    <b style="min-width: 130px;">Stock Deseado Plegadora:</b>
-    <input type="number" min="0" id="inputStockDeseadoPlegadora_${selectData._id}" value="${selectData.cantidad.plegadora.stock_deseado}" style="width: 70px;">
-  </div>
-
-  <div style="margin-top: 10px; display: flex; justify-content: center; align-items: center; gap: 20px;">
-    <img src="${selectData.cantidad.plegadora.img}" alt="Imagen Aro Plegadora" style="max-width: 70px;">
-    <button id="btnActualizarPlegadora_${selectData._id}">Actualizar Plegadora</button>
-  </div>
-</div>
+        <div style="border: 1px solid #ccc; border-radius: 8px; padding: 10px;">
+            <p style="margin-bottom: 10px;"><b>Datos Terminado</b></p>
+        
+            <div style="margin-bottom: 5px; display: flex; flex-direction: row; align-items: center; gap: 10px;">
+                <b style="min-width: 130px;">Cantidad Terminado:</b>
+                <input type="number" min=0 id="inputCantidadTerminado_${selectData._id}" value="${selectData.cantidad.terminado.cantidad}" style="width: 70px;">
+            </div>
+        
+            <div style="margin-bottom: 5px; display: flex; flex-direction: row; align-items: center; gap: 10px;">
+                <b style="min-width: 130px;">Stock Deseado Terminado:</b>
+                <input type="number" min=0 id="inputStockDeseadoTerminado_${selectData._id}" value="${selectData.cantidad.terminado.stock_deseado}" style="width: 70px;">
+            </div>
+        
+            <div style="margin-top: 10px; display: flex; justify-content: center; align-items: center; gap: 20px;">
+                <img src="${selectData.cantidad.terminado.img}" alt="Imagen Aro Terminado" style="max-width: 70px;">
+                <button id="btnActualizarTerminado_${selectData._id}">Actualizar Terminado</button>
+            </div>
+        </div>
 
         
       </div>
@@ -4280,27 +4327,28 @@ function panel() {
 
 
         <div style="border: 1px solid #ccc; border-radius: 8px; padding: 10px;">
-            <p style="margin-bottom: 10px;"><b>Datos Plegadora</b></p>
-
+            <p style="margin-bottom: 10px;"><b>Datos Terminado</b></p>
+        
             <div style="margin-bottom: 5px; display: flex; flex-direction: row; align-items: center; gap: 10px;">
-            <b style="min-width: 130px;">Cantidad Plegadora:</b>
-            <input type="number" min="0" id="inputCantidadPlegadora_${selectData._id}" value="${selectData.cantidad.plegadora.cantidad}" style="width: 70px;">
+                <b style="min-width: 130px;">Cantidad Terminado:</b>
+                <input type="number" min=0 id="inputCantidadTerminado_${selectData._id}" value="${selectData.cantidad.terminado.cantidad}" style="width: 70px;">
+            </div>
+        
+            <div style="margin-bottom: 5px; display: flex; flex-direction: row; align-items: center; gap: 10px;">
+                <b style="min-width: 130px;">Stock Deseado Terminado:</b>
+                <input type="number" min=0 id="inputStockDeseadoTerminado_${selectData._id}" value="${selectData.cantidad.terminado.stock_deseado}" style="width: 70px;">
+            </div>
+        
+            <div style="margin-top: 10px; display: flex; justify-content: center; align-items: center; gap: 20px;">
+                <img src="${selectData.cantidad.terminado.img}" alt="Imagen Aro Terminado" style="max-width: 70px;">
+                <button id="btnActualizarTerminado_${selectData._id}">Actualizar Terminado</button>
+            </div>
         </div>
-
-        <div style="margin-bottom: 5px; display: flex; flex-direction: row; align-items: center; gap: 10px;">
-            <b style="min-width: 130px;">Stock Deseado Plegadora:</b>
-            <input type="number" min="0" id="inputStockDeseadoPlegadora_${selectData._id}" value="${selectData.cantidad.plegadora.stock_deseado}" style="width: 70px;">
-         </div>
-
-        <div style="margin-top: 10px; display: flex; justify-content: center; align-items: center; gap: 20px;">
-            <img src="${selectData.cantidad.plegadora.img}" alt="Imagen Aro Plegadora" style="max-width: 70px;">
-            <button id="btnActualizarPlegadora_${selectData._id}">Actualizar Plegadora</button>
-        </div>
-    </div>
 
 
     `;
   }
+
   function crearContenedorChapaCubreCabezalinox(selectData) {
     return `
       <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
@@ -4324,23 +4372,24 @@ function panel() {
         </div>
 
 
-        <div style="border: 1px solid #ccc; border-radius: 8px; padding: 10px;">
-          <p style="margin-bottom: 10px;"><b>Datos Corte</b></p>
+<div style="border: 1px solid #ccc; border-radius: 8px; padding: 10px;">
+  <p style="margin-bottom: 10px;"><b>Datos Balancín</b></p>
 
-          <div style="margin-bottom: 5px; display: flex; flex-direction: row; align-items: center; gap: 10px;">
-            <b style="min-width: 130px;">Cantidad Corte:</b>
-            <input type="number" min="0" id="inputCantidadCorte_${selectData._id}" value="${selectData.cantidad.corte.cantidad}"style="width: 70px;">
-          </div>
+  <div style="margin-bottom: 5px; display: flex; flex-direction: row; align-items: center; gap: 10px;">
+    <b style="min-width: 130px;">Cantidad Balancín:</b>
+    <input type="number" min="0" id="inputCantidadBalancin_${selectData._id}" value="${selectData.cantidad.balancin.cantidad}" style="width: 70px;">
+  </div>
 
-          <div style="margin-bottom: 5px; display: flex; flex-direction: row; align-items: center; gap: 10px;">
-            <b style="min-width: 130px;">Stock Deseado Corte:</b>
-            <input type="number" min="0" id="inputStockDeseadoCorte_${selectData._id}" value="${selectData.cantidad.corte.stock_deseado}"style="width: 70px;">
-          </div>
+  <div style="margin-bottom: 5px; display: flex; flex-direction: row; align-items: center; gap: 10px;">
+    <b style="min-width: 130px;">Stock Deseado Balancín:</b>
+    <input type="number" min="0" id="inputStockDeseadoBalancin_${selectData._id}" value="${selectData.cantidad.balancin.stock_deseado}" style="width: 70px;">
+  </div>
 
-          <div style="margin-top: 10px; display: flex; justify-content: center; align-items: center; gap: 20px;">
-            <img src="${selectData.cantidad.corte.img}" alt="Imagen Corte" style="max-width: 70px;">
-            <button id="btnActualizarCorte_${selectData._id}">Actualizar Corte</button>
-          </div>
+  <div style="margin-top: 10px; display: flex; justify-content: center; align-items: center; gap: 20px;">
+    <img src="${selectData.cantidad.balancin.img}" alt="Imagen Balancín" style="max-width: 70px;">
+    <button id="btnActualizarBalancin_${selectData._id}">Actualizar Balancín</button>
+  </div>
+</div>
         </div>
 
     `;
@@ -4368,23 +4417,24 @@ function panel() {
         </div>
 
 
-        <div style="border: 1px solid #ccc; border-radius: 8px; padding: 10px;">
-          <p style="margin-bottom: 10px;"><b>Datos Corte</b></p>
+<div style="border: 1px solid #ccc; border-radius: 8px; padding: 10px;">
+  <p style="margin-bottom: 10px;"><b>Datos Balancín</b></p>
 
-          <div style="margin-bottom: 5px; display: flex; flex-direction: row; align-items: center; gap: 10px;">
-            <b style="min-width: 130px;">Cantidad Corte:</b>
-            <input type="number" min="0" id="inputCantidadCorte_${selectData._id}" value="${selectData.cantidad.corte.cantidad}"style="width: 70px;">
-          </div>
+  <div style="margin-bottom: 5px; display: flex; flex-direction: row; align-items: center; gap: 10px;">
+    <b style="min-width: 130px;">Cantidad Balancín:</b>
+    <input type="number" min="0" id="inputCantidadBalancin_${selectData._id}" value="${selectData.cantidad.balancin.cantidad}" style="width: 70px;">
+  </div>
 
-          <div style="margin-bottom: 5px; display: flex; flex-direction: row; align-items: center; gap: 10px;">
-            <b style="min-width: 130px;">Stock Deseado Corte:</b>
-            <input type="number" min="0" id="inputStockDeseadoCorte_${selectData._id}" value="${selectData.cantidad.corte.stock_deseado}"style="width: 70px;">
-          </div>
+  <div style="margin-bottom: 5px; display: flex; flex-direction: row; align-items: center; gap: 10px;">
+    <b style="min-width: 130px;">Stock Deseado Balancín:</b>
+    <input type="number" min="0" id="inputStockDeseadoBalancin_${selectData._id}" value="${selectData.cantidad.balancin.stock_deseado}" style="width: 70px;">
+  </div>
 
-          <div style="margin-top: 10px; display: flex; justify-content: center; align-items: center; gap: 20px;">
-            <img src="${selectData.cantidad.corte.img}" alt="Imagen Corte" style="max-width: 70px;">
-            <button id="btnActualizarCorte_${selectData._id}">Actualizar Corte</button>
-          </div>
+  <div style="margin-top: 10px; display: flex; justify-content: center; align-items: center; gap: 20px;">
+    <img src="${selectData.cantidad.balancin.img}" alt="Imagen Balancín" style="max-width: 70px;">
+    <button id="btnActualizarBalancin_${selectData._id}">Actualizar Balancín</button>
+  </div>
+</div>
         </div>
 
     `;
@@ -4412,28 +4462,30 @@ function panel() {
         </div>
 
 
-        <div style="border: 1px solid #ccc; border-radius: 8px; padding: 10px;">
-          <p style="margin-bottom: 10px;"><b>Datos Corte</b></p>
+<div style="border: 1px solid #ccc; border-radius: 8px; padding: 10px;">
+  <p style="margin-bottom: 10px;"><b>Datos Balancín</b></p>
 
-          <div style="margin-bottom: 5px; display: flex; flex-direction: row; align-items: center; gap: 10px;">
-            <b style="min-width: 130px;">Cantidad Corte:</b>
-            <input type="number" min="0" id="inputCantidadCorte_${selectData._id}" value="${selectData.cantidad.corte.cantidad}"style="width: 70px;">
-          </div>
+  <div style="margin-bottom: 5px; display: flex; flex-direction: row; align-items: center; gap: 10px;">
+    <b style="min-width: 130px;">Cantidad Balancín:</b>
+    <input type="number" min="0" id="inputCantidadBalancin_${selectData._id}" value="${selectData.cantidad.balancin.cantidad}" style="width: 70px;">
+  </div>
 
-          <div style="margin-bottom: 5px; display: flex; flex-direction: row; align-items: center; gap: 10px;">
-            <b style="min-width: 130px;">Stock Deseado Corte:</b>
-            <input type="number" min="0" id="inputStockDeseadoCorte_${selectData._id}" value="${selectData.cantidad.corte.stock_deseado}"style="width: 70px;">
-          </div>
+  <div style="margin-bottom: 5px; display: flex; flex-direction: row; align-items: center; gap: 10px;">
+    <b style="min-width: 130px;">Stock Deseado Balancín:</b>
+    <input type="number" min="0" id="inputStockDeseadoBalancin_${selectData._id}" value="${selectData.cantidad.balancin.stock_deseado}" style="width: 70px;">
+  </div>
 
-          <div style="margin-top: 10px; display: flex; justify-content: center; align-items: center; gap: 20px;">
-            <img src="${selectData.cantidad.corte.img}" alt="Imagen Corte" style="max-width: 70px;">
-            <button id="btnActualizarCorte_${selectData._id}">Actualizar Corte</button>
-          </div>
+  <div style="margin-top: 10px; display: flex; justify-content: center; align-items: center; gap: 20px;">
+    <img src="${selectData.cantidad.balancin.img}" alt="Imagen Balancín" style="max-width: 70px;">
+    <button id="btnActualizarBalancin_${selectData._id}">Actualizar Balancín</button>
+  </div>
+</div>
         </div>
 
     `;
   }
 
+  
   function crearContenedorChapaUinox(selectData) {
     return `
       <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
@@ -7814,6 +7866,340 @@ function panel() {
       </div>
     `;
   }
+
+  function crearContenedorCabezalInox(selectData) {
+    return `
+      <div style="display: grid; grid-template-columns: 1fr 1fr ; gap: 20px;">
+    
+
+
+<div style="border: 1px solid #ccc; border-radius: 8px; padding: 10px;">
+  <p style="margin-bottom: 10px;"><b>Datos Soldador</b></p>
+
+  <div style="margin-bottom: 5px; display: flex; flex-direction: row; align-items: center; gap: 10px;">
+    <b style="min-width: 130px;">Cantidad Soldador:</b>
+    <input type="number" min="0" id="inputCantidadSoldador_${selectData._id}" value="${selectData.cantidad.soldador.cantidad}" style="width: 70px;">
+  </div>
+
+  <div style="margin-bottom: 5px; display: flex; flex-direction: row; align-items: center; gap: 10px;">
+    <b style="min-width: 130px;">Stock Deseado Soldador:</b>
+    <input type="number" min="0" id="inputStockDeseadoSoldador_${selectData._id}" value="${selectData.cantidad.soldador.stock_deseado}" style="width: 70px;">
+  </div>
+
+  <div style="margin-top: 10px; display: flex; justify-content: center; align-items: center; gap: 20px;">
+    <img src="${selectData.cantidad.soldador.img}" alt="Imagen Soldador" style="max-width: 70px;">
+    <button id="btnActualizarSoldador_${selectData._id}">Actualizar Soldador</button>
+  </div>
+</div>
+
+<div style="border: 1px solid #ccc; border-radius: 8px; padding: 10px;">
+  <p style="margin: 5px;"><b>Datos Pulido</b></p>
+
+  <div style="margin-bottom: 5px; display: flex; flex-direction: row; align-items: center; gap: 10px;">
+    <b style="min-width: 130px;">Cantidad Pulido:</b>
+    <input type="number" min="0" id="inputCantidadPulido_${selectData._id}" value="${selectData.cantidad.pulido.cantidad}" style="width: 70px;">
+  </div>
+
+  <div style="margin-bottom: 5px; display: flex; flex-direction: row; align-items: center; gap: 10px;">
+    <b style="min-width: 130px;">Stock Deseado Pulido:</b>
+    <input type="number" min="0" id="inputStockDeseadoPulido_${selectData._id}" value="${selectData.cantidad.pulido.stock_deseado}" style="width: 70px;">
+  </div>
+
+  <div style="margin-top: 10px; display: flex; justify-content: center; align-items: center; gap: 20px;">
+    <img src="${selectData.cantidad.pulido.img}" alt="Imagen Pulido" style="max-width: 70px;">
+    <button id="btnActualizarPulido_${selectData._id}">Actualizar Pulido</button>
+  </div>
+</div>
+
+
+        <div style="border: 1px solid #ccc; border-radius: 8px; padding: 10px;">
+            <p style="margin-bottom: 10px;"><b>Datos Terminado</b></p>
+        
+            <div style="margin-bottom: 5px; display: flex; flex-direction: row; align-items: center; gap: 10px;">
+                <b style="min-width: 130px;">Cantidad Terminado:</b>
+                <input type="number" min=0 id="inputCantidadTerminado_${selectData._id}" value="${selectData.cantidad.terminado.cantidad}" style="width: 70px;">
+            </div>
+        
+            <div style="margin-bottom: 5px; display: flex; flex-direction: row; align-items: center; gap: 10px;">
+                <b style="min-width: 130px;">Stock Deseado Terminado:</b>
+                <input type="number" min=0 id="inputStockDeseadoTerminado_${selectData._id}" value="${selectData.cantidad.terminado.stock_deseado}" style="width: 70px;">
+            </div>
+        
+            <div style="margin-top: 10px; display: flex; justify-content: center; align-items: center; gap: 20px;">
+                <img src="${selectData.cantidad.terminado.img}" alt="Imagen Aro Terminado" style="max-width: 70px;">
+                <button id="btnActualizarTerminado_${selectData._id}">Actualizar Terminado</button>
+            </div>
+        </div>
+      </div>
+    `;
+  }
+  function crearContenedorCabezalPintada(selectData) {
+    return `
+      <div style="display: grid; grid-template-columns: 1fr 1fr ; gap: 20px;">
+    
+
+
+<div style="border: 1px solid #ccc; border-radius: 8px; padding: 10px;">
+  <p style="margin-bottom: 10px;"><b>Datos Soldador</b></p>
+
+  <div style="margin-bottom: 5px; display: flex; flex-direction: row; align-items: center; gap: 10px;">
+    <b style="min-width: 130px;">Cantidad Soldador:</b>
+    <input type="number" min="0" id="inputCantidadSoldador_${selectData._id}" value="${selectData.cantidad.soldador.cantidad}" style="width: 70px;">
+  </div>
+
+  <div style="margin-bottom: 5px; display: flex; flex-direction: row; align-items: center; gap: 10px;">
+    <b style="min-width: 130px;">Stock Deseado Soldador:</b>
+    <input type="number" min="0" id="inputStockDeseadoSoldador_${selectData._id}" value="${selectData.cantidad.soldador.stock_deseado}" style="width: 70px;">
+  </div>
+
+  <div style="margin-top: 10px; display: flex; justify-content: center; align-items: center; gap: 20px;">
+    <img src="${selectData.cantidad.soldador.img}" alt="Imagen Soldador" style="max-width: 70px;">
+    <button id="btnActualizarSoldador_${selectData._id}">Actualizar Soldador</button>
+  </div>
+</div>
+
+
+        <div style="border: 1px solid #ccc; border-radius: 8px; padding: 10px;">
+            <p style="margin-bottom: 10px;"><b>Datos Terminado</b></p>
+        
+            <div style="margin-bottom: 5px; display: flex; flex-direction: row; align-items: center; gap: 10px;">
+                <b style="min-width: 130px;">Cantidad Terminado:</b>
+                <input type="number" min=0 id="inputCantidadTerminado_${selectData._id}" value="${selectData.cantidad.terminado.cantidad}" style="width: 70px;">
+            </div>
+        
+            <div style="margin-bottom: 5px; display: flex; flex-direction: row; align-items: center; gap: 10px;">
+                <b style="min-width: 130px;">Stock Deseado Terminado:</b>
+                <input type="number" min=0 id="inputStockDeseadoTerminado_${selectData._id}" value="${selectData.cantidad.terminado.stock_deseado}" style="width: 70px;">
+            </div>
+        
+            <div style="margin-top: 10px; display: flex; justify-content: center; align-items: center; gap: 20px;">
+                <img src="${selectData.cantidad.terminado.img}" alt="Imagen Aro Terminado" style="max-width: 70px;">
+                <button id="btnActualizarTerminado_${selectData._id}">Actualizar Terminado</button>
+            </div>
+        </div>
+      </div>
+    `;
+  }
+  function crearContenedorCabezal250(selectData) {
+    return `
+      <div style="display: grid; grid-template-columns: 1fr 1fr ; gap: 20px;">
+    
+
+
+<div style="border: 1px solid #ccc; border-radius: 8px; padding: 10px;">
+  <p style="margin-bottom: 10px;"><b>Datos Soldador</b></p>
+
+  <div style="margin-bottom: 5px; display: flex; flex-direction: row; align-items: center; gap: 10px;">
+    <b style="min-width: 130px;">Cantidad Soldador:</b>
+    <input type="number" min="0" id="inputCantidadSoldador_${selectData._id}" value="${selectData.cantidad.soldador.cantidad}" style="width: 70px;">
+  </div>
+
+  <div style="margin-bottom: 5px; display: flex; flex-direction: row; align-items: center; gap: 10px;">
+    <b style="min-width: 130px;">Stock Deseado Soldador:</b>
+    <input type="number" min="0" id="inputStockDeseadoSoldador_${selectData._id}" value="${selectData.cantidad.soldador.stock_deseado}" style="width: 70px;">
+  </div>
+
+  <div style="margin-top: 10px; display: flex; justify-content: center; align-items: center; gap: 20px;">
+    <img src="${selectData.cantidad.soldador.img}" alt="Imagen Soldador" style="max-width: 70px;">
+    <button id="btnActualizarSoldador_${selectData._id}">Actualizar Soldador</button>
+  </div>
+</div>
+
+<div style="border: 1px solid #ccc; border-radius: 8px; padding: 10px;">
+  <p style="margin: 5px;"><b>Datos Pulido</b></p>
+
+  <div style="margin-bottom: 5px; display: flex; flex-direction: row; align-items: center; gap: 10px;">
+    <b style="min-width: 130px;">Cantidad Pulido:</b>
+    <input type="number" min="0" id="inputCantidadPulido_${selectData._id}" value="${selectData.cantidad.pulido.cantidad}" style="width: 70px;">
+  </div>
+
+  <div style="margin-bottom: 5px; display: flex; flex-direction: row; align-items: center; gap: 10px;">
+    <b style="min-width: 130px;">Stock Deseado Pulido:</b>
+    <input type="number" min="0" id="inputStockDeseadoPulido_${selectData._id}" value="${selectData.cantidad.pulido.stock_deseado}" style="width: 70px;">
+  </div>
+
+  <div style="margin-top: 10px; display: flex; justify-content: center; align-items: center; gap: 20px;">
+    <img src="${selectData.cantidad.pulido.img}" alt="Imagen Pulido" style="max-width: 70px;">
+    <button id="btnActualizarPulido_${selectData._id}">Actualizar Pulido</button>
+  </div>
+</div>
+
+
+        <div style="border: 1px solid #ccc; border-radius: 8px; padding: 10px;">
+            <p style="margin-bottom: 10px;"><b>Datos Terminado</b></p>
+        
+            <div style="margin-bottom: 5px; display: flex; flex-direction: row; align-items: center; gap: 10px;">
+                <b style="min-width: 130px;">Cantidad Terminado:</b>
+                <input type="number" min=0 id="inputCantidadTerminado_${selectData._id}" value="${selectData.cantidad.terminado.cantidad}" style="width: 70px;">
+            </div>
+        
+            <div style="margin-bottom: 5px; display: flex; flex-direction: row; align-items: center; gap: 10px;">
+                <b style="min-width: 130px;">Stock Deseado Terminado:</b>
+                <input type="number" min=0 id="inputStockDeseadoTerminado_${selectData._id}" value="${selectData.cantidad.terminado.stock_deseado}" style="width: 70px;">
+            </div>
+        
+            <div style="margin-top: 10px; display: flex; justify-content: center; align-items: center; gap: 20px;">
+                <img src="${selectData.cantidad.terminado.img}" alt="Imagen Aro Terminado" style="max-width: 70px;">
+                <button id="btnActualizarTerminado_${selectData._id}">Actualizar Terminado</button>
+            </div>
+        </div>
+      </div>
+    `;
+  }
+
+
+  function crearContenedorInox330(selectData) {
+    return `
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+
+        <div style="border: 1px solid #ccc; border-radius: 8px; padding: 10px;">
+            <p style="margin-bottom: 10px;"><b>Datos Terminado</b></p>
+        
+            <div style="margin-bottom: 5px; display: flex; flex-direction: row; align-items: center; gap: 10px;">
+                <b style="min-width: 130px;">Cantidad Terminado:</b>
+                <input type="number" min=0 id="inputCantidadTerminado_${selectData._id}" value="${selectData.cantidad.terminado.cantidad}" style="width: 70px;">
+            </div>
+        
+            <div style="margin-bottom: 5px; display: flex; flex-direction: row; align-items: center; gap: 10px;">
+                <b style="min-width: 130px;">Stock Deseado Terminado:</b>
+                <input type="number" min=0 id="inputStockDeseadoTerminado_${selectData._id}" value="${selectData.cantidad.terminado.stock_deseado}" style="width: 70px;">
+            </div>
+        
+            <div style="margin-top: 10px; display: flex; justify-content: center; align-items: center; gap: 20px;">
+                <img src="${selectData.cantidad.terminado.img}" alt="Imagen Aro Terminado" style="max-width: 70px;">
+                <button id="btnActualizarTerminado_${selectData._id}">Actualizar Terminado</button>
+            </div>
+        </div>
+      </div>
+    `;
+  }
+  function crearContenedorInoxECO(selectData) {
+    return `
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+
+        <div style="border: 1px solid #ccc; border-radius: 8px; padding: 10px;">
+            <p style="margin-bottom: 10px;"><b>Datos Terminado</b></p>
+        
+            <div style="margin-bottom: 5px; display: flex; flex-direction: row; align-items: center; gap: 10px;">
+                <b style="min-width: 130px;">Cantidad Terminado:</b>
+                <input type="number" min=0 id="inputCantidadTerminado_${selectData._id}" value="${selectData.cantidad.terminado.cantidad}" style="width: 70px;">
+            </div>
+        
+            <div style="margin-bottom: 5px; display: flex; flex-direction: row; align-items: center; gap: 10px;">
+                <b style="min-width: 130px;">Stock Deseado Terminado:</b>
+                <input type="number" min=0 id="inputStockDeseadoTerminado_${selectData._id}" value="${selectData.cantidad.terminado.stock_deseado}" style="width: 70px;">
+            </div>
+        
+            <div style="margin-top: 10px; display: flex; justify-content: center; align-items: center; gap: 20px;">
+                <img src="${selectData.cantidad.terminado.img}" alt="Imagen Aro Terminado" style="max-width: 70px;">
+                <button id="btnActualizarTerminado_${selectData._id}">Actualizar Terminado</button>
+            </div>
+        </div>
+      </div>
+    `;
+  }
+  function crearContenedorInox250(selectData) {
+    return `
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+
+        <div style="border: 1px solid #ccc; border-radius: 8px; padding: 10px;">
+            <p style="margin-bottom: 10px;"><b>Datos Terminado</b></p>
+        
+            <div style="margin-bottom: 5px; display: flex; flex-direction: row; align-items: center; gap: 10px;">
+                <b style="min-width: 130px;">Cantidad Terminado:</b>
+                <input type="number" min=0 id="inputCantidadTerminado_${selectData._id}" value="${selectData.cantidad.terminado.cantidad}" style="width: 70px;">
+            </div>
+        
+            <div style="margin-bottom: 5px; display: flex; flex-direction: row; align-items: center; gap: 10px;">
+                <b style="min-width: 130px;">Stock Deseado Terminado:</b>
+                <input type="number" min=0 id="inputStockDeseadoTerminado_${selectData._id}" value="${selectData.cantidad.terminado.stock_deseado}" style="width: 70px;">
+            </div>
+        
+            <div style="margin-top: 10px; display: flex; justify-content: center; align-items: center; gap: 20px;">
+                <img src="${selectData.cantidad.terminado.img}" alt="Imagen Aro Terminado" style="max-width: 70px;">
+                <button id="btnActualizarTerminado_${selectData._id}">Actualizar Terminado</button>
+            </div>
+        </div>
+      </div>
+    `;
+  }
+  function crearContenedorInox300(selectData) {
+    return `
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+
+        <div style="border: 1px solid #ccc; border-radius: 8px; padding: 10px;">
+            <p style="margin-bottom: 10px;"><b>Datos Terminado</b></p>
+        
+            <div style="margin-bottom: 5px; display: flex; flex-direction: row; align-items: center; gap: 10px;">
+                <b style="min-width: 130px;">Cantidad Terminado:</b>
+                <input type="number" min=0 id="inputCantidadTerminado_${selectData._id}" value="${selectData.cantidad.terminado.cantidad}" style="width: 70px;">
+            </div>
+        
+            <div style="margin-bottom: 5px; display: flex; flex-direction: row; align-items: center; gap: 10px;">
+                <b style="min-width: 130px;">Stock Deseado Terminado:</b>
+                <input type="number" min=0 id="inputStockDeseadoTerminado_${selectData._id}" value="${selectData.cantidad.terminado.stock_deseado}" style="width: 70px;">
+            </div>
+        
+            <div style="margin-top: 10px; display: flex; justify-content: center; align-items: center; gap: 20px;">
+                <img src="${selectData.cantidad.terminado.img}" alt="Imagen Aro Terminado" style="max-width: 70px;">
+                <button id="btnActualizarTerminado_${selectData._id}">Actualizar Terminado</button>
+            </div>
+        </div>
+      </div>
+    `;
+  }
+  function crearContenedorPintada330(selectData) {
+    return `
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+
+        <div style="border: 1px solid #ccc; border-radius: 8px; padding: 10px;">
+            <p style="margin-bottom: 10px;"><b>Datos Terminado</b></p>
+        
+            <div style="margin-bottom: 5px; display: flex; flex-direction: row; align-items: center; gap: 10px;">
+                <b style="min-width: 130px;">Cantidad Terminado:</b>
+                <input type="number" min=0 id="inputCantidadTerminado_${selectData._id}" value="${selectData.cantidad.terminado.cantidad}" style="width: 70px;">
+            </div>
+        
+            <div style="margin-bottom: 5px; display: flex; flex-direction: row; align-items: center; gap: 10px;">
+                <b style="min-width: 130px;">Stock Deseado Terminado:</b>
+                <input type="number" min=0 id="inputStockDeseadoTerminado_${selectData._id}" value="${selectData.cantidad.terminado.stock_deseado}" style="width: 70px;">
+            </div>
+        
+            <div style="margin-top: 10px; display: flex; justify-content: center; align-items: center; gap: 20px;">
+                <img src="${selectData.cantidad.terminado.img}" alt="Imagen Aro Terminado" style="max-width: 70px;">
+                <button id="btnActualizarTerminado_${selectData._id}">Actualizar Terminado</button>
+            </div>
+        </div>
+      </div>
+    `;
+  }
+  function crearContenedorPintada300(selectData) {
+    return `
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+
+        <div style="border: 1px solid #ccc; border-radius: 8px; padding: 10px;">
+            <p style="margin-bottom: 10px;"><b>Datos Terminado</b></p>
+        
+            <div style="margin-bottom: 5px; display: flex; flex-direction: row; align-items: center; gap: 10px;">
+                <b style="min-width: 130px;">Cantidad Terminado:</b>
+                <input type="number" min=0 id="inputCantidadTerminado_${selectData._id}" value="${selectData.cantidad.terminado.cantidad}" style="width: 70px;">
+            </div>
+        
+            <div style="margin-bottom: 5px; display: flex; flex-direction: row; align-items: center; gap: 10px;">
+                <b style="min-width: 130px;">Stock Deseado Terminado:</b>
+                <input type="number" min=0 id="inputStockDeseadoTerminado_${selectData._id}" value="${selectData.cantidad.terminado.stock_deseado}" style="width: 70px;">
+            </div>
+        
+            <div style="margin-top: 10px; display: flex; justify-content: center; align-items: center; gap: 20px;">
+                <img src="${selectData.cantidad.terminado.img}" alt="Imagen Aro Terminado" style="max-width: 70px;">
+                <button id="btnActualizarTerminado_${selectData._id}">Actualizar Terminado</button>
+            </div>
+        </div>
+      </div>
+    `;
+  }
+
+
 
   function crearBotonesDeFiltro() {
     const filtros = ["Aluminio", "Chapa", "Shop", "Plastico", "Hierro", "all"];
