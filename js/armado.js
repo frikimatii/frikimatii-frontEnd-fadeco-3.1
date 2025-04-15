@@ -156,6 +156,7 @@ async function boxArmado() {
         const datosTabla = motoresFiltrado.map((p) => ({
           nombre: p.nombre,
           cantidad: p.cantidad?.bruto?.cantidad,
+          stock: p.cantidad?.bruto?.stock_deseado
         }));
 
         if (!tablaDiv) {
@@ -172,6 +173,16 @@ async function boxArmado() {
             { title: "Nombre", field: "nombre" },
             { title: "Cantidad", field: "cantidad" },
           ],
+
+          rowFormatter: function (row) {
+            const data = row.getData();
+  
+            if (data.cantidad < data.stock) {
+              row.getElement().style.backgroundColor = "#f8d7da"; // rojo claro (menos del deseado)
+            } else {
+              row.getElement().style.backgroundColor = "#d4edda"; // verde claro (ok o más del deseado)
+            }
+          },
         });
       } catch (error) {
         console.log("ERROR EM EL SERVIDOR", error);
@@ -228,6 +239,7 @@ async function boxArmado() {
           return {
             nombre: p.nombre,
             cantidad: p.cantidad?.[categoria]?.cantidad,
+            stock: p.cantidad?.[categoria].stock_deseado
           };
         });
 
@@ -245,6 +257,15 @@ async function boxArmado() {
             { title: "Nombre", field: "nombre" },
             { title: "Cantidad", field: "cantidad" },
           ],
+          rowFormatter: function (row) {
+            const data = row.getData();
+  
+            if (data.cantidad < data.stock) {
+              row.getElement().style.backgroundColor = "#f8d7da"; // rojo claro (menos del deseado)
+            } else {
+              row.getElement().style.backgroundColor = "#d4edda"; // verde claro (ok o más del deseado)
+            }
+          },
         });
       } catch (error) {
         console.log("esto es un error", error);
@@ -314,7 +335,8 @@ async function boxArmado() {
       "Ventilador Motor",
     ],
     torno: ["Buje Eje Eco"],
-    augeriado: ["Tornillo Teletubi Eco", "Caja Soldada Eco"],
+    augeriado: ["Tornillo Teletubi Eco",],
+    terminado: ["Caja Soldada Eco"]
   });
 
   ///Stock de motores
@@ -346,6 +368,7 @@ async function boxArmado() {
           return {
             nombre: p.nombre,
             cantidad: p.cantidad?.[categoria]?.cantidad, // Evitar undefined
+            stock: p.cantidad?.[categoria]?.stock_deseado
           };
         });
 
@@ -364,6 +387,16 @@ async function boxArmado() {
             { title: "Nombre", field: "nombre" },
             { title: "Cantidad", field: "cantidad" },
           ],
+
+          rowFormatter: function (row) {
+            const data = row.getData();
+  
+            if (data.cantidad < data.stock) {
+              row.getElement().style.backgroundColor = "#f8d7da"; // rojo claro (menos del deseado)
+            } else {
+              row.getElement().style.backgroundColor = "#d4edda"; // verde claro (ok o más del deseado)
+            }
+          },
         });
       } catch (error) {
         console.error("Esto es un error:", error);
@@ -438,6 +471,7 @@ async function boxArmado() {
           return {
             nombre: p.nombre,
             cantidad: p.cantidad?.[categoria]?.cantidad,
+            stock: p.cantidad?.[categoria]?.stock_deseado
           };
         });
 
@@ -455,6 +489,15 @@ async function boxArmado() {
             { title: "Nombre", field: "nombre" },
             { title: "Cantidad", field: "cantidad" },
           ],
+          rowFormatter: function (row) {
+            const data = row.getData();
+  
+            if (data.cantidad < data.stock) {
+              row.getElement().style.backgroundColor = "#f8d7da"; // rojo claro (menos del deseado)
+            } else {
+              row.getElement().style.backgroundColor = "#d4edda"; // verde claro (ok o más del deseado)
+            }
+          },
         });
       } catch (error) {
         console.log("error", error);
@@ -640,6 +683,15 @@ async function boxArmado() {
             { title: "Nombre", field: "nombre", minWidth: 200 },
             { title: "Cantidad", field: "cantidad", with: 100 },
           ],
+          rowFormatter: function (row) {
+            const data = row.getData();
+  
+            if (data.cantidad < data.stock) {
+              row.getElement().style.backgroundColor = "#f8d7da"; // rojo claro (menos del deseado)
+            } else {
+              row.getElement().style.backgroundColor = "#d4edda"; // verde claro (ok o más del deseado)
+            }
+          },
         });
       } catch (error) {
         console.log("ERROR EM EL SERVIDOR", error);
@@ -762,6 +814,7 @@ async function boxArmado() {
           return {
             nombre: p.nombre,
             cantidad: p.cantidad?.[categoria]?.cantidad,
+            stock: p.cantidad?.[categoria]?.stock_deseado
           };
         });
 
@@ -779,6 +832,15 @@ async function boxArmado() {
             { title: "Nombre", field: "nombre", minWidth: 200 },
             { title: "Cantidad", field: "cantidad", width: 100 },
           ],
+          rowFormatter: function (row) {
+            const data = row.getData();
+  
+            if (data.cantidad < data.stock) {
+              row.getElement().style.backgroundColor = "#f8d7da"; // rojo claro (menos del deseado)
+            } else {
+              row.getElement().style.backgroundColor = "#d4edda"; // verde claro (ok o más del deseado)
+            }
+          },
         });
       } catch (error) {
         console.log("error", error);
@@ -792,7 +854,6 @@ async function boxArmado() {
       "Cubrecuchilla 330",
       "Velero",
       "Teletubi 330",
-      "Cuchilla 330",
       "Vela 330",
       "Planchada 330",
       "Varilla Brazo 330",
@@ -804,6 +865,7 @@ async function boxArmado() {
     bruto: [
       "Cubre Motor Rectangulo",
       "Cubre Motor Cuadrado",
+      "Cuchilla 330",
       "Perilla Brazo",
       "Resorte Brazo",
       "Pipas",
@@ -823,7 +885,6 @@ async function boxArmado() {
       "Cubrecuchilla 300",
       "Velero",
       "Teletubi 300",
-      "Cuchilla 300",
       "Vela 300",
       "Planchada 300",
       "Varilla Brazo 300",
@@ -835,6 +896,7 @@ async function boxArmado() {
     bruto: [
       "Cubre Motor Rectangulo",
       "Cubre Motor Cuadrado",
+      "Cuchilla 300",
       "Perilla Brazo",
       "Resorte Brazo",
       "Pipas",
@@ -854,7 +916,6 @@ async function boxArmado() {
       "Cubrecuchilla 330",
       "Velero",
       "Teletubi 330",
-      "Cuchilla 330",
       "Vela 330",
       "Planchada 330",
       "Varilla Brazo 330",
@@ -866,6 +927,7 @@ async function boxArmado() {
     bruto: [
       "Cubre Motor Rectangulo",
       "Cubre Motor Cuadrado",
+      "Cuchilla 330",
       "Perilla Brazo",
       "Resorte Brazo",
       "Pipas",
@@ -885,7 +947,6 @@ async function boxArmado() {
       "Cubrecuchilla 300",
       "Velero",
       "Teletubi 300",
-      "Cuchilla 300",
       "Vela 300",
       "Planchada 300",
       "Varilla Brazo 300",
@@ -897,6 +958,7 @@ async function boxArmado() {
     bruto: [
       "Cubre Motor Rectangulo",
       "Cubre Motor Cuadrado",
+      "Cuchilla 300",
       "Perilla Brazo",
       "Resorte Brazo",
       "Pipas",
@@ -915,7 +977,6 @@ async function boxArmado() {
       "Brazo 330",
       "Cubrecuchilla 330",
       "Velero",
-      "Cuchilla 330",
       "Vela 330",
       "Planchada 330",
       "Varilla Brazo 330",
@@ -928,6 +989,7 @@ async function boxArmado() {
     bruto: [
       "Perilla Brazo",
       "Resorte Brazo",
+      "Cuchilla 330",
       "Pipas",
       "Perilla Cubrecuchilla",
       "Perilla Afilador",
@@ -946,7 +1008,6 @@ async function boxArmado() {
       "Cubrecuchilla 250",
       "Velero",
       "Teletubi 250",
-      "Cuchilla 250",
       "Vela 250",
       "Planchada 250",
       "Varilla Brazo 250",
@@ -960,6 +1021,7 @@ async function boxArmado() {
       "Perilla Brazo",
       "Resorte Brazo",
       "Pipas",
+      "Cuchilla 250",
       "Perilla Cubrecuchilla",
       "Perilla Afilador",
       "Base Afilador 250",

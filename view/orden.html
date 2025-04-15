@@ -1,0 +1,123 @@
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px">
+  <div style="border: 1px solid #ccc; border-radius: 8px; padding: 10px">
+    <p style="margin-bottom: 10px"><b>Datos Plasma</b></p>
+
+    <div
+      style="
+        margin-bottom: 5px;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 10px;
+      "
+    >
+      <b style="min-width: 130px">Cantidad Plasma:</b>
+      <input
+        type="number"
+        min="0"
+        id="inputCantidadPlasma_${selectData._id}"
+        value="${selectData.cantidad.plasma.cantidad}"
+        style="width: 70px"
+      />
+    </div>
+
+    <div
+      style="
+        margin-bottom: 5px;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 10px;
+      "
+    >
+      <b style="min-width: 130px">Stock Deseado Plasma:</b>
+      <input
+        type="number"
+        min="0"
+        id="inputStockDeseadoPlasma_${selectData._id}"
+        value="${selectData.cantidad.plasma.stock_deseado}"
+        style="width: 70px"
+      />
+    </div>
+
+    <div
+      style="
+        margin-top: 10px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 20px;
+      "
+    >
+      <img
+        src="${selectData.cantidad.plasma.img}"
+        alt="Imagen Aro Plasma"
+        style="max-width: 70px"
+      />
+      <button id="btnActualizarPlasma_${selectData._id}">
+        Actualizar Plasma
+      </button>
+    </div>
+  </div>
+
+  <div style="border: 1px solid #ccc; border-radius: 8px; padding: 10px">
+    <p style="margin-bottom: 10px"><b>Datos Plegadora</b></p>
+
+    <div
+      style="
+        margin-bottom: 5px;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 10px;
+      "
+    >
+      <b style="min-width: 130px">Cantidad Plegadora:</b>
+      <input
+        type="number"
+        min="0"
+        id="inputCantidadPlegadora_${selectData._id}"
+        value="${selectData.cantidad.plegadora.cantidad}"
+        style="width: 70px"
+      />
+    </div>
+
+    <div
+      style="
+        margin-bottom: 5px;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 10px;
+      "
+    >
+      <b style="min-width: 130px">Stock Deseado Plegadora:</b>
+      <input
+        type="number"
+        min="0"
+        id="inputStockDeseadoPlegadora_${selectData._id}"
+        value="${selectData.cantidad.plegadora.stock_deseado}"
+        style="width: 70px"
+      />
+    </div>
+
+    <div
+      style="
+        margin-top: 10px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 20px;
+      "
+    >
+      <img
+        src="${selectData.cantidad.plegadora.img}"
+        alt="Imagen Aro Plegadora"
+        style="max-width: 70px"
+      />
+      <button id="btnActualizarPlegadora_${selectData._id}">
+        Actualizar Plegadora
+      </button>
+    </div>
+  </div>
+</div>

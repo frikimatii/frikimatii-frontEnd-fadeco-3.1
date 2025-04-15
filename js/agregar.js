@@ -24,7 +24,7 @@ async function mostrarTabla(tabla) {
   const tablaSeleccionada = document.getElementById(`tabla-${tabla}`);
 
   if (tablaSeleccionada) {
-    tablaSeleccionada.style.display = "block"
+    tablaSeleccionada.style.display = "block";
 
     const tablaContenedor = document.getElementById(
       `tablaDe${tabla.charAt(0).toUpperCase() + tabla.slice(1)}`
@@ -39,7 +39,7 @@ async function mostrarTabla(tabla) {
     try {
       if (tabla === "aluminio") {
         const response = await fetch("http://localhost:5000/api/aluminio");
-        
+
         if (!response.ok) throw new Error("Error en la respuesta del servidor");
         const piezas = await response.json();
         tableData = piezas.map((p) => ({
@@ -47,7 +47,7 @@ async function mostrarTabla(tabla) {
           cantidad: p.cantidad?.bruto?.cantidad || 0,
           img: p.cantidad?.bruto?.img || "default-image.png",
           detalle: p.detallesGeneral || "Sin detalles",
-          
+          stock: p.cantidad?.bruto?.stock_deseado || 0,
         }));
       } else if (tabla === "chapa") {
         const response = await fetch("http://localhost:5000/api/chapa");
@@ -59,6 +59,8 @@ async function mostrarTabla(tabla) {
           cantidad: p.cantidad?.bruto?.cantidad,
           img: p.cantidad?.bruto?.img,
           detalle: p.detallesGeneral,
+          stock: p.cantidad?.bruto?.stock_deseado || 0,
+
         }));
       } else if (tabla === "shop") {
         const response = await fetch("http://localhost:5000/api/shop");
@@ -70,6 +72,8 @@ async function mostrarTabla(tabla) {
           cantidad: p.cantidad?.bruto?.cantidad,
           img: p.cantidad?.bruto?.img,
           detalle: p.detallesGeneral,
+          stock: p.cantidad?.bruto?.stock_deseado || 0,
+
         }));
       } else if (tabla === "plastico") {
         const response = await fetch("http://localhost:5000/api/plastico");
@@ -81,6 +85,8 @@ async function mostrarTabla(tabla) {
           cantidad: p.cantidad?.bruto?.cantidad,
           img: p.cantidad?.bruto?.img,
           detalle: p.detallesGeneral,
+          stock: p.cantidad?.bruto?.stock_deseado || 0,
+
         }));
       } else if (tabla === "fundicion") {
         const response = await fetch("http://localhost:5000/api/hierro");
@@ -92,6 +98,8 @@ async function mostrarTabla(tabla) {
           cantidad: p.cantidad?.bruto?.cantidad,
           img: p.cantidad?.bruto?.img,
           detalle: p.detallesGeneral,
+          stock: p.cantidad?.bruto?.stock_deseado || 0,
+
         }));
       }
     } catch (error) {
@@ -105,10 +113,20 @@ async function mostrarTabla(tabla) {
         data: tableData,
         initialSort: [{ column: "nombre", dir: "asc" }],
         columns: [
-          { title: "Nombre", field: "nombre" , minWidth: 200},
-          { title: "Cantidad", field: "cantidad" , width: 100},
+          { title: "Nombre", field: "nombre", minWidth: 200 },
+          { title: "Cantidad", field: "cantidad", width: 100 },
         ],
         selectable: 1,
+
+        rowFormatter: function (row) {
+          const data = row.getData();
+
+          if (data.cantidad < data.stock) {
+            row.getElement().style.backgroundColor = "#f8d7da"; // rojo claro (menos del deseado)
+          } else {
+            row.getElement().style.backgroundColor = "#d4edda"; // verde claro (ok o más del deseado)
+          }
+        },
       });
 
       // Array para almacenar el historial de cambios
@@ -138,7 +156,6 @@ async function mostrarTabla(tabla) {
                 );
 
                 nuevoBotonAgregar.addEventListener("click", async () => {
-                  
                   const nombrePieza =
                     document.getElementById("pieza-aluminio")?.value;
                   let cantidadInput =
@@ -187,14 +204,13 @@ async function mostrarTabla(tabla) {
                     console.error("Error al actualizar la cantidad:", error);
                     alert("Error al actualizar la cantidad.");
                   }
-                  
                 });
               } else {
                 console.error(
                   "El botón 'agregar-aluminio' no existe en el DOM."
                 );
               }
-              cargarHistorialAluminio()
+              cargarHistorialAluminio();
               break;
             case "chapa":
               document.getElementById("pieza-chapa").value =
@@ -253,7 +269,6 @@ async function mostrarTabla(tabla) {
                       nombrePiezachapa,
                       chapaCantidadNueva
                     );
-                    
 
                     await mostrarTabla("chapa");
 
@@ -267,7 +282,7 @@ async function mostrarTabla(tabla) {
               } else {
                 console.error('El Boton "AGREGAR CHAPA NO EXISYE EN EL DOM');
               }
-              cargarHistorialchapa()
+              cargarHistorialchapa();
               break;
             case "shop":
               document.getElementById("pieza-shop").value = selectedData.nombre;
@@ -333,7 +348,7 @@ async function mostrarTabla(tabla) {
               } else {
                 console.error('El Boton "AGREGAR shop NO EXISYE EN EL DOM');
               }
-              cargarHistorialshop()
+              cargarHistorialshop();
               break;
             case "plastico":
               document.getElementById("pieza-plastico").value =
@@ -414,7 +429,7 @@ async function mostrarTabla(tabla) {
               } else {
                 console.error('El Boton "AGREGAR plastico NO EXISYE EN EL DOM');
               }
-              cargarHistorialplastico()
+              cargarHistorialplastico();
               break;
             case "fundicion":
               document.getElementById("pieza-fundicion").value =
@@ -493,9 +508,11 @@ async function mostrarTabla(tabla) {
                   }
                 );
               } else {
-                console.error('El Boton "AGREGAR fundicion NO EXISYE EN EL DOM');
+                console.error(
+                  'El Boton "AGREGAR fundicion NO EXISYE EN EL DOM'
+                );
               }
-              cargarHistorialfundicion()
+              cargarHistorialfundicion();
               break;
           }
         } catch (err) {
@@ -510,40 +527,42 @@ async function mostrarTabla(tabla) {
         if (historialCambios.length > 10) {
           historialCambios.pop();
         }
-      
-        fetch('http://localhost:5000/api/historiales', {
-          method: 'POST',
+
+        fetch("http://localhost:5000/api/historiales", {
+          method: "POST",
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
           },
           body: JSON.stringify({ pieza: "chapa", cantidad: nuevoCambio }),
         })
           .then((res) => res.json())
           .then((data) => console.log(data))
-          .catch((err) => console.error('Error al guardar:', err));
+          .catch((err) => console.error("Error al guardar:", err));
 
-          cargarHistorialchapa()
+        cargarHistorialchapa();
       }
       function cargarHistorialchapa() {
-        fetch('http://localhost:5000/api/historiales/chapa')
-          .then(res => res.json())
-          .then(data => {
+        fetch("http://localhost:5000/api/historiales/chapa")
+          .then((res) => res.json())
+          .then((data) => {
             if (data.success) {
-              const historialContainer = document.getElementById("historial-cambios-chapa");
+              const historialContainer = document.getElementById(
+                "historial-cambios-chapa"
+              );
               historialContainer.innerHTML = "";
-      
-              data.cambios.forEach(cambio => {
+
+              data.cambios.forEach((cambio) => {
                 const li = document.createElement("li");
                 li.textContent = cambio;
-                li.id = "historial-chapa"
+                li.id = "historial-chapa";
                 historialContainer.appendChild(li);
               });
             } else {
               console.error("No se pudo cargar el historial");
             }
           })
-          .catch(err => {
-            console.error('Error al cargar historial:', err);
+          .catch((err) => {
+            console.error("Error al cargar historial:", err);
           });
       }
       function agregarAlHistorialshop(pieza, cantidad) {
@@ -554,39 +573,41 @@ async function mostrarTabla(tabla) {
         if (historialCambios.length > 10) {
           historialCambios.pop();
         }
-        fetch('http://localhost:5000/api/historiales', {
-          method: 'POST',
+        fetch("http://localhost:5000/api/historiales", {
+          method: "POST",
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
           },
           body: JSON.stringify({ pieza: "shop", cantidad: nuevoCambio }),
         })
           .then((res) => res.json())
           .then((data) => console.log(data))
-          .catch((err) => console.error('Error al guardar:', err));
+          .catch((err) => console.error("Error al guardar:", err));
 
-          cargarHistorialshop()
+        cargarHistorialshop();
       }
       function cargarHistorialshop() {
-        fetch('http://localhost:5000/api/historiales/shop')
-          .then(res => res.json())
-          .then(data => {
+        fetch("http://localhost:5000/api/historiales/shop")
+          .then((res) => res.json())
+          .then((data) => {
             if (data.success) {
-              const historialContainer = document.getElementById("historial-cambios-shop");
+              const historialContainer = document.getElementById(
+                "historial-cambios-shop"
+              );
               historialContainer.innerHTML = "";
-      
-              data.cambios.forEach(cambio => {
+
+              data.cambios.forEach((cambio) => {
                 const li = document.createElement("li");
                 li.textContent = cambio;
-                li.id = "historial-shop"
+                li.id = "historial-shop";
                 historialContainer.appendChild(li);
               });
             } else {
               console.error("No se pudo cargar el historial");
             }
           })
-          .catch(err => {
-            console.error('Error al cargar historial:', err);
+          .catch((err) => {
+            console.error("Error al cargar historial:", err);
           });
       }
       function agregarAlHistorialplastico(pieza, cantidad) {
@@ -597,39 +618,41 @@ async function mostrarTabla(tabla) {
         if (historialCambios.length > 10) {
           historialCambios.pop();
         }
-        fetch('http://localhost:5000/api/historiales', {
-          method: 'POST',
+        fetch("http://localhost:5000/api/historiales", {
+          method: "POST",
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
           },
           body: JSON.stringify({ pieza: "plastico", cantidad: nuevoCambio }),
         })
           .then((res) => res.json())
           .then((data) => console.log(data))
-          .catch((err) => console.error('Error al guardar:', err));
+          .catch((err) => console.error("Error al guardar:", err));
 
-          cargarHistorialplastico()
+        cargarHistorialplastico();
       }
       function cargarHistorialplastico() {
-        fetch('http://localhost:5000/api/historiales/plastico')
-          .then(res => res.json())
-          .then(data => {
+        fetch("http://localhost:5000/api/historiales/plastico")
+          .then((res) => res.json())
+          .then((data) => {
             if (data.success) {
-              const historialContainer = document.getElementById("historial-cambios-plastico");
+              const historialContainer = document.getElementById(
+                "historial-cambios-plastico"
+              );
               historialContainer.innerHTML = "";
-      
-              data.cambios.forEach(cambio => {
+
+              data.cambios.forEach((cambio) => {
                 const li = document.createElement("li");
                 li.textContent = cambio;
-                li.id = "historial-plastico"
+                li.id = "historial-plastico";
                 historialContainer.appendChild(li);
               });
             } else {
               console.error("No se pudo cargar el historial");
             }
           })
-          .catch(err => {
-            console.error('Error al cargar historial:', err);
+          .catch((err) => {
+            console.error("Error al cargar historial:", err);
           });
       }
       function agregarAlHistorialfundicion(pieza, cantidad) {
@@ -640,39 +663,41 @@ async function mostrarTabla(tabla) {
         if (historialCambios.length > 10) {
           historialCambios.pop();
         }
-        fetch('http://localhost:5000/api/historiales', {
-          method: 'POST',
+        fetch("http://localhost:5000/api/historiales", {
+          method: "POST",
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
           },
           body: JSON.stringify({ pieza: "fundicion", cantidad: nuevoCambio }),
         })
           .then((res) => res.json())
           .then((data) => console.log(data))
-          .catch((err) => console.error('Error al guardar:', err));
+          .catch((err) => console.error("Error al guardar:", err));
 
-          cargarHistorialfundicion()
+        cargarHistorialfundicion();
       }
       function cargarHistorialfundicion() {
-        fetch('http://localhost:5000/api/historiales/fundicion')
-          .then(res => res.json())
-          .then(data => {
+        fetch("http://localhost:5000/api/historiales/fundicion")
+          .then((res) => res.json())
+          .then((data) => {
             if (data.success) {
-              const historialContainer = document.getElementById("historial-cambios-fundicion");
+              const historialContainer = document.getElementById(
+                "historial-cambios-fundicion"
+              );
               historialContainer.innerHTML = "";
-      
-              data.cambios.forEach(cambio => {
+
+              data.cambios.forEach((cambio) => {
                 const li = document.createElement("li");
                 li.textContent = cambio;
-                li.id = "historial-fundicion"
+                li.id = "historial-fundicion";
                 historialContainer.appendChild(li);
               });
             } else {
               console.error("No se pudo cargar el historial");
             }
           })
-          .catch(err => {
-            console.error('Error al cargar historial:', err);
+          .catch((err) => {
+            console.error("Error al cargar historial:", err);
           });
       }
       function agregarAlHistorial(pieza, cantidad) {
@@ -685,54 +710,52 @@ async function mostrarTabla(tabla) {
           historialCambios.pop();
         }
 
-        fetch('http://localhost:5000/api/historiales', {
-          method: 'POST',
+        fetch("http://localhost:5000/api/historiales", {
+          method: "POST",
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
           },
           body: JSON.stringify({ pieza: "aluminio", cantidad: nuevoCambio }),
         })
           .then((res) => res.json())
           .then((data) => console.log(data))
-          .catch((err) => console.error('Error al guardar:', err));
+          .catch((err) => console.error("Error al guardar:", err));
 
-          cargarHistorialAluminio()
+        cargarHistorialAluminio();
       }
       function cargarHistorialAluminio() {
-        fetch('http://localhost:5000/api/historiales/aluminio')
-          .then(res => res.json())
-          .then(data => {
+        fetch("http://localhost:5000/api/historiales/aluminio")
+          .then((res) => res.json())
+          .then((data) => {
             if (data.success) {
-              const historialContainer = document.getElementById("historial-cambios-aluminio");
+              const historialContainer = document.getElementById(
+                "historial-cambios-aluminio"
+              );
               historialContainer.innerHTML = "";
-      
-              data.cambios.forEach(cambio => {
+
+              data.cambios.forEach((cambio) => {
                 const li = document.createElement("li");
                 li.textContent = cambio;
-                li.id = "historial-aluminio"
+                li.id = "historial-aluminio";
                 historialContainer.appendChild(li);
               });
             } else {
               console.error("No se pudo cargar el historial");
             }
           })
-          .catch(err => {
-            console.error('Error al cargar historial:', err);
+          .catch((err) => {
+            console.error("Error al cargar historial:", err);
           });
       }
 
       // Llamá a esta función cuando cargue la página
-      cargarHistorialAluminio()
-      cargarHistorialfundicion()
-      cargarHistorialplastico()
-      cargarHistorialshop()
-      cargarHistorialchapa()
+      cargarHistorialAluminio();
+      cargarHistorialfundicion();
+      cargarHistorialplastico();
+      cargarHistorialshop();
+      cargarHistorialchapa();
     }
-  } 
-
-
+  }
 }
-
-
 
 module.exports = { mostrar, limpiarCampos, mostrarTabla };

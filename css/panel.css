@@ -1,0 +1,10 @@
+#filtros button {
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    font-size: 14px;
+    transition: background-color 0.2s;
+}
+
+#filtros button:hover {
+    background-color: #ddd;
+}

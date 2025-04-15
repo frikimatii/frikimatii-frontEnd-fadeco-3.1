@@ -53,6 +53,7 @@ function box() {
 
           let cantidad = 0;
           let origen = categoria;
+          let stock = piezaEncontrada.cantidad?.[categoria].stock_deseado
 
           if (
             piezaEncontrada &&
@@ -65,6 +66,7 @@ function box() {
             nombre: nombrePieza,
             cantidad: cantidad,
             origen: origen,
+            stock: stock
           });
         });
       }
@@ -81,6 +83,17 @@ function box() {
           { title: "Cantidad", field: "cantidad", width: 50 },
           { title: "Origen", field: "origen", width: 100 },
         ],
+
+        rowFormatter: function (row) {
+          const data = row.getData();
+
+          if (data.cantidad < data.stock) {
+            row.getElement().style.backgroundColor = "#f8d7da"; // rojo claro (menos del deseado)
+          } else {
+            row.getElement().style.backgroundColor = "#d4edda"; // verde claro (ok o más del deseado)
+          }
+        },
+
       });
     } catch (error) {
       console.error("Error al Obtener datos", error);
@@ -281,6 +294,8 @@ function box() {
 
           let cantidad = 0;
           let origen = categoria;
+          let stock = piezaEncontrada.cantidad?.[categoria].stock_deseado
+
           if (
             piezaEncontrada &&
             piezaEncontrada.cantidad?.[categoria]?.cantidad
@@ -292,6 +307,7 @@ function box() {
             nombre: nombrePieza,
             cantidad: cantidad,
             origen: origen,
+            stock: stock
           });
         });
       }
@@ -307,6 +323,17 @@ function box() {
           { title: "Cantidad", field: "cantidad", width: 50 },
           { title: "Origen", field: "origen", width: 100 },
         ],
+
+        rowFormatter: function (row) {
+          const data = row.getData();
+
+          if (data.cantidad < data.stock) {
+            row.getElement().style.backgroundColor = "#f8d7da"; // rojo claro (menos del deseado)
+          } else {
+            row.getElement().style.backgroundColor = "#d4edda"; // verde claro (ok o más del deseado)
+          }
+        },
+
       });
     } catch (error) {
       console.error("Error al Obtener datos", error);
@@ -444,6 +471,7 @@ function box() {
         nombre: p.nombre || "sin nombre",
         cantidad: p.cantidad?.corte?.cantidad,
         origen: "corte",
+        stock: p.cantidad?.corte?.stock_deseado
       }));
 
       titulo.innerText= "Tabla de Corte Piezas Terminadas"
@@ -459,6 +487,16 @@ function box() {
           { title: "Cantidad", field: "cantidad", width: 50 },
           { title: "Origen", field: "origen" },
         ],
+
+        rowFormatter: function (row) {
+          const data = row.getData();
+
+          if (data.cantidad < data.stock) {
+            row.getElement().style.backgroundColor = "#f8d7da"; // rojo claro (menos del deseado)
+          } else {
+            row.getElement().style.backgroundColor = "#d4edda"; // verde claro (ok o más del deseado)
+          }
+        },
       });
     } catch (error) {
       console.log("esto es un erro ", error);
@@ -554,6 +592,8 @@ function box() {
 
           let cantidad = 0;
           let origen = categoria;
+          let stock = pieezaEncontrada.cantidad?.[categoria].stock_deseado
+
           if (
             pieezaEncontrada &&
             pieezaEncontrada.cantidad?.[categoria]?.cantidad
@@ -565,6 +605,7 @@ function box() {
             nombre: nombrePieza,
             cantidad: cantidad,
             origen: origen,
+            stock: stock
           });
         });
       }
@@ -581,6 +622,16 @@ function box() {
           { title: "Cantidad", field: "cantidad", width: 50 },
           { title: "Origen", field: "origen", width: 100 },
         ],
+
+        rowFormatter: function (row) {
+          const data = row.getData();
+
+          if (data.cantidad < data.stock) {
+            row.getElement().style.backgroundColor = "#f8d7da"; // rojo claro (menos del deseado)
+          } else {
+            row.getElement().style.backgroundColor = "#d4edda"; // verde claro (ok o más del deseado)
+          }
+        },
       });
     } catch (error) {
       console.error("Error al Obtener datos", error);
@@ -691,7 +742,7 @@ function box() {
 
       const piezaPorCategoria = {
         bruto: [
-          "Buje Eje Eco",
+
           "Eje",
           "Eje 250",
           "Manchon",
@@ -709,6 +760,7 @@ function box() {
           "Tornillo Teletubi Eco",
           "Tapa Afilador Eco",
         ],
+        corte:["Buje Eje Eco"]
       };
 
       let datosTabla = [];
@@ -721,6 +773,8 @@ function box() {
 
           let cantidad = 0;
           let origen = categoria;
+          let stock = pieezaEncontrada.cantidad?.[categoria].stock_deseado
+
           if (
             pieezaEncontrada &&
             pieezaEncontrada.cantidad?.[categoria]?.cantidad
@@ -732,6 +786,8 @@ function box() {
             nombre: nombrePieza,
             cantidad: cantidad,
             origen: origen,
+            stock: stock
+
           });
         });
       }
@@ -747,6 +803,15 @@ function box() {
           { title: "Cantidad", field: "cantidad", width: 50 },
           { title: "Origen", field: "origen", width: 100 },
         ],
+        rowFormatter: function (row) {
+          const data = row.getData();
+
+          if (data.cantidad < data.stock) {
+            row.getElement().style.backgroundColor = "#f8d7da"; // rojo claro (menos del deseado)
+          } else {
+            row.getElement().style.backgroundColor = "#d4edda"; // verde claro (ok o más del deseado)
+          }
+        },
       });
     } catch (error) {
       console.error("Error al Obtener datos", error);
@@ -875,6 +940,7 @@ function box() {
 
           let cantidad = 0;
           let origen = categoria;
+          let stock = pieezaEncontrada.cantidad?.[categoria].stock_deseado
 
           if (
             pieezaEncontrada &&
@@ -887,6 +953,7 @@ function box() {
             nombre: nombrePieza,
             cantidad: cantidad,
             origen: origen,
+            stock: stock
           });
         });
       }
@@ -902,6 +969,17 @@ function box() {
           { title: "Cantidad", field: "cantidad", width: 50 },
           { title: "Origen", field: "origen", width: 100 },
         ],
+
+        rowFormatter: function (row) {
+          const data = row.getData();
+
+          if (data.cantidad < data.stock) {
+            row.getElement().style.backgroundColor = "#f8d7da"; // rojo claro (menos del deseado)
+          } else {
+            row.getElement().style.backgroundColor = "#d4edda"; // verde claro (ok o más del deseado)
+          }
+        },
+
       });
     } catch (error) {
       console.error("Error al Obtener datos", error);
@@ -1014,12 +1092,13 @@ function box() {
           "Vela 250",
           "Vela 300",
           "Vela 330",
-          "Planchada 330",
-          "Planchada 300",
-          "Planchada 250",
         ],
         corte: ["Varilla 330", "Varilla 300", "Varilla 250"],
         augeriado: ["Cuadrado Regulador"],
+        plegadora:[         
+          "Planchada 330",
+          "Planchada 300",
+          "Planchada 250",]
       };
 
       let datosTabla = [];
@@ -1032,6 +1111,8 @@ function box() {
 
           let cantidad = 0;
           let origen = categoria;
+          let stock = pieezaEncontrada.cantidad?.[categoria].stock_deseado
+
           if (
             pieezaEncontrada &&
             pieezaEncontrada.cantidad?.[categoria]?.cantidad
@@ -1043,6 +1124,8 @@ function box() {
             nombre: nombrePieza,
             cantidad: cantidad,
             origen: origen,
+            stock: stock
+
           });
         });
       }
@@ -1058,6 +1141,15 @@ function box() {
           { title: "Cantidad", field: "cantidad", width: 50 },
           { title: "Origen", field: "origen", width: 100 },
         ],
+        rowFormatter: function (row) {
+          const data = row.getData();
+
+          if (data.cantidad < data.stock) {
+            row.getElement().style.backgroundColor = "#f8d7da"; // rojo claro (menos del deseado)
+          } else {
+            row.getElement().style.backgroundColor = "#d4edda"; // verde claro (ok o más del deseado)
+          }
+        },
       });
     } catch (error) {
       console.error("Error al Obtener datos", error);
@@ -1175,7 +1267,7 @@ function box() {
           "Eje Largo",
           "Teletubi Eco",
         ],
-        bruto: ["Chapa U Inox", "Chapa U Pintada", "Chapa U Inox 250"],
+        bruto: ["Chapa U inox", "Chapa U Pintada", "Chapa U inox 250"],
         balancin: ["PortaEje"],
       };
 
@@ -1189,6 +1281,8 @@ function box() {
 
           let cantidad = 0;
           let origen = categoria;
+          let stock = pieezaEncontrada.cantidad?.[categoria].stock_deseado
+
           if (
             pieezaEncontrada &&
             pieezaEncontrada.cantidad?.[categoria]?.cantidad
@@ -1200,6 +1294,7 @@ function box() {
             nombre: nombrePieza,
             cantidad: cantidad,
             origen: origen,
+            stock: stock
           });
         });
       }
@@ -1215,6 +1310,16 @@ function box() {
           { title: "Cantidad", field: "cantidad", width: 50 },
           { title: "Origen", field: "origen", width: 100 },
         ],
+        rowFormatter: function (row) {
+          const data = row.getData();
+
+          if (data.cantidad < data.stock) {
+            row.getElement().style.backgroundColor = "#f8d7da"; // rojo claro (menos del deseado)
+          } else {
+            row.getElement().style.backgroundColor = "#d4edda"; // verde claro (ok o más del deseado)
+          }
+        },
+
       });
     } catch (error) {
       console.error("Error al Obtener datos", error);
@@ -1652,7 +1757,7 @@ function box() {
         funcion: mostrarTablasSoldador,
         funcionStock: mostrarStockTerminadosSoldador,
         actualizarP: "",
-        historiales : () => mostrarHisotrial("soldador")
+        historiales : () => hola("soldador")
 
       },
     },

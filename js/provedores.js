@@ -177,6 +177,7 @@ async function mostrarContenido(nombre) {
       layoutDiv.appendChild(caja);
       caja.appendChild(botonerBases);
       layoutDiv.appendChild(bttt)
+      
       async function cargarDatosTablas(url, piezasPorCategoria) {
         try {
           const res = await fetch(url);
@@ -479,7 +480,6 @@ async function mostrarContenido(nombre) {
       document
       .getElementById("btnEnviarSoldador")
       .addEventListener("click", function () {
-        mostrarJson("soldador", caja)
         const selectElement = document.getElementById("soldadorEnvios");
         const inputCantidad = document.getElementById("cantidadEnvios");
     
@@ -543,7 +543,6 @@ async function mostrarContenido(nombre) {
       document
         .getElementById("btnEntrega")
         .addEventListener("click", function () {
-          mostrarJson("soldador", caja)
           const selectElement = document.getElementById("soldadorEntrega");
           const inputCantidad = document.getElementById("cantidadEntrega");
 
@@ -601,7 +600,7 @@ async function mostrarContenido(nombre) {
         "Caja 330",
         "Cubrecuchilla 250",
         "Cubrecuchilla 300",
-        "Cubrecuchill 330",
+        "Cubrecuchilla 330",
         "Velero",
         "Vela 330",
         "Vela 250",
@@ -708,7 +707,6 @@ async function mostrarContenido(nombre) {
                 "Tapa Afilador 250",
                 "Teletubi 330",
                 "Teletubi 250",
-                "Tapa Afilador Eco",
                 "baseInox330",
                 "baseInox300",
                 "baseInox250",
@@ -717,6 +715,7 @@ async function mostrarContenido(nombre) {
               torno: [
                 "Cubrecuchilla 300",
                 "Teletubi 300",
+                "Tapa Afilador Eco",
                 "Caja 250",
                 "Caja 300",
                 "Caja 330",
@@ -979,6 +978,7 @@ async function mostrarContenido(nombre) {
           console.log("Por favor, seleccione una pieza y una cantidad válida.");
           alert("Por favor, seleccione una pieza y una cantidad válida.");
         }
+
       });
 
       
@@ -1054,7 +1054,7 @@ async function mostrarContenido(nombre) {
         "Caja 330",
         "Cubrecuchilla 250",
         "Cubrecuchilla 300",
-        "Cubrecuchill 330",
+        "Cubrecuchilla 330",
         "Velero",
         "Vela 330",
         "Vela 250",
@@ -1068,10 +1068,10 @@ async function mostrarContenido(nombre) {
         "Teletubi 330",
         "Teletubi 300",
         "Teletubi 250",
-        "BaseInox330",
-        "BaseInox300",
-        "BaseInox250",
-        "BaseInoxECO",
+        "baseInox330",
+        "baseInox300",
+        "baseInox250",
+        "baseInoxECO",
         "Tapa Afilador Eco",
       ];
 
@@ -1160,7 +1160,6 @@ async function mostrarContenido(nombre) {
                 "Tapa Afilador 250",
                 "Teletubi 330",
                 "Teletubi 250",
-                "Tapa Afilador Eco",
                 "baseInox330",
                 "baseInox300",
                 "baseInox250",
@@ -1172,6 +1171,7 @@ async function mostrarContenido(nombre) {
                 "Caja 250",
                 "Caja 300",
                 "Caja 330",
+                "Tapa Afilador Eco",
               ],
               soldador: [
                 "Vela 330",
@@ -1585,9 +1585,10 @@ async function mostrarContenido(nombre) {
               soldador: ["cabezal_pintada"],
               augeriado: [
                 "Caja Soldada Eco",
-                "basePintada330",
-                "basePintada300",
               ],
+              bruto:[ 
+                "basePintada330",
+                "basePintada300",]
             };
 
             const datosTabla = piezaBrutaEnFabrica.map((p) => {
@@ -1775,7 +1776,7 @@ async function mostrarContenido(nombre) {
         const cantidad = parseInt(inputCantidad.value);
     
         if (piezaSeleccionada && !isNaN(cantidad) && cantidad > 0) {
-          fetch(`http://localhost:5000/api/entregasPintura/${piezaSeleccionada}`, {
+          fetch(`http://localhost:5000/api/entregasPintura/${encodeURIComponent(piezaSeleccionada)}`, {
             method: "PUT",
             headers: {
               "Content-Type": "application/json",
@@ -1845,8 +1846,8 @@ async function mostrarContenido(nombre) {
         <div>
           <p>Niquelado</p>
             <div class="boxBtnStock">
-              <button class="stockNiquelado"  data-tipo="StockEnNiquelado" >En Niquelado</button>
               <button class="stockBruto"  data-tipo="StockEnBruto">En Fabrica Bruto</button>
+              <button class="stockNiquelado"  data-tipo="StockEnNiquelado" >En Niquelado</button>
               <button class="stockEnFabrica"  data-tipo="StockEnTerminado">Terminado</button>
             </div>
         </div>`;
@@ -2177,15 +2178,9 @@ async function mostrarContenido(nombre) {
       const htmlAfilador = `
             <div>
                <div class="boxBtnStock">
-                    <button class="stockRoman" data-tipo="StockEnRoman">
-                      En Roman
-                    </button>
-                    <button class="stockFabrica" data-tipo="StockEnFabrica">
-                      En Fabrica
-                    </button>
-                    <button class="stockEnFabricaAfilador">
-                      Terminado
-                    </button>
+                    <button class="stockFabrica" data-tipo="StockEnFabrica">En Fabrica</button>
+                    <button class="stockRoman" data-tipo="StockEnRoman">En Roman</button>
+                    <button class="stockEnFabricaAfilador">Terminado</button>
               </div>       
         </div>`;
 
@@ -2206,7 +2201,7 @@ async function mostrarContenido(nombre) {
         <div>
           <p>Entrega De Afiladores Terminados</p>
           <div>
-            <input class='cantidades' type='number' id='cantidadEmtregacarmelo' min="0" required>
+            <input class='cantidades' type='number' id='cantidadEntregaAfiladores' min="0" required>
             <button id="EntregaAfiladores">Afiladores Entregados</button>
           </div>
         </div>
@@ -2242,7 +2237,7 @@ async function mostrarContenido(nombre) {
                 "Resorte Palanca",
                 "Resorte Empuje",
               ],
-              corte: ["Palanca Afilador"],
+              terminado: ["Palanca Afilador"],
             };
 
             const datosTabla = piezaBrutaEnFabrica.map((p) => {
@@ -2424,7 +2419,7 @@ async function mostrarContenido(nombre) {
       document
       .getElementById("EntregaAfiladores")
       .addEventListener("click", function () {
-        const inputCantidad = document.getElementById("cantidadEmtregacarmelo");
+        const inputCantidad = document.getElementById("cantidadEntregaAfiladores");
     
         const piezaSeleccionada = "Afilador";
         const cantidad = parseInt(inputCantidad.value);

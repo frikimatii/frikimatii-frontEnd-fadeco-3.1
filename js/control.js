@@ -460,13 +460,13 @@ async function controlCalidad() {
                 <p class="controlTitulo">PreArmado</p>
             <div class="row">
                 <label class="labelcontrol"for="text">PreArmado</label>
-                <select id="" class="selecConsultorio">${PreArmado}
+                <select id="basePreArmadaSelecc" class="selecConsultorio">${PreArmado}
                 </select>
             </div>
             <div class="row">
                 <label class="labelcontrol"for="">Cantidad:</label>
-                <input class="cantidades" type="number" id="cantidadMaquinasArmadas" min="0" required />
-                <button class="btnConsultas" id="btnArmarfinal" >Terminadas</button>
+                <input class="cantidades" type="number" id="cantidadPrearmardaSelecc" min="0" required />
+                <button class="btnConsultas" id="btnConsultaPreArmado" >Terminadas</button>
             </div>
         </div>
 </div>
@@ -475,22 +475,20 @@ async function controlCalidad() {
                 <p class="controlTitulo">Armado</p>
             <div class="row">
                 <label class="labelcontrol"for="text">Armado</label>
-                <select id="" class="selecConsultorio">${maquinasArmadas}
+                <select id="armadoSelecc" class="selecConsultorio">${maquinasArmadas}
                 </select>
             </div>
             <div class="row">
                 <label class="labelcontrol"for="">Cantidad:</label>
-                <input class="cantidades" type="number" id="cantidadMaquinasArmadas" min="0" required />
-                <button class="btnConsultas" id="btnArmarfinal" >Terminadas</button>
+                <input class="cantidades" type="number" id="cantidadArmadoSelecc" min="0" required />
+                <button class="btnConsultas" id="btnConsultaArmarfinal" >Terminadas</button>
             </div>
         </div>
 </div>`;
 
   boxControl.appendChild(consultas);
-  document
-    .getElementById("consultaMotores")
-    .addEventListener("click", consultasDeMotores);
 
+  document.getElementById("consultaMotores").addEventListener("click", consultasDeMotores);
   async function consultasDeMotores() {
     const MotorSeleccionado =
       document.getElementById("motorSeleccionado").value;
@@ -530,6 +528,78 @@ async function controlCalidad() {
       alert("Ocurrió un error al verificar el armado.");
     }
   }
+
+  
+
+  document.getElementById("btnConsultaPreArmado").addEventListener('click', consultaPreArmado)
+  async function consultaPreArmado(){
+    const preArmadoSelecc = document.getElementById("basePreArmadaSelecc").value
+    const cantidadSelecc = parseInt( document.getElementById("cantidadPrearmardaSelecc").value, 10)
+
+    try{
+      const res = await fetch(`http://localhost:5000/api/verificarPreArmado/${preArmadoSelecc}`,{
+        method: "POST",
+        headers:{
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({cantidad: cantidadSelecc})
+      })
+
+      const data = await res.json()
+
+      console.log("Respuesta de la API:", data);
+
+      if (data.puedeArmar) {
+        mostrarVentanaMensaje("✅ Éxito", data.mensaje, data.piezasFaltantes);
+      } else {
+        mostrarVentanaMensaje(
+          "❌ No se puede armar",
+          data.mensaje,
+          data.piezasFaltantes
+        );
+        console.log("Faltantes:", data.piezasFaltantes);
+      }
+    } catch (error) {
+      console.error("❌ Error en la consulta:", error);
+      alert("Ocurrió un error al verificar el armado.");
+    }
+  }
+
+
+  document.getElementById("btnConsultaArmarfinal").addEventListener('click', consultaArmadoFinal)
+  async function consultaArmadoFinal(){
+    const MaquinaSelecc = document.getElementById("armadoSelecc").value
+    const CantidaSelecc = parseInt( document.getElementById("cantidadArmadoSelecc").value, 10)
+
+    try{
+      const res = await fetch(`http://localhost:5000/api/verificarArmado/${MaquinaSelecc}`,{
+        method: "POST",
+        headers:{
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({cantidad: CantidaSelecc})
+      })
+
+      const data = await res.json()
+
+      console.log("Respuesta De La API: ", data)
+
+      if (data.puedeArmar) {
+        mostrarVentanaMensaje("✅ Éxito", data.mensaje, data.piezasFaltantes);
+      } else {
+        mostrarVentanaMensaje(
+          "❌ No se puede armar",
+          data.mensaje,
+          data.piezasFaltantes
+        );
+        console.log("Faltantes:", data.piezasFaltantes);
+      }
+    } catch (error) {
+      console.error("❌ Error en la consulta:", error);
+      alert("Ocurrió un error al verificar el armado.");
+    }
+  }
+
 
   function mostrarVentanaMensaje(titulo, mensaje, piezasFaltantes = []) {
     const ventanaExistente = document.getElementById("ventanaMensaje");
@@ -588,7 +658,6 @@ async function controlCalidad() {
   
     document.body.appendChild(ventana);
   }
-  
 
   // --------- Columna 4: Pedidos ---------
 

@@ -1,1 +1,41 @@
+<div
+  id="panelDeControl"
+  style="
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    padding: 10px;
+    box-sizing: border-box;
+  "
+>
+  <!-- Columna 1: Botones -->
+  <div style="display: flex; flex-direction: column; margin: 10px">
+    <button id="btnMostrarTabla">Mostrar Piezas</button>
+  </div>
 
+  <!-- Columna 2: Tabla + Botones de filtro -->
+  <div
+    style="
+      display: flex;
+      flex-direction: column;
+      align-items: start;
+      margin: 20px;
+
+    "
+  >
+    <div id="miTabla"></div>
+    <div
+      id="filtros"
+      style="
+        display: grid;
+        grid-template-columns: repeat(3, auto);
+        justify-content: center;
+      "
+    ></div>
+  </div>
+
+  <!-- Columna 3 y 4 vacías -->
+  <div id="piezaSeleccionada" style="margin-top: 15px; font-weight: bold; font-size: 14px; color: #4d7b97;">
+    Selecciona una pieza para verla aquí.
+  </div>  
+  
+</div>
