@@ -698,14 +698,34 @@ async function controlCalidad() {
         <input class="cantidades" type="number" id="cantidadInoxECO" min="0" required />
     </div>
     <div class="botones">
-        <button>Averiguar</button>
+        <button id="btnAveriguar">Averiguar</button>
         <button>Abrir Registro</button>
     </div>
 </div>
 
 `;
 
-  boxControl.appendChild(pedidos);
+boxControl.appendChild(pedidos);
+
+const btnAveriguar = document.getElementById("btnAveriguar")
+btnAveriguar.addEventListener("click", async function () {
+  granPedido()
+})
+
+function granPedido(){
+  const Inox_330 = parseFloat(document.getElementById("cantidadInox330").value) || 0;
+  const Inox_300 = parseFloat(document.getElementById("cantidadInox300").value) || 0;
+  const Inox_ECO = parseFloat(document.getElementById("cantidadInox250").value) || 0;
+  const Inox_250 = parseFloat(document.getElementById("cantidadInoxECO").value) || 0;
+  const Pintada_330 = parseFloat(document.getElementById("cantidadPintada330").value) || 0;
+  const Pintada_300 = parseFloat(document.getElementById("cantidadPintada300").value) || 0;
+
+  const resultado = Inox_330 + Inox_300 + Inox_250 + Inox_ECO + Pintada_330 + Pintada_300;
+
+  alert(resultado);
+}
+
+
 }
 
 module.exports = { controlCalidad };
