@@ -7912,24 +7912,7 @@ function panel() {
 </div>
 
 
-        <div style="border: 1px solid #ccc; border-radius: 8px; padding: 10px;">
-            <p style="margin-bottom: 10px;"><b>Datos Terminado</b></p>
-        
-            <div style="margin-bottom: 5px; display: flex; flex-direction: row; align-items: center; gap: 10px;">
-                <b style="min-width: 130px;">Cantidad Terminado:</b>
-                <input type="number" min=0 id="inputCantidadTerminado_${selectData._id}" value="${selectData.cantidad.terminado.cantidad}" style="width: 70px;">
-            </div>
-        
-            <div style="margin-bottom: 5px; display: flex; flex-direction: row; align-items: center; gap: 10px;">
-                <b style="min-width: 130px;">Stock Deseado Terminado:</b>
-                <input type="number" min=0 id="inputStockDeseadoTerminado_${selectData._id}" value="${selectData.cantidad.terminado.stock_deseado}" style="width: 70px;">
-            </div>
-        
-            <div style="margin-top: 10px; display: flex; justify-content: center; align-items: center; gap: 20px;">
-                <img src="${selectData.cantidad.terminado.img}" alt="Imagen Aro Terminado" style="max-width: 70px;">
-                <button id="btnActualizarTerminado_${selectData._id}">Actualizar Terminado</button>
-            </div>
-        </div>
+
       </div>
     `;
   }
@@ -8025,24 +8008,6 @@ function panel() {
 </div>
 
 
-        <div style="border: 1px solid #ccc; border-radius: 8px; padding: 10px;">
-            <p style="margin-bottom: 10px;"><b>Datos Terminado</b></p>
-        
-            <div style="margin-bottom: 5px; display: flex; flex-direction: row; align-items: center; gap: 10px;">
-                <b style="min-width: 130px;">Cantidad Terminado:</b>
-                <input type="number" min=0 id="inputCantidadTerminado_${selectData._id}" value="${selectData.cantidad.terminado.cantidad}" style="width: 70px;">
-            </div>
-        
-            <div style="margin-bottom: 5px; display: flex; flex-direction: row; align-items: center; gap: 10px;">
-                <b style="min-width: 130px;">Stock Deseado Terminado:</b>
-                <input type="number" min=0 id="inputStockDeseadoTerminado_${selectData._id}" value="${selectData.cantidad.terminado.stock_deseado}" style="width: 70px;">
-            </div>
-        
-            <div style="margin-top: 10px; display: flex; justify-content: center; align-items: center; gap: 20px;">
-                <img src="${selectData.cantidad.terminado.img}" alt="Imagen Aro Terminado" style="max-width: 70px;">
-                <button id="btnActualizarTerminado_${selectData._id}">Actualizar Terminado</button>
-            </div>
-        </div>
       </div>
     `;
   }

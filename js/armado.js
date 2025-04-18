@@ -1,3 +1,5 @@
+const { Chart } = require("chart.js");
+
 async function boxArmado() {
   const Maquinas = [
     "Inox_330",
@@ -25,18 +27,18 @@ async function boxArmado() {
   ];
 
   const meses = [
-    "Enero",
-    "Febrero",
-    "Marzo",
-    "Abril",
-    "Mayo",
-    "Junio",
-    "Julio",
-    "Agosto",
-    "Septiembre",
-    "Octubre",
-    "Noviembre",
-    "Diciembre",
+    "enero",
+    "febrero",
+    "marzo",
+    "abril",
+    "mayo",
+    "junio",
+    "julio",
+    "agosto",
+    "septiembre",
+    "octubre",
+    "noviembre",
+    "diciembre",
   ];
 
   function generarSelector(pieza) {
@@ -62,7 +64,7 @@ async function boxArmado() {
   BoxArmado.style.alignItems = "flex-start";
 
   // Simulación de las opciones para el selector de piezas
-  data = []
+  data = [];
 
   // --------- Columna 1: Tabla de Armado ---------
   const tablaDiv = document.createElement("div");
@@ -156,7 +158,7 @@ async function boxArmado() {
         const datosTabla = motoresFiltrado.map((p) => ({
           nombre: p.nombre,
           cantidad: p.cantidad?.bruto?.cantidad,
-          stock: p.cantidad?.bruto?.stock_deseado
+          stock: p.cantidad?.bruto?.stock_deseado,
         }));
 
         if (!tablaDiv) {
@@ -176,7 +178,7 @@ async function boxArmado() {
 
           rowFormatter: function (row) {
             const data = row.getData();
-  
+
             if (data.cantidad < data.stock) {
               row.getElement().style.backgroundColor = "#f8d7da"; // rojo claro (menos del deseado)
             } else {
@@ -239,7 +241,7 @@ async function boxArmado() {
           return {
             nombre: p.nombre,
             cantidad: p.cantidad?.[categoria]?.cantidad,
-            stock: p.cantidad?.[categoria].stock_deseado
+            stock: p.cantidad?.[categoria].stock_deseado,
           };
         });
 
@@ -259,7 +261,7 @@ async function boxArmado() {
           ],
           rowFormatter: function (row) {
             const data = row.getData();
-  
+
             if (data.cantidad < data.stock) {
               row.getElement().style.backgroundColor = "#f8d7da"; // rojo claro (menos del deseado)
             } else {
@@ -335,13 +337,11 @@ async function boxArmado() {
       "Ventilador Motor",
     ],
     torno: ["Buje Eje Eco"],
-    augeriado: ["Tornillo Teletubi Eco",],
-    terminado: ["Caja Soldada Eco"]
+    augeriado: ["Tornillo Teletubi Eco"],
+    terminado: ["Caja Soldada Eco"],
   });
 
   ///Stock de motores
-
-
 
   document
     .getElementById("stockMotoresFinales")
@@ -368,7 +368,7 @@ async function boxArmado() {
           return {
             nombre: p.nombre,
             cantidad: p.cantidad?.[categoria]?.cantidad, // Evitar undefined
-            stock: p.cantidad?.[categoria]?.stock_deseado
+            stock: p.cantidad?.[categoria]?.stock_deseado,
           };
         });
 
@@ -390,7 +390,7 @@ async function boxArmado() {
 
           rowFormatter: function (row) {
             const data = row.getData();
-  
+
             if (data.cantidad < data.stock) {
               row.getElement().style.backgroundColor = "#f8d7da"; // rojo claro (menos del deseado)
             } else {
@@ -471,7 +471,7 @@ async function boxArmado() {
           return {
             nombre: p.nombre,
             cantidad: p.cantidad?.[categoria]?.cantidad,
-            stock: p.cantidad?.[categoria]?.stock_deseado
+            stock: p.cantidad?.[categoria]?.stock_deseado,
           };
         });
 
@@ -491,7 +491,7 @@ async function boxArmado() {
           ],
           rowFormatter: function (row) {
             const data = row.getData();
-  
+
             if (data.cantidad < data.stock) {
               row.getElement().style.backgroundColor = "#f8d7da"; // rojo claro (menos del deseado)
             } else {
@@ -562,7 +562,7 @@ async function boxArmado() {
       "Cable 220w",
       "Resorte Carro",
       "Capacitores",
-      "Bandeja 330"
+      "Bandeja 330",
     ],
     augeriado: ["Movimiento", "Carros"],
     torno: ["Tornillo guia", "Rueditas"],
@@ -586,7 +586,7 @@ async function boxArmado() {
       "Cable 220w",
       "Resorte Carro",
       "Capacitores",
-      "Bandeja 300"
+      "Bandeja 300",
     ],
     augeriado: ["Movimiento", "Carros"],
     torno: ["Tornillo guia", "Rueditas"],
@@ -687,7 +687,7 @@ async function boxArmado() {
           ],
           rowFormatter: function (row) {
             const data = row.getData();
-  
+
             if (data.cantidad < data.stock) {
               row.getElement().style.backgroundColor = "#f8d7da"; // rojo claro (menos del deseado)
             } else {
@@ -789,8 +789,9 @@ async function boxArmado() {
             ${todoslosmeses}
           </select>
           <button id="CerraMes">Cerra Mes</button>
+          <button id="GraficoAnual">Grafico Anual</button>
         </div>
-      
+        <p id="cantidadDeMaquinas">cantidad Total</p>
     </div>
   </div>`;
 
@@ -816,7 +817,7 @@ async function boxArmado() {
           return {
             nombre: p.nombre,
             cantidad: p.cantidad?.[categoria]?.cantidad,
-            stock: p.cantidad?.[categoria]?.stock_deseado
+            stock: p.cantidad?.[categoria]?.stock_deseado,
           };
         });
 
@@ -836,7 +837,7 @@ async function boxArmado() {
           ],
           rowFormatter: function (row) {
             const data = row.getData();
-  
+
             if (data.cantidad < data.stock) {
               row.getElement().style.backgroundColor = "#f8d7da"; // rojo claro (menos del deseado)
             } else {
@@ -879,7 +880,7 @@ async function boxArmado() {
       "Pinche lateral",
     ],
     soldador: ["Cuadrado Regulador"],
-    pulido: ["CabezalInox"]
+    pulido: ["CabezalInox"],
   });
 
   cargarArmadoFinal("maquinasi300", {
@@ -911,7 +912,7 @@ async function boxArmado() {
       "Pinche lateral",
     ],
     soldador: ["Cuadrado Regulador"],
-    pulido: ["CabezalInox"]
+    pulido: ["CabezalInox"],
   });
 
   cargarArmadoFinal("maquinasp330", {
@@ -927,7 +928,7 @@ async function boxArmado() {
       "Tubo Manija",
       "Afilador",
       "BasePreArmada_Pintada330",
-      "CabezalPintada"
+      "CabezalPintada",
     ],
     bruto: [
       "Cubre Motor Rectangulo",
@@ -959,7 +960,7 @@ async function boxArmado() {
       "Tubo Manija",
       "Afilador",
       "BasePreArmada_Pintada300",
-      "CabezalPintada"
+      "CabezalPintada",
     ],
     bruto: [
       "Cubre Motor Rectangulo",
@@ -1006,7 +1007,7 @@ async function boxArmado() {
       "Pitito Teletubi Eco",
     ],
     soldador: ["Cuadrado Regulador"],
-    pulido: ["CabezalInox"]
+    pulido: ["CabezalInox"],
   });
 
   cargarArmadoFinal("maquinasi250", {
@@ -1037,7 +1038,7 @@ async function boxArmado() {
       "Pinche lateral 250",
     ],
     soldador: ["Cuadrado Regulador"],
-    pulido: ["Cabezal250"]
+    pulido: ["Cabezal250"],
   });
 
   document
@@ -1124,7 +1125,6 @@ async function boxArmado() {
       }
     });
 
-
   ///////// GRAFICOS
   document.getElementById("abrirGraficos").addEventListener("click", () => {
     const nuevaVentana = window.open("", "Graficos", "width=500,height=500");
@@ -1207,29 +1207,217 @@ async function boxArmado() {
     `);
   });
 
-  document.getElementById("CerraMes").addEventListener('click', async () => {
+  document.getElementById("CerraMes").addEventListener("click", async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/mesReset", {
-        method: "PUT",
-        headers: {
-          'Content-Type': 'application/json'
-        }
-        // No hace falta enviar body ya que no usamos datos
-      });
-  
-      const data = await res.json();
-  
-      if (res.ok) {
-        alert(data.mensaje);
-      } else {
-        alert("Error al cerrar el mes: " + data.mensaje);
+      // Obtener el valor del mes seleccionado
+      const mesSeleccionado = document.getElementById("mesSeleccionado").value;
+
+      // Validar que realmente se ha seleccionado un mes
+      if (!mesSeleccionado) {
+        alert("Por favor, selecciona un mes.");
+        return;
       }
+
+      const cantidad = 0;
+
+      // Mostrar el mes seleccionado en la consola
+      console.log("Mes seleccionado:", mesSeleccionado);
+
+      const res = await fetch("http://localhost:5000/api/cierreMes", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ cantidad, mesSeleccionado }), // Enviamos también el mes seleccionado
+      });
+
+      const data = await res.json();
+      alert(`Total de máquinas:  ${data.totalMaquinas}`);
+      const total = document.getElementById("cantidadDeMaquinas");
+      total.innerText = data.totalMaquinas;
     } catch (error) {
       console.error("Error de conexión:", error);
       alert("Error de conexión con el servidor.");
     }
   });
+
+  async function obtenerCantidadTotal() {
+    let totalCantidad = 0;
+    try {
+      const res = await fetch("http://localhost:5000/api/totall");
+      const data = await res.json();
+
+      if (data.totalCantidad !== undefined) {
+        totalCantidad = data.totalCantidad;
+      }
+
+      document.getElementById(
+        "cantidadDeMaquinas"
+      ).textContent = `Cantidad Total: ${totalCantidad}`;
+    } catch (error) {
+      console.error("Error al obtener la cantidad total de máquinas:", error);
+    }
+  }
+
+  function inicarContador() {
+    obtenerCantidadTotal();
+
+    setInterval(() => {
+      obtenerCantidadTotal();
+    }, 5000);
+  }
+
+  inicarContador();
+
+
+  document.getElementById("GraficoAnual").addEventListener("click", () => {
+    const nuevaVentana = window.open("", "GraficoAnual", "width=800,height=600");
   
+    nuevaVentana.document.write(`
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <title>Gráficos del Mes</title>
+          <style>
+            body {
+              background: #222;
+              color: white;
+              font-family: sans-serif;
+              display: flex;
+              flex-direction: column;
+              align-items: center;
+              justify-content: center;
+              padding: 10px;
+            }
+            canvas {
+              max-width: 90%;
+              max-height: 80%;
+            }
+            #controls {
+              margin-top: 20px;
+              display: flex;
+              gap: 10px;
+              align-items: center;
+            }
+            select, button {
+              padding: 10px;
+              font-size: 16px;
+              border-radius: 5px;
+              border: none;
+            }
+            select {
+              background-color: #444;
+              color: white;
+            }
+            button {
+              background-color: #ff4444;
+              color: white;
+              cursor: pointer;
+            }
+            button:hover {
+              background-color: #cc0000;
+            }
+          </style>
+          <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        </head>
+        <body>
+          <h2>Gráficos del Mes</h2>
+          <canvas id="graficoMeses" width="600" height="300"></canvas>
+      
+          <div id="controls">
+            <label for="anioSelect">Seleccionar Año:</label>
+            <select id="anioSelect">
+              <option value="2025">2025</option>
+              <option value="2026">2026</option>
+              <option value="2027">2027</option>
+              <option value="2028">2028</option>
+              <option value="2029">2029</option>
+              <option value="2030">2030</option>
+            </select>
+            <button id="resetButton">Resetear Piezas</button>
+          </div>
+  
+          <script>
+            const mesesValidos = [
+              "enero", "febrero", "marzo", "abril", "mayo", "junio",
+              "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"
+            ];
+  
+            fetch("http://localhost:5000/api/graficoAnual")
+              .then(res => res.json())
+              .then(data => {
+                const meses = [];
+                const cantidades = [];
+  
+                for (const mes of mesesValidos) {
+                  if (data[mes] !== undefined) {
+                    meses.push(mes);
+                    cantidades.push(data[mes]);
+                  }
+                }
+  
+                const totalMaquinas = cantidades.reduce((acc, curr) => acc + curr, 0);
+                const totalElement = document.createElement("h4");
+                totalElement.textContent = "Total de Máquinas Anual: " + totalMaquinas;
+                document.body.insertBefore(totalElement, document.getElementById("graficoMeses"));
+  
+                const ctx = document.getElementById("graficoMeses").getContext("2d");
+  
+                new Chart(ctx, {
+                  type: "bar",
+                  data: {
+                    labels: meses,
+                    datasets: [{
+                      label: "Máquinas terminadas",
+                      data: cantidades,
+                      backgroundColor: "rgba(75, 192, 192, 0.2)",
+                      borderColor: "rgba(75, 192, 192, 1)",
+                      borderWidth: 1
+                    }]
+                  },
+                  options: {
+                    scales: {
+                      y: {
+                        beginAtZero: true
+                      }
+                    }
+                  }
+                });
+              });
+  
+            function resetearPiezas() {
+              const anio = document.getElementById("anioSelect").value;
+  
+              fetch("http://localhost:5000/api/resetAnual", {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ anio }),
+              })
+                .then(response => response.json())
+                .then(data => {
+                  alert(data.mensaje);
+                  document.getElementById("resetButton").textContent = "Piezas Reseteadas ✔";
+                  window.close(); // <- Esto cierra la ventana
+
+                })
+                .catch(error => {
+                  console.error("Error al resetear las piezas:", error);
+                  alert("Hubo un error al resetear las piezas.");
+                });
+            }
+  
+            document.getElementById("resetButton").addEventListener("click", resetearPiezas);
+          </script>
+        </body>
+      </html>
+    `);
+  });
+  
+  
+
+
 
 }
 

@@ -67,7 +67,7 @@ async function loadSection(section) {
 }
 
 window.loadSection = loadSection;
-window.onload = () => loadSection("provedores");
+window.onload = () => loadSection("armado");
 // Tema oscuro/claro
 document.addEventListener("DOMContentLoaded", () => {
   const themeToggleBtn = document.getElementById("themeToggleBtn");
