@@ -130,7 +130,12 @@ function box() {
         const cantidad = piezasTerminadas.includes(nombre)
           ? p.cantidad?.terminado?.cantidad || 0
           : p.cantidad?.plegadora?.cantidad || 0;
-        return { nombre, cantidad };
+
+        const stock = piezasTerminadas.includes(nombre)
+          ? p.cantidad?.terminado?.stock_deseado || 0 
+          : p.cantidad?.plegadora?.stock_deseado || 0
+
+        return { nombre, cantidad, stock };
       });
       
       titulo.innerText= "Tabla de Plegadoras Piezas Terminadas"
@@ -143,6 +148,15 @@ function box() {
           { title: "Nombre", field: "nombre", minWidth: 200 },
           { title: "Cantidad", field: "cantidad", width: 100 },
         ],
+        rowFormatter: function (row) {
+          const data = row.getData();
+
+          if (data.cantidad < data.stock) {
+            row.getElement().style.backgroundColor = "#f8d7da"; // rojo claro (menos del deseado)
+          } else {
+            row.getElement().style.backgroundColor = "#d4edda"; // verde claro (ok o más del deseado)
+          }
+        },
       });
     } catch (error) {
       console.log("Ocurrió un error:", error);
@@ -358,6 +372,7 @@ function box() {
       const tableData = piezaplegadoras.map((p) => ({
         nombre: p.nombre || "sin nombre",
         cantidad: p.cantidad?.plasma?.cantidad || 0,
+        stock: p.cantidad?.plasma?.stock_deseado || 0
       }));
 
 
@@ -374,6 +389,16 @@ function box() {
           { title: "Nombre", field: "nombre" },
           { title: "Cantidad", field: "cantidad" },
         ],
+
+        rowFormatter: function (row) {
+          const data = row.getData();
+
+          if (data.cantidad < data.stock) {
+            row.getElement().style.backgroundColor = "#f8d7da"; // rojo claro (menos del deseado)
+          } else {
+            row.getElement().style.backgroundColor = "#d4edda"; // verde claro (ok o más del deseado)
+          }
+        },
       });
     } catch (error) {
       console.log("esto es un erro ", error);
@@ -657,6 +682,7 @@ function box() {
       const tableData = piezaplegadoras.map((p) => ({
         nombre: p.nombre || "sin nombre",
         cantidad: p.cantidad?.augeriado?.cantidad || 0,
+        stock: p.cantidad?.augeriado?.stock_deseado || 0
       }));
       titulo.innerText= "Tabla de Augeriado Piezas Terminadas"
 
@@ -671,6 +697,16 @@ function box() {
           { title: "Nombre", field: "nombre" },
           { title: "Cantidad", field: "cantidad" },
         ],
+
+        rowFormatter: function (row) {
+          const data = row.getData();
+
+          if (data.cantidad < data.stock) {
+            row.getElement().style.backgroundColor = "#f8d7da"; // rojo claro (menos del deseado)
+          } else {
+            row.getElement().style.backgroundColor = "#d4edda"; // verde claro (ok o más del deseado)
+          }
+        },
       });
     } catch (error) {
       console.log("esto es un erro ", error);
@@ -836,6 +872,7 @@ function box() {
       const tableData = piezaplegadoras.map((p) => ({
         nombre: p.nombre || "sin nombre",
         cantidad: p.cantidad?.torno?.cantidad || 0,
+        stock: p.cantidad?.torno?.stock_deseado || 0
       }));
 
       titulo.innerText= "Tabla de Torno Piezas Terminadas"
@@ -850,6 +887,15 @@ function box() {
           { title: "Nombre", field: "nombre" },
           { title: "Cantidad", field: "cantidad" },
         ],
+        rowFormatter: function (row) {
+          const data = row.getData();
+
+          if (data.cantidad < data.stock) {
+            row.getElement().style.backgroundColor = "#f8d7da"; // rojo claro (menos del deseado)
+          } else {
+            row.getElement().style.backgroundColor = "#d4edda"; // verde claro (ok o más del deseado)
+          }
+        },
       });
     } catch (error) {
       console.log("esto es un erro ", error);
@@ -1004,6 +1050,7 @@ function box() {
       const tableData = piezaplegadoras.map((p) => ({
         nombre: p.nombre || "sin nombre",
         cantidad: p.cantidad?.fresa?.cantidad || 0,
+        stock: p.cantidad?.fresa?.stock_deseado ||0
       }));
 
       titulo.innerText= "Tabla de Fresa Piezas Terminadas"
@@ -1018,6 +1065,15 @@ function box() {
           { title: "Nombre", field: "nombre" },
           { title: "Cantidad", field: "cantidad" },
         ],
+        rowFormatter: function (row) {
+          const data = row.getData();
+
+          if (data.cantidad < data.stock) {
+            row.getElement().style.backgroundColor = "#f8d7da"; // rojo claro (menos del deseado)
+          } else {
+            row.getElement().style.backgroundColor = "#d4edda"; // verde claro (ok o más del deseado)
+          }
+        },
       });
     } catch (error) {
       console.log("esto es un erro ", error);
@@ -1174,6 +1230,7 @@ function box() {
       const tableData = piezaplegadoras.map((p) => ({
         nombre: p.nombre || "sin nombre",
         cantidad: p.cantidad?.soldador?.cantidad || 0,
+        stock: p.cantidad?.soldador?.stock_deseado
       }));
 
       titulo.innerText= "Tabla de Soldador Piezas Terminadas"
@@ -1188,6 +1245,15 @@ function box() {
           { title: "Nombre", field: "nombre" },
           { title: "Cantidad", field: "cantidad" },
         ],
+        rowFormatter: function (row) {
+          const data = row.getData();
+
+          if (data.cantidad < data.stock) {
+            row.getElement().style.backgroundColor = "#f8d7da"; // rojo claro (menos del deseado)
+          } else {
+            row.getElement().style.backgroundColor = "#d4edda"; // verde claro (ok o más del deseado)
+          }
+        },
       });
     } catch (error) {
       console.log("esto es un erro ", error);
@@ -1350,6 +1416,7 @@ function box() {
       const tableData = piezaplegadoras.map((p) => ({
         nombre: p.nombre || "sin nombre",
         cantidad: p.cantidad?.balancin?.cantidad || 0,
+        stock: p.cantidad?.balancin?.stock_deseado || 0
       }));
 
       titulo.innerText= "Tabla de Balancin Piezas Terminadas"
@@ -1364,6 +1431,15 @@ function box() {
           { title: "Nombre", field: "nombre" },
           { title: "Cantidad", field: "cantidad" },
         ],
+        rowFormatter: function (row) {
+          const data = row.getData();
+
+          if (data.cantidad < data.stock) {
+            row.getElement().style.backgroundColor = "#f8d7da"; // rojo claro (menos del deseado)
+          } else {
+            row.getElement().style.backgroundColor = "#d4edda"; // verde claro (ok o más del deseado)
+          }
+        },
       });
     } catch (error) {
       console.log("esto es un erro ", error);
@@ -1485,6 +1561,7 @@ function box() {
       const tableData = piezaplegadoras.map((p) => ({
         nombre: p.nombre || "sin nombre",
         cantidad: p.cantidad?.pulido?.cantidad || 0,
+        stock: p.cantidad?.pulido?.cantidad || 0
       }));
 
       titulo.innerText= "Tabla de Fresa Piezas Terminadas"
@@ -1499,6 +1576,15 @@ function box() {
           { title: "Nombre", field: "nombre" },
           { title: "Cantidad", field: "cantidad" },
         ],
+        rowFormatter: function (row) {
+          const data = row.getData();
+
+          if (data.cantidad < data.stock) {
+            row.getElement().style.backgroundColor = "#f8d7da"; // rojo claro (menos del deseado)
+          } else {
+            row.getElement().style.backgroundColor = "#d4edda"; // verde claro (ok o más del deseado)
+          }
+        },
       });
     } catch (error) {
       console.log("esto es un erro ", error);
@@ -1939,7 +2025,7 @@ function box() {
                     <div class="sepa"></div>
                     <div class="cajonBotones">
                         <button class="btnstock" id="stockBruto-${r}">Stock Bruto</button>
-                        <button class="btnstock" id="stockTerminado-${r}">Stock terminado</button>
+                        <button class="btnstock" id="stockTerminado-${r}">Stock ${r}</button>
                         <img src="${imagen}" alt="${r}">
                     </div>
                 </div>`;

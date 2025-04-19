@@ -119,7 +119,6 @@ async function controlCalidad() {
             <div >
             <p>Grafico/Tabla -  VENTAS</p>
                 <div class="box-btn-ventas">
-                    <button>Grafico</button>
                     <button id="StockVentas">Tabla</button>
                 </div>
             </div>
@@ -700,7 +699,6 @@ pedidos.innerHTML = `
 
     <div class="botones">
         <button id="btnAveriguar">Averiguar</button>
-        <button>Abrir Registro</button>
     </div>
 </div>
 `;

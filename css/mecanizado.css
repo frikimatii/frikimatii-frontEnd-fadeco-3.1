@@ -83,3 +83,7 @@ body.dark-mode .cajacaja p {
   text-align: start;
 
 }
+
+#stockBruto-corte{
+  display: none;
+}

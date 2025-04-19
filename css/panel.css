@@ -8,3 +8,13 @@
 #filtros button:hover {
     background-color: #ddd;
 }
+.contenidoPanel{
+    display: none;
+    padding: 20px;
+    margin-top: 10px;
+    border: 1px solid #ccc;
+}
+
+.activo {
+    display: block;
+}

@@ -143,7 +143,16 @@ input{
 }
 .box-descripcion p{
 margin: 0;
-padding: 0;}
+padding: 5px;
+font-size: 15px;
+}
+
+.descripcion-pieza{
+    font-weight: 700;
+    font-size: 18px !important;
+
+
+}
 
 .id-imagen img{
     width: 150px;

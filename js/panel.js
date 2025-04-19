@@ -50,8 +50,7 @@ function panel() {
       let piezaSeleccionadaInfo = `
         <b>Seleccionaste:</b> ${selectData.nombre} <br>
         <b>Tipo:</b> ${selectData.tipo_material} <br>
-        <b>Detalles Generales:</b> ${
-          selectData.detallesGeneral || "No disponible"
+        <b>Detalles Generales:</b> ${selectData.detallesGeneral || "No disponible"
         } <br>
       `;
 
@@ -836,7 +835,7 @@ function panel() {
           const stockDeseadoPulido = document.getElementById(
             `inputStockDeseadoPulido_${selectData._id}`
           ).value;
-      
+
           try {
             const response = await fetch(
               `http://localhost:5000/api/piezasPulidoActualizar/nombre/${selectData.nombre}`,
@@ -851,7 +850,7 @@ function panel() {
                 }),
               }
             );
-      
+
             const result = await response.json();
             if (response.ok) {
               alert(result.mensaje);
@@ -864,7 +863,7 @@ function panel() {
           }
         });
       }
-      
+
 
       // Agregar el evento de clic en el botón de actualizar piezas terminadas
       const btnActualizarTerminado = document.getElementById(
@@ -4485,7 +4484,7 @@ function panel() {
     `;
   }
 
-  
+
   function crearContenedorChapaUinox(selectData) {
     return `
       <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
@@ -8165,6 +8164,173 @@ function panel() {
   }
 
 
+  //////////////////////////////////////////////////////////
+
+  function abrirVentana() {
+    const modal = document.createElement('div');
+    modal.style.position = 'fixed';
+    modal.style.top = '50%';
+    modal.style.left = '50%';
+    modal.style.transform = 'translate(-50%, -50%)';
+    modal.style.width = '300px';
+    modal.style.padding = '25px';
+    modal.style.backgroundColor = '#2c3e50';
+    modal.style.border = '2px solid #34495e';
+    modal.style.borderRadius = '8px';
+    modal.style.boxShadow = '0 4px 15px rgba(0,0,0,0.3)';
+    modal.style.zIndex = '1000';
+    modal.style.textAlign = 'center';
+    modal.style.color = '#ecf0f1';
+    modal.style.fontFamily = 'Arial, sans-serif';
+
+    // Contenido del modal con tres botones
+    modal.innerHTML = `
+      <h3 style="margin-top: 0; margin-bottom: 20px; color: #f1c40f;">Descargar Historiales</h3>
+      
+      <div style="display: flex; flex-direction: column; gap: 12px;">
+        <button id="descargarBtnAgregar" style="
+          padding: 10px 15px; 
+          background: #27ae60;
+          color: white; 
+          border: none; 
+          border-radius: 5px; 
+          cursor: pointer;
+          font-weight: bold;
+          transition: all 0.3s;
+        ">
+          Historial Agregar
+        </button>
+        
+        <button id="descargarBtnMecanizado" style="
+          padding: 10px 15px; 
+          background: #2980b9;
+          color: white; 
+          border: none; 
+          border-radius: 5px; 
+          cursor: pointer;
+          font-weight: bold;
+          transition: all 0.3s;
+        ">
+          Historial Mecanizado
+        </button>
+        
+        <button id="descargarBtnProvedores" style="
+          padding: 10px 15px; 
+          background: #8e44ad;
+          color: white; 
+          border: none; 
+          border-radius: 5px; 
+          cursor: pointer;
+          font-weight: bold;
+          transition: all 0.3s;
+        ">
+          Historial Proveedores
+        </button>
+      </div>
+      
+      <br>
+      <button onclick="this.parentElement.remove()" style="
+        padding: 8px 15px; 
+        margin-top: 15px;
+        background: #e74c3c;
+        color: white; 
+        border: none; 
+        border-radius: 5px; 
+        cursor: pointer;
+        transition: all 0.3s;
+      ">
+        Cerrar
+      </button>
+    `;
+
+    // Efectos hover para los botones
+    const buttons = modal.querySelectorAll('button');
+    buttons.forEach(btn => {
+        btn.onmouseenter = () => {
+            btn.style.transform = 'translateY(-2px)';
+            btn.style.boxShadow = '0 4px 8px rgba(0,0,0,0.2)';
+        };
+        btn.onmouseleave = () => {
+            btn.style.transform = 'none';
+            btn.style.boxShadow = 'none';
+        };
+    });
+
+    // Evento para el botón de Historial Agregar
+    modal.querySelector('#descargarBtnAgregar').onclick = async () => {
+      try {
+        const response = await fetch('http://localhost:5000/api/historiales/descargar/txt');
+        if (!response.ok) throw new Error('Error al descargar');
+
+        const blob = await response.blob();
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = 'stock_cargaIncial.txt';
+        link.click();
+        URL.revokeObjectURL(url);
+      } catch (error) {
+        alert('Error: ' + error.message);
+      }
+    };
+
+    // Evento para el botón de Historial Proveedores
+    modal.querySelector('#descargarBtnProvedores').onclick = async () => {
+      try {
+        const response = await fetch('http://localhost:5000/api/descargar/historial/provedores');
+        
+        if (!response.ok) {
+          throw new Error('Error al descargar el archivo');
+        }
+        
+        const blob = await response.blob();
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = 'historialProvedores.txt';
+        link.click();
+        URL.revokeObjectURL(url);
+        
+      } catch (error) {
+        alert('Error al descargar: ' + error.message);
+      }
+    };
+
+    modal.querySelector('#descargarBtnMecanizado').onclick = async () => {
+      try {
+          const response = await fetch('http://localhost:5000/guardar/descargar/historial/mecanizado');
+          
+          if (!response.ok) {
+              throw new Error(`Error ${response.status}: ${response.statusText}`);
+          }
+          
+          // Crear blob y descargar
+          const blob = await response.blob();
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = 'historial_mecanizados.txt'; 
+          document.body.appendChild(a);
+          a.click();
+          
+          // Limpieza
+          setTimeout(() => {
+              document.body.removeChild(a);
+              URL.revokeObjectURL(url);
+          }, 100);
+          
+      } catch (error) {
+          console.error('Error:', error);
+          alert('Error al descargar: ' + error.message);
+      }
+  };
+  
+    // Evento para el botón de Historial Mecanizado - Versión definitiva
+
+
+    // Agregar el modal al cuerpo del documento
+    document.body.appendChild(modal);
+}
 
   function crearBotonesDeFiltro() {
     const filtros = ["Aluminio", "Chapa", "Shop", "Plastico", "Hierro", "all"];
@@ -8196,7 +8362,12 @@ function panel() {
     .getElementById("btnMostrarTabla")
     .addEventListener("click", cargarPiezasDesdeServidor);
 
-    cargarPiezasDesdeServidor()
+  cargarPiezasDesdeServidor()
+
+  document.getElementById("Abrirventana").addEventListener('click', abrirVentana)
+
+
 }
+
 
 module.exports = { panel };
