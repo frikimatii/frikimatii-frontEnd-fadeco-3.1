@@ -662,15 +662,15 @@ async function controlCalidad() {
   // --------- Columna 4: Pedidos ---------
 
   const pedidos = document.createElement("div");
-  pedidos.id = "colArmadoFinal";
-  pedidos.style.flex = "1";
-  pedidos.style.minWidth = "250px";
-  pedidos.style.border = "1px solid #ccc";
-  pedidos.style.padding = "10px";
-  pedidos.style.borderRadius = "8px";
-  pedidos.style.marginRight = "10px";
+pedidos.id = "colArmadoFinal";
+pedidos.style.flex = "1";
+pedidos.style.minWidth = "250px";
+pedidos.style.border = "1px solid #ccc";
+pedidos.style.padding = "10px";
+pedidos.style.borderRadius = "8px";
+pedidos.style.marginRight = "10px";
 
-  pedidos.innerHTML = `
+pedidos.innerHTML = `
 <h2> Consulta de pedidos </h2>
 <div class="pedidos">
     <div>
@@ -681,50 +681,162 @@ async function controlCalidad() {
         <label for="cantidadInox300">Inox300</label>
         <input class="cantidades" type="number" id="cantidadInox300" min="0" required />
     </div>
-    <div>
+        <div>
         <label for="cantidadInox250">Inox250</label>
         <input class="cantidades" type="number" id="cantidadInox250" min="0" required />
     </div>
-    <div>
+        <div>
+        <label for="cantidadInoxECO">InoxEco</label>
+        <input class="cantidades" type="number" id="cantidadInoxECO" min="0" required />
+    </div>
+        <div>
         <label for="cantidadPintada330">Pintada330</label>
         <input class="cantidades" type="number" id="cantidadPintada330" min="0" required />
     </div>
-    <div>
+        <div>
         <label for="cantidadPintada300">Pintada300</label>
         <input class="cantidades" type="number" id="cantidadPintada300" min="0" required />
     </div>
-    <div>
-        <label for="cantidadInoxECO">InoxECO</label>
-        <input class="cantidades" type="number" id="cantidadInoxECO" min="0" required />
-    </div>
+
     <div class="botones">
         <button id="btnAveriguar">Averiguar</button>
         <button>Abrir Registro</button>
     </div>
 </div>
-
 `;
 
 boxControl.appendChild(pedidos);
 
-const btnAveriguar = document.getElementById("btnAveriguar")
+const btnAveriguar = document.getElementById("btnAveriguar");
 btnAveriguar.addEventListener("click", async function () {
-  granPedido()
-})
+    granPedido();
+});
 
-function granPedido(){
-  const Inox_330 = parseFloat(document.getElementById("cantidadInox330").value) || 0;
-  const Inox_300 = parseFloat(document.getElementById("cantidadInox300").value) || 0;
-  const Inox_ECO = parseFloat(document.getElementById("cantidadInox250").value) || 0;
-  const Inox_250 = parseFloat(document.getElementById("cantidadInoxECO").value) || 0;
-  const Pintada_330 = parseFloat(document.getElementById("cantidadPintada330").value) || 0;
-  const Pintada_300 = parseFloat(document.getElementById("cantidadPintada300").value) || 0;
+async function generarInformeFaltantes(data) {
+  const maquinas = data.maquinas;
 
-  const resultado = Inox_330 + Inox_300 + Inox_250 + Inox_ECO + Pintada_330 + Pintada_300;
+  // 1. Encabezado del informe
+  let contenido = [
+    `INFORME DE PIEZAS FALTANTES - ${new Date().toLocaleDateString()}`,
+    '====================================================',
+    'PEDIDO SOLICITADO:',
+    ...Object.entries(data.pedido)
+      .filter(([_, cantidad]) => cantidad > 0)
+      .map(([modelo, cantidad]) => `• ${modelo.replace('_', ' ')}: ${cantidad} unidades`),
+    '',
+    'DETALLE DE PIEZAS FALTANTES POR SECCIÓN',
+    '====================================================',
+    ''
+  ];
 
-  alert(resultado);
+  // 2. Clasificar piezas faltantes por sección
+  const secciones = {
+    Armado: [],
+    PreArmado: [],
+    Motor: []
+  };
+
+  data.piezasFaltantes.forEach(pieza => {
+    // Determinar a qué sección pertenece la pieza (usando el objeto maquinas)
+    const seccionEncontrada = Object.entries(maquinas).find(([_, maquina]) => 
+      maquina.ArmadoCantidadCategoria.some(p => p.pieza === pieza.pieza) ||
+      maquina.PreArmadoCantidadCategoria.some(p => p.pieza === pieza.pieza) ||
+      maquina.MotorCantidadCategoria.some(p => p.pieza === pieza.pieza)
+    );
+
+    if (seccionEncontrada) {
+      const [modelo, maquina] = seccionEncontrada;
+      if (maquina.ArmadoCantidadCategoria.some(p => p.pieza === pieza.pieza)) {
+        secciones.Armado.push(pieza);
+      } else if (maquina.PreArmadoCantidadCategoria.some(p => p.pieza === pieza.pieza)) {
+        secciones.PreArmado.push(pieza);
+      } else if (maquina.MotorCantidadCategoria.some(p => p.pieza === pieza.pieza)) {
+        secciones.Motor.push(pieza);
+      }
+    }
+  });
+
+  // 3. Función para generar cada sección
+  const generarSeccion = (nombreSeccion, piezas) => {
+    if (piezas.length === 0) return [];
+    
+    return [
+      `SECCIÓN ${nombreSeccion.toUpperCase()}`,
+      '------------------------------------------------------------------',
+      'Pieza                      Categoría       Requerido   Stock  Faltan',
+      '------------------------------------------------------------------',
+      ...piezas.map(p => [
+        p.pieza.padEnd(25),
+        p.categoria.padEnd(13),
+        p.requerido.toString().padStart(5),
+        p.disponible.toString().padStart(5),
+        p.faltan.toString().padStart(5)
+      ].join('   ')),
+      ''  // Espacio entre secciones
+    ];
+  };
+
+  // 4. Agregar secciones al contenido
+  contenido.push(
+    ...generarSeccion('Armado', secciones.Armado),
+    ...generarSeccion('PreArmado', secciones.PreArmado),
+    ...generarSeccion('Motor', secciones.Motor)
+  );
+
+  // 5. Pie del informe
+  contenido.push(
+    '====================================================',
+    `Total de piezas faltantes: ${data.piezasFaltantes.length}`,
+    '====================================================',
+    'Generado automáticamente por el sistema'
+  );
+
+  return contenido.join('\n');
 }
 
+async function granPedido() {
+  // Obtener cantidades del formulario
+  const modelos = {
+    Inox_330: parseInt(document.getElementById("cantidadInox330").value) || 0,
+    Inox_300: parseInt(document.getElementById("cantidadInox300").value) || 0,
+    Inox_250: parseInt(document.getElementById("cantidadInox250").value) || 0,
+    Pintada_330: parseInt(document.getElementById("cantidadPintada330").value) || 0,
+    Pintada_300: parseInt(document.getElementById("cantidadPintada300").value) || 0,
+    Inox_ECO: parseInt(document.getElementById("cantidadInoxECO").value) || 0
+  };
+
+  // Validar
+  if (Object.values(modelos).every(v => v <= 0)) {
+    alert("❌ Ingrese cantidades válidas para al menos un modelo");
+    return;
+  }
+
+  try {
+    const response = await fetch("http://localhost:5000/api/granPedido", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(modelos)
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) throw new Error(data.error || "Error en el servidor");
+
+    // Generar y descargar informe
+    const informe = await generarInformeFaltantes(data);
+    const blob = new Blob([informe], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `Piezas_Requeridas_${new Date().toISOString().slice(0, 10)}.txt`;
+    a.click();
+    URL.revokeObjectURL(url);
+
+  } catch (error) {
+    console.error("Error:", error);
+    alert(`❌ Error: ${error.message || "No se pudo completar la solicitud"}`);
+  }
+}
 
 }
 
