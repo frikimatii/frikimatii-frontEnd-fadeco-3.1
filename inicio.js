@@ -5,7 +5,7 @@ const {mostrarContenido} = require("./js/provedores")
 const {boxArmado} = require("./js/armado")
 const {controlCalidad} = require("./js/control")
 const {panel} = require("./js/panel")
-
+const {pedidosGrandes} = require("./js/pedidos")
 
 fetch("http://localhost:5000/api/auth/user", {
   method: "GET",
@@ -58,6 +58,10 @@ async function loadSection(section) {
       controlCalidad()
     }else if (section === "panel"){
       panel()
+    }else if (section === "pedidos"){
+      pedidosGrandes()
+    }else {
+
     }
 
   } catch (error) {
@@ -76,20 +80,20 @@ document.addEventListener("DOMContentLoaded", () => {
   const savedTheme = localStorage.getItem("theme");
   if (savedTheme === "dark") {
     body.classList.add("dark-mode");
-    themeToggleBtn.textContent = "Cambiar a Modo Claro";
+    themeToggleBtn.textContent = "Modo Claro";
   } else {
     body.classList.remove("dark-mode");
-    themeToggleBtn.textContent = "Cambiar a Modo Oscuro";
+    themeToggleBtn.textContent = "Modo Oscuro";
   }
 
   themeToggleBtn.addEventListener("click", () => {
     body.classList.toggle("dark-mode");
 
     if (body.classList.contains("dark-mode")) {
-      themeToggleBtn.textContent = "Cambiar a Modo Claro";
+      themeToggleBtn.textContent = "Modo Claro";
       localStorage.setItem("theme", "dark");
     } else {
-      themeToggleBtn.textContent = "Cambiar a Modo Oscuro";
+      themeToggleBtn.textContent = "Modo Oscuro";
       localStorage.setItem("theme", "light");
     }
   });

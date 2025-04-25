@@ -8226,6 +8226,19 @@ function panel() {
         ">
           Historial Proveedores
         </button>
+
+        <button id="descargarBtnPedidos" style="
+          padding: 10px 15px; 
+          background: #007BFF;
+          color: white; 
+          border: none; 
+          border-radius: 5px; 
+          cursor: pointer;
+          font-weight: bold;
+          transition: all 0.3s;
+        ">
+          Historial Pedidos
+        </button>
       </div>
       
       <br>
@@ -8324,7 +8337,24 @@ function panel() {
           alert('Error al descargar: ' + error.message);
       }
   };
+
+  modal.querySelector('#descargarBtnPedidos').onclick = async () => {
+    try {
+      const response = await fetch('http://localhost:5000/api/pedidosMarcelo/descargar/pedidos');
+      if (!response.ok) throw new Error('Error al descargar');
   
+      const blob = await response.blob();
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = 'pedidos.txt'; // Nombre del archivo descargado
+      link.click();
+      URL.revokeObjectURL(url);
+    } catch (error) {
+      alert('Error: ' + error.message);
+    }
+  };
+
     // Evento para el botón de Historial Mecanizado - Versión definitiva
 
 

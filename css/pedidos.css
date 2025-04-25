@@ -1,0 +1,172 @@
+.boxPedidoss {
+  display: flex;
+  gap: 20px;
+}
+
+.listaPedido {
+  width: 300px;
+}
+
+.cardPedidos {
+  margin: 10px;
+  background-color: #666666;
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.boxmaquina {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.boxmaquina label {
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.numPedido,
+.para {
+  width: 70px;
+  height: 30px;
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.para {
+  width: 180px;
+}
+
+.fechaEntrega {
+  margin-top: 5px;
+}
+
+.botonAceptar button {
+  width: 100%;
+  padding: 10px;
+  background-color: #28a745;
+  color: rgb(34, 34, 34);
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.botonAceptar button:hover {
+  background-color: #218838;
+}
+
+/* Estilos para la lista de pedidos */
+
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.cajaDePedido {
+  flex-grow: 1;
+}
+
+.cardpedido {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+#contenedorPedidos {
+  max-height: 550px;
+  overflow-y: auto;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  padding: 10px;
+  background-color: #202020;
+}
+
+.cardlisto {
+  background-color: #303030;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 15px;
+  margin-bottom: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  position: relative;
+}
+
+.cardlisto p {
+  margin: 5px 0;
+}
+
+.cardlisto .btn button {
+  background-color: #99c2ee;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.completar-pedido{
+    background-color: #218838 !important;
+}
+.eliminar-pedido{
+    background-color: #dc3545 !important;
+}
+
+.cardlisto .btn button:hover {
+  background-color: #0056b3;
+}
+
+/* Estilos para el contenedor de pedidos */
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* 4 columnas por fila */
+  gap: 20px; /* Espacio entre las tarjetas */
+  margin-top: 20px;
+}
+
+.cardlisto {
+  background-color: #555555;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 15px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  position: relative;
+}
+
+.cardlisto p {
+  margin: 5px 0;
+}
+
+.cardlisto .btn {
+  margin-top: 10px;
+  display: flex;
+  gap: 10px; /* Espacio entre los botones */
+}
+
+.cardlisto button {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.cardlisto button:hover {
+  opacity: 0.9;
+}
+
+.cardlisto .btn-completado {
+  background-color: #47f770;
+  color: black;
+}
+
+.cardlisto .btn-completado:hover {
+  opacity: 0.9;
+}

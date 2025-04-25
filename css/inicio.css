@@ -19,6 +19,7 @@ body {
     gap: 15px;
     padding-bottom: 5px;
     width: 100%;
+    justify-content: center;
 }
 
 .menu button {

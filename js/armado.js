@@ -1261,10 +1261,6 @@ async function boxArmado() {
 
   function inicarContador() {
     obtenerCantidadTotal();
-
-    setInterval(() => {
-      obtenerCantidadTotal();
-    }, 5000);
   }
 
   inicarContador();

@@ -2,7 +2,9 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Página Principal - Control de Stock</title>
+    <link rel="icon" type="image/x-icon" href="./documentos/FLogo.ico">
+
+    <title> Control de Stock - Fadeco</title>
     <link rel="stylesheet" href="./css/inicio.css" />
     <link rel="stylesheet" href="./css/inicio1.css" />
     <link rel="stylesheet" href="./css/agregar.css" />
@@ -10,6 +12,7 @@
     <link rel="stylesheet" href="./css/provedores.css" />
     <link rel="stylesheet" href="./css/armado.css" />
     <link rel="stylesheet" href="./css/control.css">
+    <link rel="stylesheet" href="./css/pedidos.css">
 
     <script src="https://unpkg.com/tabulator-tables@5.2.7/dist/js/tabulator.min.js"></script>
     <link
@@ -28,7 +31,8 @@
       <button onclick="loadSection('armado')">Zona de Armado</button>
       <button onclick="loadSection('control')">Control de Calidad</button>
       <button onclick="loadSection('panel')">Dashboard</button>
-      <button id="themeToggleBtn">Cambiar a Modo Oscuro</button>
+      <button onclick="loadSection('pedidos')">Pedidos</button>
+      <button id="themeToggleBtn">Modo Oscuro</button>
     </div>
 
     <p id="nombre_id"><strong>Cargando..</strong></p>
@@ -41,6 +45,7 @@
     <script src="js/mecanizado.js"></script>
     <script src="js/provedores.js"></script>
     <script src="js/armado.js"></script>
+    <script src="js/pedidos.js" ></script>
 
   </body>
 </html>

@@ -6,11 +6,12 @@ let mainWindow;
 function createWindow() {
   mainWindow = new BrowserWindow({
     width: 1400,
-    height: 800,
+    height: 750,
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,
     },
+    icon: path.join(__dirname, "documentos/Flogo.ico")
   });
 
 

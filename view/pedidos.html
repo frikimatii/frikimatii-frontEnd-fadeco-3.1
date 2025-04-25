@@ -1,0 +1,63 @@
+<div class="boxPedidoss">
+  <!-- Formulario de Pedidos -->
+  <div class="listaPedido">
+    <h4>Pedidos de Máquinas</h4>
+    <div class="cardPedidos">
+      <div class="boxmaquina">
+        <label for="para">Para:</label>
+        <input
+          type="text"
+          id="para"
+          class="para"
+          placeholder="Nombre del cliente"
+          required
+          autofocus
+        />
+      </div>
+      <div class="boxmaquina">
+        <label for="cantInox330">Inox_330</label>
+        <input type="number" id="cantInox330" class="numPedido" min="0" />
+      </div>
+      <div class="boxmaquina">
+        <label for="cantInox300">Inox_300</label>
+        <input type="number" id="cantInox300" class="numPedido" min="0" />
+      </div>
+      <div class="boxmaquina">
+        <label for="cantInox250">Inox_250</label>
+        <input type="number" id="cantInox250" class="numPedido" min="0" />
+      </div>
+      <div class="boxmaquina">
+        <label for="cantInoxECO">Inox_ECO</label>
+        <input type="number" id="cantInoxECO" class="numPedido" min="0" />
+      </div>
+      <div class="boxmaquina">
+        <label for="cantPintada330">Pintada_330</label>
+        <input type="number" id="cantPintada330" class="numPedido" min="0" />
+      </div>
+      <div class="boxmaquina">
+        <label for="cantPintada300">Pintada_300</label>
+        <input type="number" id="cantPintada300" class="numPedido" min="0" />
+      </div>
+      <!-- Fecha de Entrega -->
+      <div class="fechaEntrega">
+        <label for="fecha">Fecha de Entrega:</label>
+        <input type="date" id="fecha" required />
+      </div>
+      <!-- Botón para Aceptar Pedido -->
+      <div class="botonAceptar">
+        <button type="button" id="aceptarPedido">Aceptar Pedido</button>
+      </div>
+    </div>
+<div class="btnHisotiral">
+  <button id="cargarTerminados">Pedidos Entregados</button>
+  <button id="cargarPedidosBtn">Ver Pedidos</button>
+</div>
+  </div>
+
+
+  <!-- Lista de Pedidos -->
+  <div class="cajaDePedido">
+    <div class="cardpedido">Lista de Pedidos</div>
+    <div id="contenedorPedidos" class="grid-container"></div>
+  </div>
+</div>
